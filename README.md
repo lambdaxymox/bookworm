@@ -13,10 +13,10 @@ Usage
 
 Fork [fork]https://github.com/stallmanifold/bookworm and run
 
-    python bookworm.py /path/to/book/pages
+    python3 bookworm.py [-options] /path/to/book/pages
     
 or
     
-    python bookworm.py /path/to/pdf/file  
+    python3 bookworm.py [-options] /path/to/pdf/file  
     
 in the main directory.

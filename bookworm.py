@@ -58,7 +58,9 @@ def change_resolution(resolution, image_file):
         cleanup(new_image_file)
         raise e
     
-
+    os.remove(image_file)
+    os.rename(new_image_file, image_file)
+    
         
 def rescale(resolution, image_file):
     gravity = "-gravity center"
@@ -69,17 +71,17 @@ def expand_file_with_fill(dimensions, image_file):
 
 
 def usage():
-    return """
-            python bookworm.py [-options] /path/to/image/files/
-        
-            or
-        
-            python bookworm.py [-options] /path/to/pdf/file
-            """
+    return  'USAGE:\n' \
+            'python3 bookworm.py [-options] /path/to/image/files/\n' \
+            'or\n' \
+            'python3 bookworm.py [-options] /path/to/pdf/file\n'
+
 
 def main():
-    usage()
+    print(usage())
 
 
 if __name__ == 'main':
+    main()
+else:
     main()
