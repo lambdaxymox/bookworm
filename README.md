@@ -1,7 +1,7 @@
 # Bookworm
 
 **Bookworm** is a set of python scripts for automating parts of the workflow
-for assembling PDF files.
+for processing PDF files.
 
 These are some python scripts for automating PDF file manipulation workflow. They
 are meant for normalizing the dimensions of scanned pages and ensuring they are all
@@ -20,3 +20,12 @@ or
     python3 bookworm.py [-options] /path/to/pdf/file  
     
 in the main directory.
+
+Dependencies
+============
+
+These scripts require the following programs to be installed on your computer:
+
+GhostScript
+ImageMagick
+Python 3
