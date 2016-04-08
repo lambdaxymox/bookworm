@@ -40,7 +40,7 @@ The main pdf operations. The primary operation are:
 5. Expand image with fill.
 
 """
-class Command:
+class TerminalCommand:
     def __init__(self, **kwargs):
         pass
 
@@ -60,7 +60,7 @@ class Command:
         return 'Command({})'.format(self.as_arg_list())
 
 
-class ChangeResolution(Command):
+class ChangeResolution(TerminalCommand):
     def __init__(source, target, resolution):
         self.command = 'convert'
         self.density = '-density {}'.format(resolution.resolution)
@@ -76,7 +76,7 @@ class ChangeResolution(Command):
             '{} {} {} {} {}'.format(self.command, self.density, self.units, self.source, self.target)
 
 
-class RescalePage(Command):
+class RescalePage(TerminalCommand):
     def __init__(source, target, resolution):
         self.command  = 'convert'
         self.units    = '-units {}'.format(resolution.units)
@@ -93,7 +93,7 @@ class RescalePage(Command):
             .format(self.command, self.units, self.resample, self.quoted_old_file, self.quoted_new_file)
 
 
-class ExpandPageWithFill(Command):
+class ExpandPageWithFill(TerminalCommand):
     def __init__(source, target, width, height):
         self.command    = 'convert'
         self.extent     = '-extent {}x{}'.format(width, height)
@@ -113,10 +113,10 @@ class ExpandPageWithFill(Command):
             .format(self.command, self.extent, self.background, self.gravity, self.source, final_arg)
 
 
-class UnpackPDF(Command):
+class UnpackPDF(TerminalCommand):
     pass
 
-class PackPDF(Command):
+class PackPDF(TerminalCommand):
     pass
 
 
@@ -128,13 +128,11 @@ def temp_file_name(file_name):
         else:
             return file_ext
 
+
     file, ext = os.path.splitext(file_name)
-    new_ext = '.tmp' + ext
 
-    assert (new_ext == '.tmp.{}'.format(remove_leading_period(ext)))
+    return '{}.tmp.{}'.format(file, remove_leading_period(ext))
 
-    return '{}.{}'.format(file, new_ext)
-    
 
 def change_resolution(source, resolution, units):
     target = temp_file_name(source)
@@ -153,6 +151,34 @@ def expand_page_with_fill(source, width, height):
 
     return ExpandPageWithFill(source, target, width, height)
 
+
+def multi_change_page_resolutions(sources, resolution, units):    
+    actions = {}
+
+    for source in sources.keys():
+        action = change_page_resolution(source, resolution, units)
+        actions[source] = action
+
+    return actions
+
+def multi_rescale_page(sources, resolution, units):
+    actions = {}
+
+    for source in sources.keys():
+        action = rescale_page(source, resolution, units)
+        actions[source] = action
+
+    return actions
+
+def multi_expand_page(sources, width, height):
+    actions = {}
+
+    for source in sources.keys():
+        action = expand_page_with_fill(source, width, height)
+        actions[source] = action
+
+    return actions
+    
 
 def unpack_pdf():
     pass

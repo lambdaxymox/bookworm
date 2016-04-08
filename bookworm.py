@@ -32,42 +32,6 @@ def files_exist(files):
 
     return True
 
-"""
-def change_page_resolutions(resolution, files):
-    # Check that all the files exist
-    if not files_exist(files):
-        raise Exception("Missing files.")
-
-    for file in files:
-        try:
-            change_resolution(resolution, file)
-        except subprocess.CalledProcessError as e:
-            raise e
-
-
-def rescale_pages(resolution, files):
-    # Check that all the files exist
-    if not files_exist(files):
-        raise Exception("Missing files.")
-
-    for file in files:
-        try:
-            rescale_page(resolution, file)
-        except subprocess.CalledProcessError as e:
-            raise e
-
-
-def expand_pages(resolution, files):
-    # Check that all the files exist
-    if not files_exist(files):
-        raise Exception("Missing files.")
-
-    for file in files:
-        try:
-            expand_page_with_fill(resolution, file)
-        except subprocess.CalledProcessError as e:
-            raise e
-"""
 
 def run_command(action):
     try:
