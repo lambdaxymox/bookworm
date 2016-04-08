@@ -141,7 +141,7 @@ def temp_file_name(file_name):
 
     file, ext = os.path.splitext(file_name)
 
-    return '{}.tmp.{}'.format(file, remove_leading_period(ext))
+    return '{}.bookworm.{}'.format(file, remove_leading_period(ext))
 
 
 """

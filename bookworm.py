@@ -3,24 +3,9 @@ import os.path
 import command
 
 
-def expand_file_with_fill(width, height, image_file):
-    new_image_file = temp_filename(image_file)
-    gravity        = '-gravity Center'
-    background     = '-background white'
-    extent         = '-extent {}x{}'.format(width, height)
-    quoted_old_file = '\"{}\"'.format(image_file)
-    quoted_new_file = '\"{}\"'.format(new_image_file)
-    final_arg      = '{}[{}x{}]'.format(quoted_new_file, width, height)
-
-    try:
-        print('{} {} {} {} {}'.format('convert', extent, background, gravity, quoted_old_file, final_arg))
-        subprocess.run(['convert', extent, background, gravity, quoted_old_file, final_arg])
-    except subprocess.CalledProcessError as e:
-        cleanup(new_image_file)
-        raise e
-    
-    os.remove(image_file)
-    os.rename(new_image_file, image_file)
+def commit_action(action):
+    os.remove(action.source)
+    os.rename(action.target, action.source)
 
 
 def handle_cleanup_file(target):
@@ -30,12 +15,11 @@ def handle_cleanup_file(target):
         # File does not exist, or it is a directory, so nothing needs to be done.
         return
 
-
 def handle_cleanup_dir(target_dir):
     try:
         os.rmdir(target_dir)
     except OSError as e:
-        # File does not exist, or it is a directory, so nothing needs to be done.
+        # Directory does not exist, so nothing needs to be done.
         return
 
 
@@ -53,7 +37,11 @@ def run_command(action):
         print(action.as_terminal_command())
         command.execute(action)
     except subprocess.CalledProcessError as e:
+        handle_cleanup(action.target)
         raise e
+
+    commit_action(action)
+
 
 def usage():
     return  'USAGE: python3 bookworm.py [-options] /path/to/image/file(s)'
