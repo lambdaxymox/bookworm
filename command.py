@@ -1,6 +1,10 @@
 import subprocess
+import os.path
 
 from enum import Enum
+
+
+DEFAULT_SUBDIRECTORY = '__bookworm__'
 
 
 class ResolutionUnits(Enum):
@@ -48,10 +52,16 @@ class TerminalCommand:
         raise NotImplemented
 
     def as_terminal_command(self):
-        return 'echo NotImplemented'
+        raise NotImplemented
 
     def as_arg_list(self):
-        return ['echo', 'NotImplemented']
+        raise NotImplemented
+
+    def is_page_action(self):
+        raise NotImplemented
+
+    def is_pdf_action(self):
+        raise NotImplemented
 
     def __str__(self):
         return self.as_terminal_arg()
@@ -60,10 +70,28 @@ class TerminalCommand:
         return 'Command({})'.format(self.as_arg_list())
 
 
+class PageCommand(TerminalCommand):
+    def is_page_action(self):
+        return True
+
+    def is_pdf_action(self):
+        return False
+
+
+class PDFCommand(TerminalCommand):
+    def is_page_action(self):
+        return False
+
+    def is_pdf_action(self):
+        return True
+
+    def tiff_dir(self):
+        raise NotImplemented
+
 """
 Change a page's image resolution without modifying the page.
 """
-class ChangeResolution(TerminalCommand):
+class ChangeResolution(PageCommand):
     def __init__(source, target, resolution):
         self.command = 'convert'
         self.density = '-density {}'.format(resolution.resolution)
@@ -82,7 +110,7 @@ class ChangeResolution(TerminalCommand):
 """
 Rescale a page by changing it's resolution and  then resampling the image.
 """
-class RescalePage(TerminalCommand):
+class RescalePage(PageCommand):
     def __init__(source, target, resolution):
         self.command  = 'convert'
         self.units    = '-units {}'.format(resolution.units)
@@ -103,7 +131,7 @@ class RescalePage(TerminalCommand):
 Expand the side of a page by expanding the edges of the page with a fill
 color. This function only does this with the color white.
 """
-class ExpandPageWithFill(TerminalCommand):
+class ExpandPageWithFill(PageCommand):
     def __init__(source, target, width, height):
         self.command    = 'convert'
         self.extent     = '-extent {}x{}'.format(width, height)
@@ -123,11 +151,35 @@ class ExpandPageWithFill(TerminalCommand):
             .format(self.command, self.extent, self.background, self.gravity, self.source, final_arg)
 
 
-class UnpackPDF(TerminalCommand):
-    pass
+"""
+Unpack a pdf into a collection of TIFF files.
+"""
+class UnpackPDF(PDFCommand):
+    def __init__(source_pdf, target_dir, resolution=600):
+        res_str = '{}x{}'.format(resolution)
 
-class PackPDF(TerminalCommand):
-    pass
+        self.command = 'gs'
+        self.source_pdf = source_pdf
+        self.target_dir = target_dir
+        self.args = ['-q', '-dNOPAUSE',   '-dBATCH',
+                     '-sDEVICE=tiff24nc', '-sCompression=lzw', 
+                     '-r' + res_str,
+                     '-sOutputFile=' + self.target_dir + '_Page_%4d.tiff'
+                    ]
+
+    def as_arg_list(self):
+        return self.command.append(self.args).append(self.source_pdf)
+
+    def as_terminal_command(self):
+        return self.command + ' ' + ' '.join(self.args) + ' ' + self.source_pdf
+
+    def tiff_dir(self):
+        return self.target_dir
+
+
+class PackPDF(PDFCommand):
+    def __init__(self):
+        pass
 
 
 def temp_file_name(file_name):
@@ -197,16 +249,20 @@ def multi_expand_page(sources, width, height):
 
 """
 Unpack a PDF file into a collection of TIFF files, one for each page, into
-a target directory.
+a target directory. If a target directory is not specified, a default one is
+used in the directory of the source pdf file.
 """
-def unpack_pdf(file_name, target_dir):
-    pass
+def unpack_pdf(source_pdf, target_dir=''):
+    if target_dir == '':
+        # Use a default directory.
+        new_target_dir = os.path.dirname(source_pdf).join(DEFAULT_SUBDIRECTORY)
+
+        return UnpackPDF(source_pdf, new_target_dir)
+    else:
+        # use the target directory
+        return UnpackPDF(source_pdf, target_dir)
+
 
 def pack_pdf():
-    pass
+    raise NotImplemented
 
-"""
-Execute a command in the shell.
-"""
-def execute(command):
-    subprocess.run(command.as_arg_list())
