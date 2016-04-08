@@ -1,7 +1,7 @@
 import subprocess
 import os.path
 
-from Enum import Enum
+from enum import Enum
 
 
 class ResolutionUnits(Enum):
@@ -69,9 +69,13 @@ def expand_file_with_fill(dimensions, image_file):
 
 
 def usage():
-    return   'python bookworm.py [-options] /path/to/image/files/\n'
-           + 'or\n'
-           + 'python bookworm.py [-options] /path/to/pdf/file\n'
+    return """
+            python bookworm.py [-options] /path/to/image/files/
+        
+            or
+        
+            python bookworm.py [-options] /path/to/pdf/file
+            """
 
 def main():
     usage()
