@@ -60,6 +60,9 @@ class TerminalCommand:
         return 'Command({})'.format(self.as_arg_list())
 
 
+"""
+Change a page's image resolution without modifying the page.
+"""
 class ChangeResolution(TerminalCommand):
     def __init__(source, target, resolution):
         self.command = 'convert'
@@ -76,6 +79,9 @@ class ChangeResolution(TerminalCommand):
             '{} {} {} {} {}'.format(self.command, self.density, self.units, self.source, self.target)
 
 
+"""
+Rescale a page by changing it's resolution and  then resampling the image.
+"""
 class RescalePage(TerminalCommand):
     def __init__(source, target, resolution):
         self.command  = 'convert'
@@ -93,6 +99,10 @@ class RescalePage(TerminalCommand):
             .format(self.command, self.units, self.resample, self.quoted_old_file, self.quoted_new_file)
 
 
+"""
+Expand the side of a page by expanding the edges of the page with a fill
+color. This function only does this with the color white.
+"""
 class ExpandPageWithFill(TerminalCommand):
     def __init__(source, target, width, height):
         self.command    = 'convert'
@@ -134,57 +144,69 @@ def temp_file_name(file_name):
     return '{}.tmp.{}'.format(file, remove_leading_period(ext))
 
 
+"""
+Generate the same action across multiple pages.
+"""
+def generate_multiple_page_actions(command, sources, **kwargs):
+    actions = {}
+
+    for source in sources:
+        action = command(source, kwargs)
+        actions[source] = action
+
+    return action
+
+"""
+Change a page's image resolution without modifying the page.
+"""
 def change_resolution(source, resolution, units):
     target = temp_file_name(source)
 
     return ChangeResolution(source, target, Resolution(resolution, units))
 
-
+"""
+Rescale a page by changing it's resolution and  then resampling the image.
+"""
 def rescale_page(source, resolution):
     target = temp_file_name(source)
 
     return RescalePage(source, target, Resolution(resolution, units))
 
-
+"""
+Expand the side of a page by expanding the edges of the page with a fill
+color. This function only does this with the color white.
+"""
 def expand_page_with_fill(source, width, height):
     target = temp_file_name(source)
 
     return ExpandPageWithFill(source, target, width, height)
 
 
+"""
+Change the properties of multiple pages.
+"""
 def multi_change_page_resolutions(sources, resolution, units):    
-    actions = {}
-
-    for source in sources.keys():
-        action = change_page_resolution(source, resolution, units)
-        actions[source] = action
-
-    return actions
+    return generate_multiple_page_actions(change_resolution, sources, resolution, units)
 
 def multi_rescale_page(sources, resolution, units):
-    actions = {}
-
-    for source in sources.keys():
-        action = rescale_page(source, resolution, units)
-        actions[source] = action
-
-    return actions
+    return generate_multiple_page_actions(rescale_page, sources, resolution, units)
 
 def multi_expand_page(sources, width, height):
-    actions = {}
+    return generate_multiple_page_actions(expand_page_with_fill, sources, resolution, units)
 
-    for source in sources.keys():
-        action = expand_page_with_fill(source, width, height)
-        actions[source] = action
 
-    return actions
-    
-
-def unpack_pdf():
+"""
+Unpack a PDF file into a collection of TIFF files, one for each page, into
+a target directory.
+"""
+def unpack_pdf(file_name, target_dir):
     pass
 
 def pack_pdf():
     pass
 
+"""
+Execute a command in the shell.
+"""
 def execute(command):
     subprocess.run(command.as_arg_list())

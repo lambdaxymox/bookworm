@@ -23,6 +23,21 @@ def expand_file_with_fill(width, height, image_file):
     os.rename(new_image_file, image_file)
 
 
+def handle_cleanup_file(target):
+    try:
+        os.remove(target)
+    except OSError as e:
+        # File does not exist, or it is a directory, so nothing needs to be done.
+        return
+
+
+def handle_cleanup_dir(target_dir):
+    try:
+        os.rmdir(target_dir)
+    except OSError as e:
+        # File does not exist, or it is a directory, so nothing needs to be done.
+        return
+
 
 def files_exist(files):
     # Check  that files actually exist
