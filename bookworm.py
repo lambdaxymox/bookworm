@@ -3,10 +3,6 @@ import os.path
 import command
 
 
-def temp_file_name(file_name):
-    return '{}.tmp'.format(file_name)
-
-
 def expand_file_with_fill(width, height, image_file):
     new_image_file = temp_filename(image_file)
     gravity        = '-gravity Center'
@@ -83,6 +79,8 @@ def run_command(action):
 def usage():
     return  'USAGE: python3 bookworm.py [-options] /path/to/image/file(s)'
 
+def help():
+    return 'Help not available'
 
 def main():
     print(usage())

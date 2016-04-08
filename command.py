@@ -41,7 +41,7 @@ The main pdf operations. The primary operation are:
 
 """
 class Command:
-    def __init__(self):
+    def __init__(self, **kwargs):
         pass
 
     def as_arg_list(self):
@@ -119,11 +119,46 @@ class UnpackPDF(Command):
 class PackPDF(Command):
     pass
 
-def build_command():
+
+def temp_file_name(file_name):
+    
+    def remove_leading_period(file_ext):
+        if file_ext[0] == '.':
+            return file_ext[1:]
+        else:
+            return file_ext
+
+    file, ext = os.path.splitext(file_name)
+    new_ext = '.tmp' + ext
+
+    assert (new_ext == '.tmp.{}'.format(remove_leading_period(ext)))
+
+    return '{}.{}'.format(file, new_ext)
+    
+
+def change_resolution(source, resolution, units):
+    target = temp_file_name(source)
+
+    return ChangeResolution(source, target, Resolution(resolution, units))
+
+
+def rescale_page(source, resolution):
+    target = temp_file_name(source)
+
+    return RescalePage(source, target, Resolution(resolution, units))
+
+
+def expand_page_with_fill(source, width, height):
+    target = temp_file_name(source)
+
+    return ExpandPageWithFill(source, target, width, height)
+
+
+def unpack_pdf():
+    pass
+
+def pack_pdf():
     pass
 
 def execute(command):
-    try:
-        subprocess.run(command.as_arg_list())
-    except subprocess.CalledProcessError as e:
-        raise e
+    subprocess.run(command.as_arg_list())
