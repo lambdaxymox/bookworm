@@ -4,23 +4,6 @@ import os.path
 from enum import Enum
 
 
-DEFAULT_SUBDIRECTORY = '__bookworm__'
-
-
-class ResolutionUnits(Enum):
-    PixelsPerInch       = 1
-    PixelsPerCentimeter = 2
-
-    def __repr__(self):
-        if self == PixelsPerInch:
-            return 'PixelsPerInch'
-        else:
-            return 'PixelsPerCentimeter'
-
-    def __str__(self):
-        return repr(self)
-
-
 class Resolution:
     def __init__(self, resolution, units):
         self.resolution = resolution
@@ -64,13 +47,14 @@ class TerminalCommand:
         raise NotImplemented
 
     def __str__(self):
-        return self.as_terminal_arg()
+        return self.as_terminal_command()
 
     def __repr__(self):
         return 'Command({})'.format(self.as_arg_list())
 
 
 class PageCommand(TerminalCommand):
+
     def is_page_action(self):
         return True
 
@@ -79,6 +63,7 @@ class PageCommand(TerminalCommand):
 
 
 class PDFCommand(TerminalCommand):
+
     def is_page_action(self):
         return False
 
@@ -88,14 +73,15 @@ class PDFCommand(TerminalCommand):
     def tiff_dir(self):
         raise NotImplemented
 
+
 """
 Change a page's image resolution without modifying the page.
 """
 class ChangeResolution(PageCommand):
-    def __init__(source, target, resolution):
+    def __init__(self, source, target, resolution):
         self.command = 'convert'
-        self.density = '-density {}'.format(resolution.resolution)
-        self.units   = '-units {}'.format(resolution.units)
+        self.density = '-density {}'.format(resolution)
+        self.units   = '-units PixelsPerInch'
         self.source  = '\"{}\"'.format(source)
         self.target  = '\"{}\"'.format(target)
 
@@ -111,10 +97,10 @@ class ChangeResolution(PageCommand):
 Rescale a page by changing it's resolution and  then resampling the image.
 """
 class RescalePage(PageCommand):
-    def __init__(source, target, resolution):
+    def __init__(self, source, target, resolution):
         self.command  = 'convert'
-        self.units    = '-units {}'.format(resolution.units)
-        self.resample = '-resample {}'.format(resolution.resolution)
+        self.units    = '-units PixelsPerInch'
+        self.resample = '-resample {}'.format(resolution)
         self.source   = '\"{}\"'.format(source)
         self.target   = '\"{}\"'.format(target)
 
@@ -132,19 +118,21 @@ Expand the side of a page by expanding the edges of the page with a fill
 color. This function only does this with the color white.
 """
 class ExpandPageWithFill(PageCommand):
-    def __init__(source, target, width, height):
+    def __init__(self, source, target, width, height):
         self.command    = 'convert'
         self.extent     = '-extent {}x{}'.format(width, height)
         self.background = '-background white'
         self.gravity    = '-gravity Center'
         self.source     = '\"{}\"'.format(source)
         self.target     = '\"{}\"'.format(target)
+        self.width      = width
+        self.height     = height
 
     def as_arg_list(self):
         return [self.command, self.extent, self.background, self.gravity, self.source, self.target]
 
     def as_terminal_command(self):
-        final_arg = '{}[{}x{}]'.format(self.source, self.width, self.height)
+        final_arg = '{}[{}x{}]'.format(self.target, self.width, self.height)
         
         return \
             '{} {} {} {} {} {}' \
@@ -155,20 +143,20 @@ class ExpandPageWithFill(PageCommand):
 Unpack a pdf into a collection of TIFF files.
 """
 class UnpackPDF(PDFCommand):
-    def __init__(source_pdf, target_dir, resolution=600):
-        res_str = '{}x{}'.format(resolution)
-
-        self.command = 'gs'
+    def __init__(self, source_pdf, target_dir, resolution=600):
+        self.command    = 'gs'
         self.source_pdf = source_pdf
         self.target_dir = target_dir
         self.args = ['-q', '-dNOPAUSE',   '-dBATCH',
                      '-sDEVICE=tiff24nc', '-sCompression=lzw', 
-                     '-r' + res_str,
+                     '-r{}x{}'.format(resolution, resolution),
                      '-sOutputFile=' + self.target_dir + '_Page_%4d.tiff'
                     ]
 
+        print(self.target_dir)
+
     def as_arg_list(self):
-        return self.command.append(self.args).append(self.source_pdf)
+        return [self.command] + self.args + [self.source_pdf]
 
     def as_terminal_command(self):
         return self.command + ' ' + ' '.join(self.args) + ' ' + self.source_pdf
@@ -214,7 +202,7 @@ Change a page's image resolution without modifying the page.
 def change_resolution(source, resolution, units):
     target = temp_file_name(source)
 
-    return ChangeResolution(source, target, Resolution(resolution, units))
+    return ChangeResolution(source, target, resolution)
 
 """
 Rescale a page by changing it's resolution and  then resampling the image.
@@ -222,7 +210,7 @@ Rescale a page by changing it's resolution and  then resampling the image.
 def rescale_page(source, resolution):
     target = temp_file_name(source)
 
-    return RescalePage(source, target, Resolution(resolution, units))
+    return RescalePage(source, target, resolution)
 
 """
 Expand the side of a page by expanding the edges of the page with a fill
@@ -237,14 +225,14 @@ def expand_page_with_fill(source, width, height):
 """
 Change the properties of multiple pages.
 """
-def multi_change_page_resolutions(sources, resolution, units):    
-    return generate_multiple_page_actions(change_resolution, sources, resolution, units)
+def multi_change_page_resolutions(sources, resolution):    
+    return generate_multiple_page_actions(change_resolution, sources, resolution)
 
-def multi_rescale_page(sources, resolution, units):
-    return generate_multiple_page_actions(rescale_page, sources, resolution, units)
+def multi_rescale_page(sources, resolution):
+    return generate_multiple_page_actions(rescale_page, sources, resolution)
 
 def multi_expand_page(sources, width, height):
-    return generate_multiple_page_actions(expand_page_with_fill, sources, resolution, units)
+    return generate_multiple_page_actions(expand_page_with_fill, sources, width, height)
 
 
 """
@@ -255,8 +243,7 @@ used in the directory of the source pdf file.
 def unpack_pdf(source_pdf, target_dir=''):
     if target_dir == '':
         # Use a default directory.
-        new_target_dir = os.path.dirname(source_pdf).join(DEFAULT_SUBDIRECTORY)
-
+        new_target_dir = os.path.join(os.path.dirname(source_pdf), '__bookworm__/')
         return UnpackPDF(source_pdf, new_target_dir)
     else:
         # use the target directory
