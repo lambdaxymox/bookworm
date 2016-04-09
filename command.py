@@ -1,8 +1,6 @@
 import subprocess
 import os.path
 
-from enum import Enum
-
 
 class Resolution:
     def __init__(self, resolution, units):
@@ -185,21 +183,9 @@ def temp_file_name(file_name):
 
 
 """
-Generate the same action across multiple pages.
-"""
-def generate_multiple_page_actions(command, sources, **kwargs):
-    actions = {}
-
-    for source in sources:
-        action = command(source, kwargs)
-        actions[source] = action
-
-    return action
-
-"""
 Change a page's image resolution without modifying the page.
 """
-def change_resolution(source, resolution, units):
+def change_page_resolution(source, resolution):
     target = temp_file_name(source)
 
     return ChangeResolution(source, target, resolution)
@@ -225,14 +211,32 @@ def expand_page_with_fill(source, width, height):
 """
 Change the properties of multiple pages.
 """
-def multi_change_page_resolutions(sources, resolution):    
-    return generate_multiple_page_actions(change_resolution, sources, resolution)
+def multi_change_page_resolution(sources, resolution):    
+    actions = {}
+
+    for source in sources:
+        action = change_page_resolution(source, resolution)
+        actions[source] = action
+
+    return actions
 
 def multi_rescale_page(sources, resolution):
-    return generate_multiple_page_actions(rescale_page, sources, resolution)
+    actions = {}
+
+    for source in sources:
+        action = rescale_page(source, resolution)
+        actions[source] = action
+
+    return actions
 
 def multi_expand_page(sources, width, height):
-    return generate_multiple_page_actions(expand_page_with_fill, sources, width, height)
+    actions = {}
+
+    for source in sources:
+        action = expand_page_with_fill(source, width, height)
+        actions[source] = action
+
+    return actions
 
 
 """
@@ -252,4 +256,3 @@ def unpack_pdf(source_pdf, target_dir=''):
 
 def pack_pdf():
     raise NotImplemented
-
