@@ -79,4 +79,4 @@ def process_args(arg_dict):
         return multi_expand_page(resolution, files, output)
 
     else:
-        raise ValueError('File or directory does not exist: {}'.format(input))
+        raise FileNotFoundError('File or directory does not exist: {}'.format(input))

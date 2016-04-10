@@ -59,9 +59,9 @@ def process_args(arg_dict):
 
     # The input file does not exist.
     elif (not os.path.isfile(input)) and os.path.isdir(output):
-        raise ValueError('Output directory does not exist: {}'.format(output))
+        raise FileNotFoundError('Output directory does not exist: {}'.format(output))
     # The output file does not exist.
     elif (os.path.isfile(input)) and (not os.path.isdir(output)):
-        raise ValueError('Input file does not exist: {}'.format(input))
+        raise FileNotFoundError('Input file does not exist: {}'.format(input))
     else:
-        raise ValueError('File or directory does not exist: \nInput: {}\nOutput: {}'.format(input, output))
+        raise FileNotFoundError('File or directory does not exist: \nInput: {}\nOutput: {}'.format(input, output))

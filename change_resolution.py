@@ -1,14 +1,16 @@
 import command
 import os.path
 
+from command import Resolution
+
 """
 Change a page's image resolution without modifying the page.
 """
 class ChangeResolution(command.PageCommand):
     def __init__(self, source, target, resolution):
         self.command = 'convert'
-        self.density = '-density {}'.format(resolution)
-        self.units   = '-units PixelsPerInch'
+        self.density = '-density {}'.format(resolution.resolution)
+        self.units   = '-units {}'.format(resolution.unit_str())
         self.source  = '\"{}\"'.format(source)
         self.target  = '\"{}\"'.format(target)
 
@@ -24,6 +26,9 @@ class ChangeResolution(command.PageCommand):
 Change a page's image resolution without modifying the page.
 """
 def change_page_resolution(resolution, source, target=''):
+    if resolution.resolution <= 0:
+        raise ValueError('Resolution must be positive. Got: {}'.format(resolution))
+
     if not target:
         new_target = command.temp_file_name(source)
         return ChangeResolution(source, new_target, resolution)
@@ -54,8 +59,13 @@ def process_args(arg_dict):
     if not resolution:
         raise ValueError('Invalid resolution value: {}'.format(resolution))
 
+    if type(resolution) != int:
+        raise ValueError('Invalid resolution value: {}'.format(resolution))
+
     if resolution <= 0:
         raise ValueError('Resolution needs to be a positive integer. Got negative value: {}'.format(resolution))
+
+    resolution = Resolution.make_resolution(resolution, 'PixelsPerInch')
 
     # We want to make multiple page operations if the input is a directory.
     if os.path.isdir(input):
@@ -74,4 +84,4 @@ def process_args(arg_dict):
         return change_page_resolution(resolution, input, output)
 
     else:
-        raise ValueError('File or directory does not exist: {}'.format(input))
+        raise FileNotFoundError('File or directory does not exist: {}'.format(input))

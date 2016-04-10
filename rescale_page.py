@@ -46,4 +46,4 @@ def multi_rescale_page(resolution, sources, target):
 
 
 def process_args(arg_dict):
-    pass
+    raise NotImplemented

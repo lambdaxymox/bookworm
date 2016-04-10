@@ -18,13 +18,19 @@ class Resolution:
         self.resolution = resolution
         self.units      = units
 
-    def resolution_units(resolution_val, unit_str):
-        if unit_str not in valid_unit_strings.keys():
-            raise ValueError('\'unit_str\' must be one of: {}'.format(valid_unit_strings.keys()))
+    def make_resolution(resolution_val, unit_str):
+        if unit_str not in Resolution.valid_unit_strings.keys():
+            raise ValueError('\'unit_str\' must be one of: {}'.format(Resolution.valid_unit_strings.keys()))
         if resolution_val <= 0:
             raise ValueError('\'resolution_val\' must be a positive integer')
 
-        return ResolutionUnits(resolution_val, valid_unit_strings[unit_str])
+        return Resolution(resolution_val, Resolution.valid_unit_strings[unit_str])
+
+    def unit_str(self):
+        if self.units == Resolution.ResolutionUnits.PixelsPerInch:
+            return 'PixelsPerInch'
+        else:
+            return 'PixelsPerCentimeter'
 
 
     def __repr__(self):
@@ -68,8 +74,7 @@ class TerminalCommand:
 
 class PageCommand(TerminalCommand):
     def commit(self):
-        os.remove(action.source)
-        os.rename(action.target, action.source)
+        raise NotImplemented
 
 
 class PDFCommand(TerminalCommand):
@@ -103,6 +108,9 @@ def temp_directory(file_name):
 
     return os.path.join(new_path, '__bookworm__/')
 
+
+def default_subdirectory():
+    return '__bookworm__/'
 
 """
 Build a command from a dictionary with a command string and a list of command arguments.
