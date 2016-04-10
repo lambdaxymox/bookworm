@@ -55,8 +55,8 @@ def arg_processor():
 
 def check_positive(value):
     ivalue = int(value)
-    if ivalue < 0:
-        raise argparse.ArgumentTypeError('{} is needs to be a positive integer'.format(ivalue))
+    if ivalue <= 0:
+        raise argparse.ArgumentTypeError('{} needs to be a positive integer'.format(ivalue))
     return ivalue
 
 
@@ -93,7 +93,7 @@ def process_command(command_dict):
 
     # Unpack the command arguments
     if command == 'unpack-pdf':
-        return  unpack_pdf.process_args(args)
+        return unpack_pdf.process_args(args)
 
     elif command == 'pack-pdf':
         return pack_pdf.process_args(args)

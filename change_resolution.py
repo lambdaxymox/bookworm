@@ -51,6 +51,12 @@ def process_args(arg_dict):
     except KeyError as e:
         raise e
 
+    if not resolution:
+        raise ValueError('Invalid resolution value: {}'.format(resolution))
+
+    if resolution <= 0:
+        raise ValueError('Resolution needs to be a positive integer. Got negative value: {}'.format(resolution))
+
     # We want to make multiple page operations if the input is a directory.
     if os.path.isdir(input):
         files = command.with_extension('.tiff', input)

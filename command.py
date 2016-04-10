@@ -4,13 +4,28 @@ import subprocess
 
 
 class Resolution:
+
     class ResolutionUnits(enum.Enum):
         PixelsPerInch       = 1
         PixelsPerCentimeter = 2
 
+    valid_unit_strings = {
+            'PixelsPerInch':       ResolutionUnits.PixelsPerInch,
+            'PixelsPerCentimeter': ResolutionUnits.PixelsPerCentimeter
+        }
+
     def __init__(self, resolution, units):
         self.resolution = resolution
         self.units      = units
+
+    def resolution_units(resolution_val, unit_str):
+        if unit_str not in valid_unit_strings.keys():
+            raise ValueError('\'unit_str\' must be one of: {}'.format(valid_unit_strings.keys()))
+        if resolution_val <= 0:
+            raise ValueError('\'resolution_val\' must be a positive integer')
+
+        return ResolutionUnits(resolution_val, valid_unit_strings[unit_str])
+
 
     def __repr__(self):
         return 'Resolution({}, {})'.format(self.resolution, self, units)
