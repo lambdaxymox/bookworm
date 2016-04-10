@@ -58,6 +58,7 @@ Execute a command in the shell.
 def execute(command):
     subprocess.run(command.as_arg_list())
 
+
 """
 Run a terminal command, catching for runtime errors.
 """
@@ -70,3 +71,7 @@ def run_command(action):
         raise e
 
     commit(action)
+
+def run_multi_page_commands(action_dict):
+    for page in action_dict.keys():
+        run_command(action_dict['page'])

@@ -182,19 +182,31 @@ def temp_file_name(file_name):
     return '{}.bookworm.{}'.format(file, remove_leading_period(ext))
 
 
+def temp_directory(file_name):
+    file_path, ext = os.path.splitext(file_name)
+
+    new_path = os.path.dirname(file_path)
+
+    return os.path.join(new_path, '__bookworm__/')
+
+
 """
 Change a page's image resolution without modifying the page.
 """
-def change_page_resolution(source, resolution):
-    target = temp_file_name(source)
+def change_page_resolution(resolution, source, target=''):
+    if target =='':
+        new_target = temp_file_name(source)
+        return ChangeResolution(source, new_target, resolution)
 
     return ChangeResolution(source, target, resolution)
 
 """
 Rescale a page by changing it's resolution and  then resampling the image.
 """
-def rescale_page(source, resolution):
-    target = temp_file_name(source)
+def rescale_page(resolution, source, target=''):
+    if target == '':
+        new_target = temp_file_name(source)
+        return RescalePage(source, target, resolution)
 
     return RescalePage(source, target, resolution)
 
@@ -202,8 +214,10 @@ def rescale_page(source, resolution):
 Expand the side of a page by expanding the edges of the page with a fill
 color. This function only does this with the color white.
 """
-def expand_page_with_fill(source, width, height):
-    target = temp_file_name(source)
+def expand_page_with_fill(width, height, source, target=''):
+    if target == '':
+        new_target = temp_file_name(source)
+        return ExpandPageWithFill(source, new_target, width, height)
 
     return ExpandPageWithFill(source, target, width, height)
 
@@ -211,25 +225,25 @@ def expand_page_with_fill(source, width, height):
 """
 Change the properties of multiple pages.
 """
-def multi_change_page_resolution(sources, resolution):    
+def multi_change_page_resolution(sources, target, resolution):    
     actions = {}
 
     for source in sources:
-        action = change_page_resolution(source, resolution)
+        action = change_page_resolution(source, target, resolution)
         actions[source] = action
 
     return actions
 
-def multi_rescale_page(sources, resolution):
+def multi_rescale_page(sources, target, resolution):
     actions = {}
 
     for source in sources:
-        action = rescale_page(source, resolution)
+        action = rescale_page(source, target, resolution)
         actions[source] = action
 
     return actions
 
-def multi_expand_page(sources, width, height):
+def multi_expand_page(sources, target, width, height):
     actions = {}
 
     for source in sources:
