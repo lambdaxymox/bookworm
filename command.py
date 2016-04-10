@@ -1,4 +1,3 @@
-import subprocess
 import os.path
 import enum
 
@@ -15,17 +14,6 @@ class Resolution:
         return '{} {}'.format(self.resolution, self.units)
 
 
-"""
-The main pdf operations. The primary operation are:
-
-1. Unpack a PDF.
-2. Repack a PDF.
-2. Pack a directory of images into a PDF.
-3. Change image resolution.
-4. Rescale image.
-5. Expand image with fill.
-
-"""
 class TerminalCommand:
     def __init__(self, **kwargs):
         pass
@@ -73,101 +61,6 @@ class PDFCommand(TerminalCommand):
         raise NotImplemented
 
 
-"""
-Change a page's image resolution without modifying the page.
-"""
-class ChangeResolution(PageCommand):
-    def __init__(self, source, target, resolution):
-        self.command = 'convert'
-        self.density = '-density {}'.format(resolution)
-        self.units   = '-units PixelsPerInch'
-        self.source  = '\"{}\"'.format(source)
-        self.target  = '\"{}\"'.format(target)
-
-    def as_arg_list(self):
-        return [self.command, self.density, self.units, self.source, self.target]
-
-    def as_terminal_command(self):
-        return  \
-            '{} {} {} {} {}'.format(self.command, self.density, self.units, self.source, self.target)
-
-
-"""
-Rescale a page by changing it's resolution and  then resampling the image.
-"""
-class RescalePage(PageCommand):
-    def __init__(self, source, target, resolution):
-        self.command  = 'convert'
-        self.units    = '-units PixelsPerInch'
-        self.resample = '-resample {}'.format(resolution)
-        self.source   = '\"{}\"'.format(source)
-        self.target   = '\"{}\"'.format(target)
-
-    def as_arg_list(self):
-        return [self.command, self.units, self.resample, self.source, self.target]
-
-    def as_terminal_command(self):
-        return \
-            '{} {} {} {} {}' \
-            .format(self.command, self.units, self.resample, self.quoted_old_file, self.quoted_new_file)
-
-
-"""
-Expand the side of a page by expanding the edges of the page with a fill
-color. This function only does this with the color white.
-"""
-class ExpandPageWithFill(PageCommand):
-    def __init__(self, source, target, width, height):
-        self.command    = 'convert'
-        self.extent     = '-extent {}x{}'.format(width, height)
-        self.background = '-background white'
-        self.gravity    = '-gravity Center'
-        self.source     = '\"{}\"'.format(source)
-        self.target     = '\"{}\"'.format(target)
-        self.width      = width
-        self.height     = height
-
-    def as_arg_list(self):
-        return [self.command, self.extent, self.background, self.gravity, self.source, self.target]
-
-    def as_terminal_command(self):
-        final_arg = '{}[{}x{}]'.format(self.target, self.width, self.height)
-        
-        return \
-            '{} {} {} {} {} {}' \
-            .format(self.command, self.extent, self.background, self.gravity, self.source, final_arg)
-
-
-"""
-Unpack a pdf into a collection of TIFF files.
-"""
-class UnpackPDF(PDFCommand):
-    def __init__(self, source_pdf, target_dir, resolution=600):
-        self.command    = 'gs'
-        self.source_pdf = source_pdf
-        self.target_dir = target_dir
-        self.args = ['-q', '-dNOPAUSE',   '-dBATCH',
-                     '-sDEVICE=tiff24nc', '-sCompression=lzw', 
-                     '-r{}x{}'.format(resolution, resolution),
-                     '-sOutputFile=' + self.target_dir + '_Page_%4d.tiff'
-                    ]
-
-        print(self.target_dir)
-
-    def as_arg_list(self):
-        return [self.command] + self.args + [self.source_pdf]
-
-    def as_terminal_command(self):
-        return self.command + ' ' + ' '.join(self.args) + ' ' + self.source_pdf
-
-    def tiff_dir(self):
-        return self.target_dir
-
-
-class PackPDF(PDFCommand):
-    def __init__(self):
-        pass
-
 
 def temp_file_name(file_name):
     
@@ -192,82 +85,18 @@ def temp_directory(file_name):
 
 
 """
-Change a page's image resolution without modifying the page.
+Build a command from a dictionary with a command string and a list of command arguments.
 """
-def change_page_resolution(resolution, source, target=''):
-    if not target:
-        new_target = temp_file_name(source)
-        return ChangeResolution(source, new_target, resolution)
+def with_extension(extension, file_dict):
+    def by_ext(extension, file):
+        file_extension = os.path.splitext(file)[1]
 
-    return ChangeResolution(source, target, resolution)
+        return file_extension == extension
 
-"""
-Rescale a page by changing it's resolution and  then resampling the image.
-"""
-def rescale_page(resolution, source, target=''):
-    if not target:
-        new_target = temp_file_name(source)
-        return RescalePage(source, target, resolution)
+    try:
+        path = file_dict['path']
+        files = file_dict['files']
+    except KeyError as e:
+        raise e
 
-    return RescalePage(source, target, resolution)
-
-"""
-Expand the side of a page by expanding the edges of the page with a fill
-color. This function only does this with the color white.
-"""
-def expand_page_with_fill(width, height, source, target=''):
-    if not target:
-        new_target = temp_file_name(source)
-        return ExpandPageWithFill(source, new_target, width, height)
-
-    return ExpandPageWithFill(source, target, width, height)
-
-
-"""
-Change the properties of multiple pages.
-"""
-def multi_change_page_resolution(resolution, sources, target):    
-    actions = {}
-
-    for source in sources:
-        action = change_page_resolution(source, target, resolution)
-        actions[source] = action
-
-    return actions
-
-def multi_rescale_page(resolution, sources, target):
-    actions = {}
-
-    for source in sources:
-        action = rescale_page(source, target, resolution)
-        actions[source] = action
-
-    return actions
-
-def multi_expand_page(width, height, sources, target):
-    actions = {}
-
-    for source in sources:
-        action = expand_page_with_fill(source, width, height)
-        actions[source] = action
-
-    return actions
-
-
-"""
-Unpack a PDF file into a collection of TIFF files, one for each page, into
-a target directory. If a target directory is not specified, a default one is
-used in the directory of the source pdf file.
-"""
-def unpack_pdf(source_pdf, target_dir=''):
-    if not target_dir:
-        # Use a default directory.
-        new_target_dir = os.path.join(os.path.dirname(source_pdf), '__bookworm__/')
-        return UnpackPDF(source_pdf, new_target_dir)
-    else:
-        # use the target directory
-        return UnpackPDF(source_pdf, target_dir)
-
-
-def pack_pdf():
-    raise NotImplemented
+    return {'path': path, 'files': list(filter(lambda f: by_ext(extension, f), files))}

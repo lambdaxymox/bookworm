@@ -1,10 +1,27 @@
 import argparse
 import sys
 import execute_commands
-import command
+import unpack_pdf
+import pack_pdf
+import expand_page
+import change_resolution
 import os.path
 
+"""
+The main pdf operations are:
 
+1. Unpack a PDF.
+2. Repack a PDF.
+2. Pack a directory of images into a PDF.
+3. Change image resolution.
+4. Rescale image.
+5. Expand image with fill.
+
+"""
+
+""" 
+Generate an argument parser.
+"""
 def arg_processor():
     parser = argparse.ArgumentParser()
 
@@ -66,117 +83,6 @@ def check_dims(value):
     return (iwidth, iheight)
 
 
-"""
-Build a command from a dictionary with a command string and a list of command arguments.
-"""
-def with_extension(extension, file_dict):
-    def by_ext(extension, file):
-        file_extension = os.path.splitext(file)[1]
-
-        return extension == file_extension
-
-    try:
-        path = file_dict['path']
-        files = file_dict['files']
-    except KeyError as e:
-        raise e
-
-    return {'path': path, 'files': filter(lambda f: by_ext('tiff', f), files)}
-
-
-def process_unpack_pdf(arg_dict):
-    try:
-        input = arg_dict['input']
-    except KeyError as e:
-        raise e
-
-    try:
-        output = arg_dict['output']
-    except KeyError as e:
-        # Derive a default output directory from the input file.
-        output = temp_directory(input)
-
-    if os.path.isfile(input) and os.path.isdir(output):
-        return command.unpack_pdf(input, output)
-
-    # The input file does not exist.
-    elif (not os.path.isfile(input)) and os.path.isdir(output):
-        raise ValueError('Output directory does not exist: {}'.format(output))
-    # The output file does not exist.
-    elif (os.path.isfile(input)) and (not os.path.isdir(output)):
-        raise ValueError('Input file does not exist: {}'.format(input))
-    else:
-        raise ValueError('File or directory does not exist: \nInput: {}\nOutput: {}'.format(input, output))
-
-
-"""
-Repacking a PDF is not presently implemented. This can always be done after editing and OCRing with
-Adobe Acrobat or a similar program.
-"""
-def process_pack_pdf(arg_dict):
-    raise ValueError('Command not implemented')
-
-
-# Output should be file or directory.
-def process_change_resolution(arg_dict):
-    try:
-        input = arg_dict['input']
-        resolution = arg_dict['resolution']
-    except KeyError as e:
-        raise e
-
-    # We want to make multiple page operations if the input is a directory.
-    if os.path.isdir(input):
-        files = with_extension('.tiff', input)
-
-        return command.multi_change_page_resolution(resolution, files, output)
-
-    # If the input is one page only, we only need a single page operation.
-    elif os.path.isfile(input):
-        try:
-            output = arg_dict['output']
-        except KeyError as e:
-            # Use input as the target file.
-            output = input
-
-        return command.change_page_resolution(resolution, input, output)
-
-    else:
-        raise ValueError('File or directory does not exist: {}'.format(input))
-
-
-def process_expand_page(arg_dict):
-    try:
-        input      = arg_dict['input']
-        dimensions = arg_dict['dimensions']
-    except KeyError as e:
-        raise e
-
-    if os.path.isfile(input):
-        try:
-            output = arg_dict['output']
-        except KeyError as e:
-            # Use input as the target file.
-            output = input
-
-
-        return command.expand_page_with_fill(dimensions[0], dimensions[1], input, output)
-
-    elif os.path.ispath(input):
-        try:
-            output = arg_dict['output']
-        except KeyError as e:
-            # Derive output directory from input directory
-            output = os.path.join(input, '__bookworm__/')
-
-        files = with_extension('.tiff', input)
-
-        return command.multi_expand_page(resolution, files, output)
-
-    else:
-        raise ValueError('File or directory does not exist: {}'.format(input))
-
-
 def process_command(command_dict):
     # Unpack the command and the arguments
     try:
@@ -187,16 +93,16 @@ def process_command(command_dict):
 
     # Unpack the command arguments
     if command == 'unpack-pdf':
-        return process_unpack_pdf(args)
+        return  unpack_pdf.process_args(args)
 
     elif command == 'pack-pdf':
-        return process_pack_pdf(args)
+        return pack_pdf.process_args(args)
     
     elif command == 'change-resolution':
-        return process_change_resolution(args)
+        return change_resolution.process_args(args)
 
     elif command == 'expand-page':
-        return process_expand_page(args)
+        return expand_page.process_args(args)
 
     else:
         raise ValueError('Invalid command: {}'.format(command))
