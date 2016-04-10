@@ -13,4 +13,4 @@ Repacking a PDF is not presently implemented. This can always be done after edit
 Adobe Acrobat or a similar program.
 """
 def process_args(arg_dict):
-    raise ValueError('Command not implemented')
+    raise NotImplemented

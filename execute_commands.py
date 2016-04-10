@@ -5,15 +5,6 @@ import command
 """
 Action cleanup handlers.
 """
-def commit(action):
-    if action.is_page_action():
-        os.remove(action.source)
-        os.rename(action.target, action.source)
-    else:
-        # Do nothing.
-        return
-
-
 def handle_cleanup_file(target_file):
     try:
         os.remove(target)
@@ -57,7 +48,7 @@ def files_exist(files):
 Execute a command in the shell.
 """
 def execute(command):
-    subprocess.run(command.as_arg_list())
+    subprocess.run(command.as_python_subprocess())
 
 
 """

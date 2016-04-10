@@ -12,7 +12,7 @@ class ChangeResolution(command.PageCommand):
         self.source  = '\"{}\"'.format(source)
         self.target  = '\"{}\"'.format(target)
 
-    def as_arg_list(self):
+    def as_python_subprocess(self):
         return [self.command, self.density, self.units, self.source, self.target]
 
     def as_terminal_command(self):

@@ -17,13 +17,13 @@ class UnpackPDF(command.PDFCommand):
 
         print(self.target_dir)
 
-    def as_arg_list(self):
+    def as_python_subprocess(self):
         return [self.command] + self.args + [self.source_pdf]
 
     def as_terminal_command(self):
         return self.command + ' ' + ' '.join(self.args) + ' ' + self.source_pdf
 
-    def tiff_dir(self):
+    def image_dir(self):
         return self.target_dir
 
 

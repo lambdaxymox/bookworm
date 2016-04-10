@@ -24,40 +24,31 @@ class TerminalCommand:
     def as_terminal_command(self):
         raise NotImplemented
 
-    def as_arg_list(self):
+    def as_python_subprocess(self):
         raise NotImplemented
 
-    def is_page_action(self):
-        raise NotImplemented
-
-    def is_pdf_action(self):
+    def commit(self):
         raise NotImplemented
 
     def __str__(self):
         return self.as_terminal_command()
 
     def __repr__(self):
-        return 'Command({})'.format(self.as_arg_list())
+        return 'Command({})'.format(self.as_python_subprocess())
 
 
 class PageCommand(TerminalCommand):
-
-    def is_page_action(self):
-        return True
-
-    def is_pdf_action(self):
-        return False
+    def commit(self):
+        os.remove(action.source)
+        os.rename(action.target, action.source)
 
 
 class PDFCommand(TerminalCommand):
 
-    def is_page_action(self):
-        return False
+    def commit(self):
+        pass
 
-    def is_pdf_action(self):
-        return True
-
-    def tiff_dir(self):
+    def image_dir(self):
         raise NotImplemented
 
 

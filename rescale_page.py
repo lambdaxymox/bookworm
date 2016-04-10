@@ -12,7 +12,7 @@ class RescalePage(command.PageCommand):
         self.source   = '\"{}\"'.format(source)
         self.target   = '\"{}\"'.format(target)
 
-    def as_arg_list(self):
+    def as_python_subprocess(self):
         return [self.command, self.units, self.resample, self.source, self.target]
 
     def as_terminal_command(self):
