@@ -35,22 +35,6 @@ def handle_cleanup(target):
         return
 
 
-def files_exist(files):
-    # Check  that files actually exist
-    for file in files:
-        if not os.path.isfile(file):
-            return False
-
-    return True
-
-
-"""
-Execute a command in the shell.
-"""
-def execute(command):
-    subprocess.run(command.as_python_subprocess())
-
-
 """
 Run a terminal command, catching for runtime errors.
 """

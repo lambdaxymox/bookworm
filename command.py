@@ -1,8 +1,13 @@
 import os.path
 import enum
+import subprocess
 
 
 class Resolution:
+    class ResolutionUnits(enum.Enum):
+        PixelsPerInch       = 1
+        PixelsPerCentimeter = 2
+
     def __init__(self, resolution, units):
         self.resolution = resolution
         self.units      = units
@@ -27,6 +32,15 @@ class TerminalCommand:
     def as_python_subprocess(self):
         raise NotImplemented
 
+    """
+    Execute a command in the shell.
+    """
+    def run(self):
+        subprocess.run(self.as_python_subprocess())
+
+    """
+    Commit and clean up after a successful execution
+    """
     def commit(self):
         raise NotImplemented
 
@@ -91,3 +105,15 @@ def with_extension(extension, file_dict):
         raise e
 
     return {'path': path, 'files': list(filter(lambda f: by_ext(extension, f), files))}
+
+
+"""
+Check that the files actually exist.
+"""
+def files_exist(files):
+    # Check  that files actually exist
+    for file in files:
+        if not os.path.isfile(file):
+            return False
+
+    return True

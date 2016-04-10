@@ -17,7 +17,7 @@ class ExpandPageWithFill(command.PageCommand):
         self.width      = width
         self.height     = height
 
-    def as_arg_list(self):
+    def as_python_subprocess(self):
         return [self.command, self.extent, self.background, self.gravity, self.source, self.target]
 
     def as_terminal_command(self):
@@ -50,7 +50,7 @@ def multi_expand_page(width, height, sources, target):
     return actions
 
 
-def process_expand_page(arg_dict):
+def process_args(arg_dict):
     try:
         input      = arg_dict['input']
         dimensions = arg_dict['dimensions']

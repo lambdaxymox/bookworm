@@ -44,7 +44,6 @@ def multi_change_page_resolution(resolution, sources, target):
     return actions
 
 
-# Output should be file or directory.
 def process_args(arg_dict):
     try:
         input      = arg_dict['input']
