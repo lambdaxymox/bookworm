@@ -1,5 +1,6 @@
 import subprocess
 import os.path
+import enum
 
 
 class Resolution:

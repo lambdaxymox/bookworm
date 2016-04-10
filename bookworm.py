@@ -197,7 +197,7 @@ def process_command(command_dict):
 def main():
     parser = arg_processor()
     
-    if len(sys.argv) < 3:
+    if len(sys.argv) < 2:
         parser.parse_args(['--help'])
 
     args = parser.parse_args(sys.argv[1:])

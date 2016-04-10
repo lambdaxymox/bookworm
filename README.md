@@ -28,4 +28,4 @@ These scripts require the following programs to be installed on your computer:
 
 GhostScript
 ImageMagick
-Python 3
+Python 3 ( >= 3.2)
