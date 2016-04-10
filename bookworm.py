@@ -51,12 +51,12 @@ def check_dims(value):
     try:
         iwidth  = int(dims[0])
     except ValueError as ve:
-        raise argparse.ArgumentTypeError('{} needs to be an integer'.format(iwidth))
+        raise argparse.ArgumentTypeError('{} needs to be an integer'.format(dims[0]))
 
     try:
         iheight = int(dims[1])
     except ValueError as ve:
-        raise argparse.ArgumentTypeError('{} needs to be an integer'.format(iheight))
+        raise argparse.ArgumentTypeError('{} needs to be an integer'.format(dims[1]))
 
     if iwidth < 0:
         raise argparse.ArgumentTypeError('{} needs to be positive'.format(iwidth))
@@ -97,7 +97,7 @@ def process_unpack_pdf(arg_dict):
         output = temp_directory(input)
 
     if os.path.isfile(input) and os.path.isdir(output):
-        return unpack_pdf(input, output)
+        return command.unpack_pdf(input, output)
 
     # The input file does not exist.
     elif (not os.path.isfile(input)) and os.path.isdir(output):
@@ -125,25 +125,25 @@ def process_change_resolution(arg_dict):
     except KeyError as e:
         raise e
 
-    try:
-        output = arg_dict['output']
-    except KeyError as e:
-        output = ''
-
     # We want to make multiple page operations if the input is a directory.
     if os.path.isdir(input):
         files = with_extension('.tiff', input)
 
-        return multi_change_page_resolution(files, output, resolution)
+        return command.multi_change_page_resolution(resolution, files, output)
 
     # If the input is one page only, we only need a single page operation.
     elif os.path.isfile(input):
-        return change_page_resolution(input, output, resolution)
+        try:
+            output = arg_dict['output']
+        except KeyError as e:
+            # Use input as the target file.
+            output = input
+
+        return command.change_page_resolution(resolution, input, output)
 
     else:
         raise ValueError('File or directory does not exist: {}'.format(input))
 
-    
 
 def process_expand_page(arg_dict):
     try:
@@ -152,18 +152,26 @@ def process_expand_page(arg_dict):
     except KeyError as e:
         raise e
 
-    try:
-        output = arg_dict['output']
-    except KeyError as e:
-        output = ''
-
     if os.path.isfile(input):
-        return expand_page_with_fill(input, output, resolution)
+        try:
+            output = arg_dict['output']
+        except KeyError as e:
+            # Use input as the target file.
+            output = input
+
+
+        return command.expand_page_with_fill(dimensions[0], dimensions[1], input, output)
 
     elif os.path.ispath(input):
+        try:
+            output = arg_dict['output']
+        except KeyError as e:
+            # Derive output directory from input directory
+            output = os.path.join(input, '__bookworm__/')
+
         files = with_extension('.tiff', input)
 
-        return multi_expand_page(files, output, resolution)
+        return command.multi_expand_page(resolution, files, output)
 
     else:
         raise ValueError('File or directory does not exist: {}'.format(input))

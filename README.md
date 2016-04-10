@@ -1,7 +1,7 @@
 # Bookworm
 
 **Bookworm** is a set of python scripts for automating parts of the workflow
-for processing PDF files.
+for processing scanned PDF files.
 
 These are some python scripts for automating PDF file manipulation workflow. They
 are meant for normalizing the dimensions of scanned pages and ensuring they are all

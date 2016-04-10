@@ -36,7 +36,7 @@ def handle_cleanup(target):
         elif os.path.isfile(target):
             handle_cleanup_file(target)
         else:
-            raise Exception("Target is neither a directory nor a file: " + target)
+            raise ValueError("Target is neither a directory nor a file: " + target)
 
     else:
         # Do nothing

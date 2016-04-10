@@ -195,7 +195,7 @@ def temp_directory(file_name):
 Change a page's image resolution without modifying the page.
 """
 def change_page_resolution(resolution, source, target=''):
-    if target =='':
+    if not target:
         new_target = temp_file_name(source)
         return ChangeResolution(source, new_target, resolution)
 
@@ -205,7 +205,7 @@ def change_page_resolution(resolution, source, target=''):
 Rescale a page by changing it's resolution and  then resampling the image.
 """
 def rescale_page(resolution, source, target=''):
-    if target == '':
+    if not target:
         new_target = temp_file_name(source)
         return RescalePage(source, target, resolution)
 
@@ -216,7 +216,7 @@ Expand the side of a page by expanding the edges of the page with a fill
 color. This function only does this with the color white.
 """
 def expand_page_with_fill(width, height, source, target=''):
-    if target == '':
+    if not target:
         new_target = temp_file_name(source)
         return ExpandPageWithFill(source, new_target, width, height)
 
@@ -226,7 +226,7 @@ def expand_page_with_fill(width, height, source, target=''):
 """
 Change the properties of multiple pages.
 """
-def multi_change_page_resolution(sources, target, resolution):    
+def multi_change_page_resolution(resolution, sources, target):    
     actions = {}
 
     for source in sources:
@@ -235,7 +235,7 @@ def multi_change_page_resolution(sources, target, resolution):
 
     return actions
 
-def multi_rescale_page(sources, target, resolution):
+def multi_rescale_page(resolution, sources, target):
     actions = {}
 
     for source in sources:
@@ -244,7 +244,7 @@ def multi_rescale_page(sources, target, resolution):
 
     return actions
 
-def multi_expand_page(sources, target, width, height):
+def multi_expand_page(width, height, sources, target):
     actions = {}
 
     for source in sources:
@@ -260,7 +260,7 @@ a target directory. If a target directory is not specified, a default one is
 used in the directory of the source pdf file.
 """
 def unpack_pdf(source_pdf, target_dir=''):
-    if target_dir == '':
+    if not target_dir:
         # Use a default directory.
         new_target_dir = os.path.join(os.path.dirname(source_pdf), '__bookworm__/')
         return UnpackPDF(source_pdf, new_target_dir)
