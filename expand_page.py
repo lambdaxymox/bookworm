@@ -2,11 +2,11 @@ import command
 import os.path
 
 
-"""
-Expand the side of a page by expanding the edges of the page with a fill
-color. This function only does this with the color white.
-"""
 class ExpandPageWithFill(command.PageCommand):
+    """
+    Expand the side of a page by expanding the edges of the page with a fill
+    color. This function only does this with the color white.
+    """
     def __init__(self, source, target, width, height):
         self.command    = 'convert'
         self.extent     = '-extent {}x{}'.format(width, height)
@@ -28,11 +28,11 @@ class ExpandPageWithFill(command.PageCommand):
             .format(self.command, self.extent, self.background, self.gravity, self.source, final_arg)
 
 
-"""
-Expand the side of a page by expanding the edges of the page with a fill
-color. This function only does this with the color white.
-"""
 def expand_page_with_fill(width, height, source, target=''):
+    """
+    Expand the side of a page by expanding the edges of the page with a fill
+    color. This function only does this with the color white.
+    """
     if not target:
         new_target = command.temp_file_name(source)
         return ExpandPageWithFill(source, new_target, width, height)
@@ -72,7 +72,7 @@ def process_args(arg_dict):
             output = arg_dict['output']
         except KeyError as e:
             # Derive output directory from input directory
-            output = os.path.join(input, '__bookworm__/')
+            output = os.path.join(input, command.default_subdirectory())
 
         files = command.with_extension('.tiff', input)
 

@@ -5,7 +5,7 @@ import unpack_pdf
 import pack_pdf
 import expand_page
 import change_resolution
-import os.path
+
 
 """
 The main pdf operations are:
@@ -116,9 +116,13 @@ def main():
 
     args = parser.parse_args(sys.argv[1:])
     command = sys.argv[1]
-
-    action = process_command({'command': command, 'args': vars(args)})
-    print(action)
+    
+    try:
+        action = process_command({'command': command, 'args': vars(args)})
+        print(action)
+    except Exception as e:
+        print(e)
+        sys.exit(1)
 
 
 if __name__ == 'main':

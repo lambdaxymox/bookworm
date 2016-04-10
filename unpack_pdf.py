@@ -1,10 +1,11 @@
 import command
 import os.path
 
-"""
-Unpack a pdf into a collection of TIFF files.
-"""
+
 class UnpackPDF(command.PDFCommand):
+    """
+    Unpack a pdf into a collection of TIFF files.
+    """
     def __init__(self, source_pdf, target_dir, resolution=600):
         self.command    = 'gs'
         self.source_pdf = source_pdf
@@ -14,8 +15,6 @@ class UnpackPDF(command.PDFCommand):
                      '-r{}x{}'.format(resolution, resolution),
                      '-sOutputFile=' + self.target_dir + '_Page_%4d.tiff'
                     ]
-
-        print(self.target_dir)
 
     def as_python_subprocess(self):
         return [self.command] + self.args + [self.source_pdf]
@@ -27,15 +26,15 @@ class UnpackPDF(command.PDFCommand):
         return self.target_dir
 
 
-"""
-Unpack a PDF file into a collection of TIFF files, one for each page, into
-a target directory. If a target directory is not specified, a default one is
-used in the directory of the source pdf file.
-"""
 def unpack_pdf(source_pdf, target_dir=''):
+    """
+    Unpack a PDF file into a collection of TIFF files, one for each page, into
+    a target directory. If a target directory is not specified, a default one is
+    used in the directory of the source pdf file.
+    """
     if not target_dir:
         # Use a default directory.
-        new_target_dir = os.path.join(os.path.dirname(source_pdf), '__bookworm__/')
+        new_target_dir = os.path.join(os.path.dirname(source_pdf), command.default_subdirectory())
         return UnpackPDF(source_pdf, new_target_dir)
     else:
         # use the target directory
@@ -50,18 +49,22 @@ def process_args(arg_dict):
 
     try:
         output = arg_dict['output']
+        if not output:
+            # Derive a default output directory from the input file.
+            output = command.temp_directory(input)
     except KeyError as e:
         # Derive a default output directory from the input file.
-        output = temp_directory(input)
+        output = command.temp_directory(input)
 
     if os.path.isfile(input) and os.path.isdir(output):
         return unpack_pdf(input, output)
 
     # The input file does not exist.
     elif (not os.path.isfile(input)) and os.path.isdir(output):
-        raise FileNotFoundError('Output directory does not exist: {}'.format(output))
+        raise FileNotFoundError('Input file does not exist: {}'.format(input))
+
     # The output file does not exist.
     elif (os.path.isfile(input)) and (not os.path.isdir(output)):
-        raise FileNotFoundError('Input file does not exist: {}'.format(input))
+        raise FileNotFoundError('Output directory does not exist: {}'.format(output))
     else:
         raise FileNotFoundError('File or directory does not exist: \nInput: {}\nOutput: {}'.format(input, output))

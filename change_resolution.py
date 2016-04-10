@@ -3,10 +3,11 @@ import os.path
 
 from command import Resolution
 
-"""
-Change a page's image resolution without modifying the page.
-"""
+
 class ChangeResolution(command.PageCommand):
+    """
+    Change a page's image resolution without modifying the page.
+    """
     def __init__(self, source, target, resolution):
         self.command = 'convert'
         self.density = '-density {}'.format(resolution.resolution)
@@ -22,10 +23,10 @@ class ChangeResolution(command.PageCommand):
             '{} {} {} {} {}'.format(self.command, self.density, self.units, self.source, self.target)
 
 
-"""
-Change a page's image resolution without modifying the page.
-"""
 def change_page_resolution(resolution, source, target=''):
+    """
+    Change a page's image resolution without modifying the page.
+    """
     if resolution.resolution <= 0:
         raise ValueError('Resolution must be positive. Got: {}'.format(resolution))
 
@@ -36,10 +37,10 @@ def change_page_resolution(resolution, source, target=''):
     return ChangeResolution(source, target, resolution)
 
 
-"""
-Change the properties of multiple pages in a single directory.
-"""
 def multi_change_page_resolution(resolution, sources, target):    
+    """
+    Change the properties of multiple pages in a single directory.
+    """
     actions = {}
 
     for source in sources:

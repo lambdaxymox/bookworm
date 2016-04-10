@@ -28,17 +28,17 @@ def handle_cleanup(target):
         elif os.path.isfile(target):
             handle_cleanup_file(target)
         else:
-            raise ValueError("Target is neither a directory nor a file: " + target)
-
+            # Do nothing
+            return
     else:
         # Do nothing
         return
 
 
-"""
-Run a terminal command, catching for runtime errors.
-"""
 def run_command(action):
+    """
+    Run a terminal command, catching for runtime errors.
+    """
     try:
         print(action.as_terminal_command())
         execute(action)
@@ -46,7 +46,7 @@ def run_command(action):
         handle_cleanup(action.target)
         raise e
 
-    commit(action)
+    action.commit()
 
 def run_multi_page_commands(action_dict):
     for page in action_dict.keys():

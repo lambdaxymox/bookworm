@@ -53,16 +53,18 @@ class TerminalCommand:
     def as_python_subprocess(self):
         raise NotImplemented
 
-    """
-    Execute a command in the shell.
-    """
     def run(self):
+        """
+        Execute a command in the shell.
+        """
+        
         subprocess.run(self.as_python_subprocess())
 
-    """
-    Commit and clean up after a successful execution
-    """
     def commit(self):
+        """
+        Commit and clean up after a successful execution
+        """
+        
         raise NotImplemented
 
     def __str__(self):
@@ -112,10 +114,12 @@ def temp_directory(file_name):
 def default_subdirectory():
     return '__bookworm__/'
 
-"""
-Build a command from a dictionary with a command string and a list of command arguments.
-"""
+
 def with_extension(extension, file_dict):
+    """
+    Build a command from a dictionary with a command string and a list of command arguments.
+    """
+    
     def by_ext(extension, file):
         file_extension = os.path.splitext(file)[1]
 
@@ -130,10 +134,10 @@ def with_extension(extension, file_dict):
     return {'path': path, 'files': list(filter(lambda f: by_ext(extension, f), files))}
 
 
-"""
-Check that the files actually exist.
-"""
 def files_exist(files):
+    """
+    Check that the files actually exist.
+    """
     # Check  that files actually exist
     for file in files:
         if not os.path.isfile(file):
