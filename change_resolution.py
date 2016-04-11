@@ -57,9 +57,6 @@ def process_args(arg_dict):
         resolution = arg_dict['resolution']
     except KeyError as e:
         raise e
-
-#    if not resolution:
-#        raise ValueError('Invalid resolution value: {}'.format(resolution))
     
     try:
         if resolution <= 0:

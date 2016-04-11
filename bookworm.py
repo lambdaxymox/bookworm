@@ -1,6 +1,7 @@
 import argparse
 import sys
 import execute_commands
+import os
 import unpack_pdf
 import pack_pdf
 import expand_page
@@ -39,10 +40,10 @@ def arg_processor():
     parser_change_resolution.add_argument('-i', '--input',      help='Input file')
     parser_change_resolution.add_argument('-o', '--output',     help='Output file')
 
-    parser_pack_pdf = subparsers.add_parser('pack-pdf', 
-        help='Pack input directory of TIFF files into an output PDF file. This action is currently disabled.')
-    parser_pack_pdf.add_argument('-i', '--input',  help='Input directory')
-    parser_pack_pdf.add_argument('-o', '--output', help='Output file')
+#    parser_pack_pdf = subparsers.add_parser('pack-pdf', 
+#        help='Pack input directory of TIFF files into an output PDF file. This action is currently disabled.')
+#    parser_pack_pdf.add_argument('-i', '--input',  help='Input directory')
+#    parser_pack_pdf.add_argument('-o', '--output', help='Output file')
 
     parser_expand_page = subparsers.add_parser('expand-page', 
         help='Expand the TIFF files in the the input directory to target WIDTH and HEIGHT in pixels')
@@ -86,17 +87,27 @@ def check_dims(value):
 def process_command(command_dict):
     # Unpack the command and the arguments
     try:
-        command = command_dict['command']
-        args = command_dict['args']
+        command  = command_dict['command']
+        arg_dict = command_dict['args']
     except KeyError as e:
         raise e
+
+    try:
+        input = arg_dict['input']
+    except KeyError as e:
+        raise ValueError('Input file or directory not specified.')
+
+    try:
+        output = arg_dict['output']
+    except KeyError as e:
+        output = command.temp_directory(output)
+
+    if not os.path.isdir(output):
+        os.mkdir(output)
 
     # Unpack the command arguments
     if command == 'unpack-pdf':
         return unpack_pdf.process_args(args)
-
-    elif command == 'pack-pdf':
-        return pack_pdf.process_args(args)
     
     elif command == 'change-resolution':
         return change_resolution.process_args(args)
@@ -108,13 +119,17 @@ def process_command(command_dict):
         raise ValueError('Invalid command: {}'.format(command))
 
 
+def help_text(parser):
+    return parser.parse_args(['--help'])
+
+
 def main():
     parser = arg_processor()
     
     if len(sys.argv) < 2:
-        parser.parse_args(['--help'])
+        help_text(parser)
 
-    args = parser.parse_args(sys.argv[1:])
+    args    = parser.parse_args(sys.argv[1:])
     command = sys.argv[1]
     
     try:
