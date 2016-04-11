@@ -12,20 +12,22 @@ class ExpandPageWithFill(command.PageCommand):
         self.extent     = '-extent {}x{}'.format(width, height)
         self.background = '-background white'
         self.gravity    = '-gravity Center'
-        self.source     = '\"{}\"'.format(source)
-        self.target     = '\"{}\"'.format(target)
+        self.source     = source
+        self.target     = target
         self.width      = width
         self.height     = height
 
     def as_python_subprocess(self):
-        return [self.command, self.extent, self.background, self.gravity, self.source, self.target]
+        return [self.command, self.extent, self.background, self.gravity, '\"{}\"'.format(self.source), '\"{}\"'.format(self.target)]
 
     def as_terminal_command(self):
-        final_arg = '{}[{}x{}]'.format(self.target, self.width, self.height)
+        quoted_source = '\"{}\"'.format(self.source)
+        quoted_target = '\"{}\"'.format(self.target)
+        final_arg = '{}[{}x{}]'.format(quoted_target, self.width, self.height)
         
         return \
             '{} {} {} {} {} {}' \
-            .format(self.command, self.extent, self.background, self.gravity, self.source, final_arg)
+            .format(self.command, self.extent, self.background, self.gravity, quoted_source, final_arg)
 
 
 def expand_page_with_fill(width, height, source, target=''):
@@ -57,6 +59,18 @@ def process_args(arg_dict):
     except KeyError as e:
         raise e
 
+    try: 
+        width = dimensions[0]
+        height = dimensions[1]
+
+        if width <= 0 or height <= 0:
+            raise ValueError('Dimensions must be positive integers: Got {}x{}'.format(width, height))
+    except TypeError as e:
+        raise e
+    except ValueError as e:
+        raise e
+
+
     if os.path.isfile(input):
         try:
             output = arg_dict['output']
@@ -65,9 +79,9 @@ def process_args(arg_dict):
             output = input
 
 
-        return expand_page_with_fill(dimensions[0], dimensions[1], input, output)
+        return expand_page_with_fill(width, height, input, output)
 
-    elif os.path.ispath(input):
+    elif os.path.isdir(input):
         try:
             output = arg_dict['output']
         except KeyError as e:
