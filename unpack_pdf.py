@@ -47,6 +47,7 @@ def process_args(arg_dict):
     """
     try:
         input = arg_dict['input']
+        output = arg_dict['output']
     except KeyError as e:
         raise e
 

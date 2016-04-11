@@ -3,7 +3,6 @@ import sys
 import execute_commands
 import os
 import unpack_pdf
-import pack_pdf
 import expand_page
 import change_resolution
 
@@ -12,8 +11,6 @@ import change_resolution
 The main pdf operations are:
 
 1. Unpack a PDF.
-2. Repack a PDF.
-2. Pack a directory of images into a PDF.
 3. Change image resolution.
 4. Rescale image.
 5. Expand image with fill.
@@ -96,16 +93,16 @@ def process_command(command_dict):
         output = arg_dict['output']
     except KeyError as e:
         output = command.temp_directory(output)
-
+#Dstinguish between files and directories here.
     if not os.path.isdir(output):
         os.mkdir(output)
 
     # Unpack the command arguments
     if command == 'unpack-pdf':
-        return unpack_pdf.process_args(args_dict)
+        return unpack_pdf.process_args(arg_dict)
     
     elif command == 'change-resolution':
-        return change_resolution.process_args(args_dict)
+        return change_resolution.process_args(arg_dict)
 
     elif command == 'expand-page':
         return expand_page.process_args(arg_dict)
