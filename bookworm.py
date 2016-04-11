@@ -40,11 +40,6 @@ def arg_processor():
     parser_change_resolution.add_argument('-i', '--input',      help='Input file')
     parser_change_resolution.add_argument('-o', '--output',     help='Output file')
 
-#    parser_pack_pdf = subparsers.add_parser('pack-pdf', 
-#        help='Pack input directory of TIFF files into an output PDF file. This action is currently disabled.')
-#    parser_pack_pdf.add_argument('-i', '--input',  help='Input directory')
-#    parser_pack_pdf.add_argument('-o', '--output', help='Output file')
-
     parser_expand_page = subparsers.add_parser('expand-page', 
         help='Expand the TIFF files in the the input directory to target WIDTH and HEIGHT in pixels')
     parser_expand_page.add_argument('-i', '--input',      help='Input file')
@@ -107,13 +102,13 @@ def process_command(command_dict):
 
     # Unpack the command arguments
     if command == 'unpack-pdf':
-        return unpack_pdf.process_args(args)
+        return unpack_pdf.process_args(args_dict)
     
     elif command == 'change-resolution':
-        return change_resolution.process_args(args)
+        return change_resolution.process_args(args_dict)
 
     elif command == 'expand-page':
-        return expand_page.process_args(args)
+        return expand_page.process_args(arg_dict)
 
     else:
         raise ValueError('Invalid command: {}'.format(command))
