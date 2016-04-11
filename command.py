@@ -156,3 +156,17 @@ def files_exist(files):
 
 def make_resolution(resolution_val, unit_str):
     return Resolution.make_resolution(resolution_val, unit_str)
+
+"""
+Determines whether a string begins and ends with quotes or not.
+"""
+def quoted_string(string):
+    new_string = string
+
+    if string[0] != '\"':
+        new_string = '\"' + new_string
+    
+    if string[len(string)-1] != '\"':
+        new_string = new_string + '\"'
+
+    return new_string

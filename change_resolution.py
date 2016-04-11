@@ -12,11 +12,12 @@ class ChangeResolution(command.PageCommand):
         self.command = 'convert'
         self.density = '-density {}'.format(resolution.resolution)
         self.units   = '-units {}'.format(resolution.unit_str())
-        self.source  = '\"{}\"'.format(source)
-        self.target  = '\"{}\"'.format(target)
+        self.source  = source
+        self.target  = target
 
     def as_python_subprocess(self):
-        return [self.command, self.density, self.units, self.source, self.target]
+        return [self.command, self.density, self.units, 
+            command.quoted_string(self.source), command.quoted_string(self.target)]
 
     def as_terminal_command(self):
         return  \
