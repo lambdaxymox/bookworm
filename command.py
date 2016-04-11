@@ -21,16 +21,22 @@ class Resolution:
     def make_resolution(resolution_val, unit_str):
         if unit_str not in Resolution.valid_unit_strings.keys():
             raise ValueError('\'unit_str\' must be one of: {}'.format(Resolution.valid_unit_strings.keys()))
+        
+        if type(resolution_val) is not int:
+            raise TypeError('\'resolution_val\' must be a positive integer')
+
         if resolution_val <= 0:
             raise ValueError('\'resolution_val\' must be a positive integer')
-
+        
         return Resolution(resolution_val, Resolution.valid_unit_strings[unit_str])
 
     def unit_str(self):
         if self.units == Resolution.ResolutionUnits.PixelsPerInch:
             return 'PixelsPerInch'
-        else:
+        elif self.units == Resolution.ResolutionUnits.PixelsPerCentimeter:
             return 'PixelsPerCentimeter'
+        else:
+            raise Error('')
 
 
     def __repr__(self):
@@ -117,13 +123,16 @@ def default_subdirectory():
 
 def with_extension(extension, file_dict):
     """
-    Build a command from a dictionary with a command string and a list of command arguments.
+    Get the collection of files in a directory with a given file extension.
     """
-    
     def by_ext(extension, file):
         file_extension = os.path.splitext(file)[1]
 
         return file_extension == extension
+
+    if extension[0] != '.':
+        # Prepend a leading period.
+        extension = '.' + extension
 
     try:
         path = file_dict['path']
