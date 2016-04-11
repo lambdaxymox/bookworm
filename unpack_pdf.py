@@ -42,6 +42,9 @@ def unpack_pdf(source_pdf, target_dir=''):
 
 
 def process_args(arg_dict):
+    """
+    Parse through the command line arguments for unpack-pdf.
+    """
     try:
         input = arg_dict['input']
     except KeyError as e:
