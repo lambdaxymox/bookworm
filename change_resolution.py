@@ -57,16 +57,18 @@ def process_args(arg_dict):
     except KeyError as e:
         raise e
 
-    if not resolution:
-        raise ValueError('Invalid resolution value: {}'.format(resolution))
+#    if not resolution:
+#        raise ValueError('Invalid resolution value: {}'.format(resolution))
+    
+    try:
+        if resolution <= 0:
+            raise ValueError('Resolution needs to be a positive integer. Got negative value: {}'.format(resolution))
 
-    if type(resolution) != int:
-        raise ValueError('Invalid resolution value: {}'.format(resolution))
-
-    if resolution <= 0:
-        raise ValueError('Resolution needs to be a positive integer. Got negative value: {}'.format(resolution))
-
-    resolution = Resolution.make_resolution(resolution, 'PixelsPerInch')
+        resolution = Resolution.make_resolution(resolution, 'PixelsPerInch')
+    except TypeError as e:
+        raise e
+    except ValueError as e:
+        raise e
 
     # We want to make multiple page operations if the input is a directory.
     if os.path.isdir(input):

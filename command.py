@@ -153,3 +153,6 @@ def files_exist(files):
             return False
 
     return True
+
+def make_resolution(resolution_val, unit_str):
+    return Resolution.make_resolution(resolution_val, unit_str)
