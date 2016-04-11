@@ -73,6 +73,9 @@ class TerminalCommand:
         
         raise NotImplemented
 
+    def setup(self):
+        raise NotImplemented
+
     def __str__(self):
         return self.as_terminal_command()
 

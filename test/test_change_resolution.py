@@ -84,4 +84,5 @@ class TestChangeResolution(unittest.TestCase):
 
 class TestMultiChangePageResolution(unittest.TestCase):
 
-    pass
+    def test_multi_page_change_resolution(self):
+        pass
