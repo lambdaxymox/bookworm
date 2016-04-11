@@ -32,26 +32,15 @@ class TestUnpackPDF(unittest.TestCase):
         self.assertIsInstance(action, unpack_pdf.UnpackPDF)
 
 
-    def test_process_args_should_reject_non_existent_output_directory(self):
-
-        source_pdf = 'sample/sample.pdf'
-        target_dir = 'sample/doesnotexist/'
-        arg_dict = {'input': source_pdf, 'output': target_dir}
-
-        action = unpack_pdf.process_args
-
-        self.assertRaises(FileNotFoundError, action, arg_dict)
-
-
-    def test_process_args_should_reject_non_existent_output_directory(self):
+    def test_action_setup_should_reject_non_existent_output_directory(self):
 
         source_pdf = 'sample/doesnotexist.pdf'
         target_dir = 'sample/'
         arg_dict = {'input': source_pdf, 'output': target_dir}
 
-        action = unpack_pdf.process_args
+        action = unpack_pdf.process_args(arg_dict)
 
-        self.assertRaises(FileNotFoundError, action, arg_dict)
+        self.assertRaises(FileNotFoundError, action.setup)
 
 
     def test_unpack_pdf_generates_correct_terminal_command(self):

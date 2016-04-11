@@ -23,6 +23,9 @@ class ChangeResolution(command.PageCommand):
         return  '{} {} {} {} {}'.format(self.command, self.density, self.units, 
                     command.quoted_string(self.source), command.quoted_string(target))
 
+    def setup(self):
+        pass
+
 
 def change_page_resolution(resolution, source, target=''):
     """
@@ -45,7 +48,7 @@ def multi_change_page_resolution(resolution, sources, target):
     actions = {}
 
     for source in sources:
-        action = change_page_resolution(source, target, resolution)
+        action = change_page_resolution(resolution, source, target)
         actions[source] = action
 
     return actions

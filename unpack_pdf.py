@@ -25,6 +25,23 @@ class UnpackPDF(command.PDFCommand):
     def image_dir(self):
         return self.target_dir
 
+    def setup(self):
+        """
+        Prepare an action for execution by setting up folders and IO.
+        """
+        # The input file does not exist.
+        if (not os.path.isfile(self.source_pdf)) and os.path.isdir(self.target_dir):
+            raise FileNotFoundError('Input file does not exist: {}'.format(self.source_pdf))
+
+        # The output file does not exist.
+        elif (os.path.isfile(self)) and (not os.path.isdir(self.target_dir)):
+            os.mkdir(self.target_dir)
+
+        else:
+            #raise FileNotFoundError('File or directory does not exist: \nInput: {}\nOutput: {}'.format(input, output))
+            # Nothing needs to be done.
+            return
+
 
 def unpack_pdf(source_pdf, target_dir=''):
     """
@@ -60,6 +77,8 @@ def process_args(arg_dict):
         # Derive a default output directory from the input file.
         output = command.temp_directory(input)
 
+    return unpack_pdf(input, output)
+"""
     if os.path.isfile(input) and os.path.isdir(output):
         return unpack_pdf(input, output)
 
@@ -69,6 +88,11 @@ def process_args(arg_dict):
 
     # The output file does not exist.
     elif (os.path.isfile(input)) and (not os.path.isdir(output)):
-        raise FileNotFoundError('Output directory does not exist: {}'.format(output))
+        #raise FileNotFoundError('Output directory does not exist: {}'.format(output))
+        os.mkdir(output)
+
+        return unpack_pdf(input, output)
     else:
         raise FileNotFoundError('File or directory does not exist: \nInput: {}\nOutput: {}'.format(input, output))
+"""
+

@@ -81,4 +81,7 @@ class TestChangeResolution(unittest.TestCase):
 
         # An error should occur from malformed input.
         self.assertNotEqual(type(action), change_resolution.ChangeResolution)
-        
+
+class TestMultiChangePageResolution(unittest.TestCase):
+
+    pass

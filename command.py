@@ -135,12 +135,12 @@ def with_extension(extension, file_dict):
         extension = '.' + extension
 
     try:
-        path = file_dict['path']
+        path  = file_dict['path']
         files = file_dict['files']
     except KeyError as e:
         raise e
 
-    return {'path': path, 'files': list(filter(lambda f: by_ext(extension, f), files))}
+    return {'path': path, 'files': list(filter(lambda file: by_ext(extension, file), files))}
 
 
 def files_exist(files):

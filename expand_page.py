@@ -29,6 +29,9 @@ class ExpandPageWithFill(command.PageCommand):
             '{} {} {} {} {} {}' \
             .format(self.command, self.extent, self.background, self.gravity, quoted_source, final_arg)
 
+    def setup(self):
+        pass
+
 
 def expand_page_with_fill(width, height, source, target=''):
     """
@@ -42,11 +45,11 @@ def expand_page_with_fill(width, height, source, target=''):
     return ExpandPageWithFill(source, target, width, height)
 
 
-def multi_expand_page(width, height, sources, target):
+def multi_expand_page(width, height, source_path, source_files, target):
     actions = {}
 
-    for source in sources:
-        action = expand_page_with_fill(source, width, height)
+    for source in source_files:
+        action = expand_page_with_fill(width, height, os.path.join(source_path, source), target)
         actions[source] = action
 
     return actions
@@ -60,7 +63,7 @@ def process_args(arg_dict):
         raise e
 
     try: 
-        width = dimensions[0]
+        width  = dimensions[0]
         height = dimensions[1]
 
         if width <= 0 or height <= 0:
@@ -88,9 +91,11 @@ def process_args(arg_dict):
             # Derive output directory from input directory
             output = os.path.join(input, command.default_subdirectory())
 
-        files = command.with_extension('.tiff', input)
+        files_dict = {'path': input, 'files': os.listdir(input)}
 
-        return multi_expand_page(resolution, files, output)
+        new_files_dict = command.with_extension('.tiff', files_dict)
+
+        return multi_expand_page(width, height, new_files_dict['path'], new_files_dict['files'], output)
 
     else:
         raise FileNotFoundError('File or directory does not exist: {}'.format(input))

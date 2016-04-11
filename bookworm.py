@@ -28,7 +28,7 @@ def arg_processor():
     parser_unpack_pdf = subparsers.add_parser('unpack-pdf', 
         help='Unpack an input PDF file to the output directory')
     parser_unpack_pdf.add_argument('-i', '--input',  help='Input file')
-    parser_unpack_pdf.add_argument('-o', '--output', help='Output directory')
+    parser_unpack_pdf.add_argument('-o', '--output', help='Output directory', required=False)
 
     parser_change_resolution = subparsers.add_parser('change-resolution', 
         help='Change the resolution of the TIFF files in the input directory to RESOLUTION in UNITS')
@@ -89,14 +89,6 @@ def process_command(command_dict):
     except KeyError as e:
         raise ValueError('Input file or directory not specified.')
 
-    try:
-        output = arg_dict['output']
-    except KeyError as e:
-        output = command.temp_directory(output)
-#Dstinguish between files and directories here.
-    if not os.path.isdir(output):
-        os.mkdir(output)
-
     # Unpack the command arguments
     if command == 'unpack-pdf':
         return unpack_pdf.process_args(arg_dict)
@@ -128,6 +120,9 @@ def main():
         action = process_command({'command': command, 'args': vars(args)})
         print(action)
     except Exception as e:
+        print(e)
+        sys.exit(1)
+    except ValueError as e:
         print(e)
         sys.exit(1)
 
