@@ -13,7 +13,7 @@ class UnpackPDF(command.PDFCommand):
         self.args = ['-q', '-dNOPAUSE',   '-dBATCH',
                      '-sDEVICE=tiff24nc', '-sCompression=lzw', 
                      '-r{}x{}'.format(resolution, resolution),
-                     '-sOutputFile={}'.format(command.quoted_string(os.path.join(self.target_dir, '_Page_%04d.tiff')))
+                     '-sOutputFile={}'.format(os.path.join(self.target_dir, '_Page_%04d.tiff'))
                     ]
 
     def as_python_subprocess(self):
