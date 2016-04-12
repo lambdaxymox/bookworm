@@ -62,3 +62,28 @@ class TestUnpackPDF(unittest.TestCase):
         os.rmdir(target_dir)
         
         self.assertEqual(action.as_python_subprocess(), terminal_command)
+
+
+    def test_unpack_pdf_setup(self):
+        """
+        An UnpackPDF object's setup function should make the target directory if it does not exist.
+        """
+        source_pdf = 'sample/sample.pdf'
+        target_dir = 'sample/' + command.default_subdirectory()
+        arg_dict = {'input': source_pdf, 'output': target_dir}
+
+        action = unpack_pdf.process_args(arg_dict)
+
+        try:
+            action.setup()
+        except FileNotFoundError as e:
+            os.rmdir(target_dir)
+            self.fail()
+
+        if not os.path.isdir(target_dir):
+            os.rmdir(target_dir)
+            self.fail()
+
+        os.rmdir(target_dir)
+
+        self.assertEqual(action.target_dir, target_dir)
