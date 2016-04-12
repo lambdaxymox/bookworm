@@ -53,7 +53,7 @@ class TestUnpackPDF(unittest.TestCase):
 
         terminal_command = [
                 'gs', '-q', '-dNOPAUSE', '-dBATCH',   '-sDEVICE=tiff24nc', 
-                '-sCompression=lzw',     '-r600x600', '-sOutputFile='+target_dir+'_Page_%4d.tiff', 
+                '-sCompression=lzw',     '-r600x600', '-sOutputFile='+target_dir+'_Page_%04d.tiff', 
                 source_pdf
             ]
 
