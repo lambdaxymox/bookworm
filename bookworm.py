@@ -5,6 +5,7 @@ import os
 import unpack_pdf
 import expand_page
 import change_resolution
+import detect_user
 
 
 """
@@ -78,6 +79,8 @@ def check_dims(value):
 def help_text(parser):
     return parser.parse_args(['--help'])
 
+def warning(*objs):
+    print('WARNING: ', *objs, file=sys.stderr)
 
 def process_command(command_dict):
     """
@@ -111,6 +114,9 @@ def process_command(command_dict):
 def main():
     parser = arg_processor()
     
+    if detect_user.is_admin():
+        warning('You are currently running as superuser. You really should not run this program with root privileges.')
+
     if len(sys.argv) < 2:
         help_text(parser)
 
