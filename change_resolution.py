@@ -27,6 +27,9 @@ class ChangeResolution(command.PageCommand):
     def setup(self):
         pass
 
+    def commit(self):
+        pass
+
 
 def change_page_resolution(resolution, source, target=''):
     """

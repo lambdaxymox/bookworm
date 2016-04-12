@@ -18,11 +18,14 @@ class ExpandPageWithFill(command.PageCommand):
         self.height     = height
 
     def as_python_subprocess(self):
-        return [self.command, self.extent, self.background, self.gravity, '\"{}\"'.format(self.source), '\"{}\"'.format(self.target)]
+        quoted_source = command.quoted_string(self.source)
+        quoted_target = command.quoted_string(self.target)
+
+        return [self.command, self.extent, self.background, self.gravity, quoted_source, quoted_target]
 
     def as_terminal_command(self):
-        quoted_source = '\"{}\"'.format(self.source)
-        quoted_target = '\"{}\"'.format(self.target)
+        quoted_source = command.quoted_string(self.source)
+        quoted_target = command.quoted_string(self.target)
         final_arg = '{}[{}x{}]'.format(quoted_target, self.width, self.height)
         
         return \
@@ -30,6 +33,9 @@ class ExpandPageWithFill(command.PageCommand):
             .format(self.command, self.extent, self.background, self.gravity, quoted_source, final_arg)
 
     def setup(self):
+        pass
+
+    def commit(self):
         pass
 
 

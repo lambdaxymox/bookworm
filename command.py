@@ -30,6 +30,7 @@ class Resolution:
         
         return Resolution(resolution_val, Resolution.valid_unit_strings[unit_str])
 
+
     def unit_str(self):
         if self.units == Resolution.ResolutionUnits.PixelsPerInch:
             return 'PixelsPerInch'
@@ -47,6 +48,7 @@ class Resolution:
 
 
 class TerminalCommand:
+
     def __init__(self, **kwargs):
         pass
 
@@ -59,21 +61,19 @@ class TerminalCommand:
     def as_python_subprocess(self):
         raise NotImplemented
 
+    def setup(self):
+        raise NotImplemented
+
     def run(self):
         """
         Execute a command in the shell.
         """
-        
         subprocess.run(self.as_python_subprocess())
 
     def commit(self):
         """
         Commit and clean up after a successful execution
         """
-        
-        raise NotImplemented
-
-    def setup(self):
         raise NotImplemented
 
     def __str__(self):
@@ -95,7 +95,6 @@ class PDFCommand(TerminalCommand):
 
     def image_dir(self):
         raise NotImplemented
-
 
 
 def temp_file_name(file_name):
@@ -156,6 +155,7 @@ def files_exist(files):
             return False
 
     return True
+
 
 def make_resolution(resolution_val, unit_str):
     return Resolution.make_resolution(resolution_val, unit_str)

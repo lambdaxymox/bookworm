@@ -18,7 +18,6 @@ class TestUnpackPDF(unittest.TestCase):
 
 
     def test_process_args(self):
-
         source_pdf = 'sample/sample.pdf'
         target_dir = 'sample/__bookworm__/'
         arg_dict = {'input': source_pdf, 'output': target_dir}
@@ -33,7 +32,6 @@ class TestUnpackPDF(unittest.TestCase):
 
 
     def test_action_setup_should_reject_non_existent_output_directory(self):
-
         source_pdf = 'sample/doesnotexist.pdf'
         target_dir = 'sample/'
         arg_dict = {'input': source_pdf, 'output': target_dir}

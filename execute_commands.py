@@ -35,19 +35,17 @@ def handle_cleanup(target):
         return
 
 
-def run_command(action):
+def run_command(actions):
     """
     Run a terminal command, catching for runtime errors.
     """
     try:
-        print(action.as_terminal_command())
-        execute(action)
+        for action in actions:
+            print(action.as_terminal_command())
+            action.setup()
+            action.run()
+            action.commit()
     except subprocess.CalledProcessError as e:
         handle_cleanup(action.target)
         raise e
 
-    action.commit()
-
-def run_multi_page_commands(action_dict):
-    for page in action_dict.keys():
-        run_command(action_dict['page'])

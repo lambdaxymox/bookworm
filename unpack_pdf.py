@@ -13,14 +13,14 @@ class UnpackPDF(command.PDFCommand):
         self.args = ['-q', '-dNOPAUSE',   '-dBATCH',
                      '-sDEVICE=tiff24nc', '-sCompression=lzw', 
                      '-r{}x{}'.format(resolution, resolution),
-                     '-sOutputFile=' + self.target_dir + '_Page_%4d.tiff'
+                     '-sOutputFile={}'.format(command.quoted_string(os.path.join(self.target_dir, '_Page_%04d.tiff')))
                     ]
 
     def as_python_subprocess(self):
         return [self.command] + self.args + [self.source_pdf]
 
     def as_terminal_command(self):
-        return self.command + ' ' + ' '.join(self.args) + ' ' + self.source_pdf
+        return self.command + ' ' + ' '.join(self.args) + ' ' + command.quoted_string(self.source_pdf)
 
     def image_dir(self):
         return self.target_dir
@@ -38,9 +38,11 @@ class UnpackPDF(command.PDFCommand):
             os.mkdir(self.target_dir)
 
         else:
-            #raise FileNotFoundError('File or directory does not exist: \nInput: {}\nOutput: {}'.format(input, output))
             # Nothing needs to be done.
             return
+
+    def commit(self):
+        pass
 
 
 def unpack_pdf(source_pdf, target_dir=''):

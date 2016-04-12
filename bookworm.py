@@ -16,11 +16,10 @@ The main pdf operations are:
 5. Expand image with fill.
 
 """
-
-""" 
-Generate an argument parser.
-"""
 def arg_processor():
+    """ 
+    Generate an argument parser for command line argument processing. The help menu is generated automatically.
+    """
     parser = argparse.ArgumentParser()
 
     subparsers = parser.add_subparsers(title='subcommands', description='valid subcommands', help='subcommand help')
@@ -76,8 +75,14 @@ def check_dims(value):
     return (iwidth, iheight)
 
 
+def help_text(parser):
+    return parser.parse_args(['--help'])
+
+
 def process_command(command_dict):
-    # Unpack the command and the arguments
+    """
+    Unpack the command and the arguments
+    """
     try:
         command  = command_dict['command']
         arg_dict = command_dict['args']
@@ -103,10 +108,6 @@ def process_command(command_dict):
         raise ValueError('Invalid command: {}'.format(command))
 
 
-def help_text(parser):
-    return parser.parse_args(['--help'])
-
-
 def main():
     parser = arg_processor()
     
@@ -118,7 +119,7 @@ def main():
     
     try:
         action = process_command({'command': command, 'args': vars(args)})
-        print(action)
+        execute_commands.run_command([action])
     except Exception as e:
         print(e)
         sys.exit(1)
