@@ -33,6 +33,24 @@ class TestCommandFunction(unittest.TestCase):
 
         self.assertEqual(res, after)
 
+    def test_quoted_string(self):
+
+        string = "\"foo bar baz quux!\""
+        final_string = '{}'.format(string)
+
+        self.assertEqual(command.quoted_string(string), final_string)
+
+        # String with only one quote in it.
+        string = '\"foo bar baz quux'
+        final_string = '{}\"'.format(string)
+
+        self.assertEqual(command.quoted_string(string), final_string)
+
+        string = 'foo bar baz quux\"'
+        final_string = '\"{}'.format(string)
+
+        self.assertEqual(command.quoted_string(string), final_string)
+
     
 class TestResolution(unittest.TestCase):
 
