@@ -13,13 +13,23 @@ Usage
 
 Fork [fork]https://github.com/stallmanifold/bookworm and run
 
-    python3 bookworm.py [-options] /path/to/book/pages
-    
-or
-    
-    python3 bookworm.py [-options] /path/to/pdf/file  
-    
-in the main directory.
+```
+$ python bookworm.py unpack-pdf -i /path/to/file.pdf  
+```  
+
+to unpack a pdf. Run
+
+```    
+$ python bookworm.py expand-page -d WIDTHxHEIGHT -i /path/to/file.tiff
+```
+
+to expand the dimensions to WIDTH and HEIGHT in pixels. Run the command
+
+```
+$ python bookworm.py change-resolution -r RESOLUTION -i /path/to/file.tiff
+```
+to change the resolution of a page, in pixels per inch, without modifying the page contents.
+
 
 Dependencies
 ============
