@@ -163,7 +163,8 @@ def make_resolution(resolution_val, unit_str):
 
 def quoted_string(string):
     """
-    Determines whether a string begins and ends with quotes or not.
+    Determines whether a string begins and ends with quotes or not. If not, it closes
+    the input string in quotes.
     """
     new_string = string
 

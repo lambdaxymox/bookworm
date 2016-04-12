@@ -9,11 +9,12 @@ class ChangeResolution(command.PageCommand):
     Change a page's image resolution without modifying the page.
     """
     def __init__(self, source, target, resolution):
-        self.command = 'convert'
-        self.density = '-density {}'.format(resolution.resolution)
-        self.units   = '-units {}'.format(resolution.unit_str())
-        self.source  = source
-        self.target  = target
+        self.command    = 'convert'
+        self.density    = '-density {}'.format(resolution.resolution)
+        self.units      = '-units {}'.format(resolution.unit_str())
+        self.source     = source
+        self.target     = target
+        self.resolution = resolution
 
     def as_python_subprocess(self):
         return [self.command, self.density, self.units, 
@@ -41,14 +42,14 @@ def change_page_resolution(resolution, source, target=''):
     return ChangeResolution(source, target, resolution)
 
 
-def multi_change_page_resolution(resolution, sources, target):    
+def multi_change_page_resolution(resolution, source_path, source_files, target):    
     """
     Change the properties of multiple pages in a single directory.
     """
     actions = {}
 
-    for source in sources:
-        action = change_page_resolution(resolution, source, target)
+    for source in source_files:
+        action = change_page_resolution(resolution, os.path.join(source_path, source), target)
         actions[source] = action
 
     return actions
@@ -65,7 +66,7 @@ def process_args(arg_dict):
         if resolution <= 0:
             raise ValueError('Resolution needs to be a positive integer. Got negative value: {}'.format(resolution))
 
-        resolution = Resolution.make_resolution(resolution, 'PixelsPerInch')
+        resolution = command.make_resolution(resolution, 'PixelsPerInch')
     except TypeError as e:
         raise e
     except ValueError as e:
@@ -73,9 +74,17 @@ def process_args(arg_dict):
 
     # We want to make multiple page operations if the input is a directory.
     if os.path.isdir(input):
-        files = command.with_extension('.tiff', input)
+        try:
+            output = arg_dict['output']
+        except KeyError as e:
+            # Use input as the target file.
+            output = input
+        
+        files_dict = {'path': input, 'files': os.listdir(input)}
 
-        return multi_change_page_resolution(resolution, files, output)
+        tiff_files_dict = command.with_extension('.tiff', files_dict)
+
+        return multi_change_page_resolution(resolution, tiff_files_dict['path'], tiff_files_dict['files'], output)
 
     # If the input is one page only, we only need a single page operation.
     elif os.path.isfile(input):

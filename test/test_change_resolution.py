@@ -1,6 +1,7 @@
 import unittest
 import change_resolution
 import command
+import os
 
 class TestChangeResolution(unittest.TestCase):
 
@@ -84,5 +85,70 @@ class TestChangeResolution(unittest.TestCase):
 
 class TestMultiChangePageResolution(unittest.TestCase):
 
-    def test_multi_page_change_resolution(self):
-        pass
+    def test_multi_page_change_resolution_should_generation_multiple_actions_from_input_directory(self):
+        source_dir     = 'sample/test_tiffs/'
+        source_files   = list(map(lambda f: os.path.join(source_dir, f), os.listdir(source_dir)))
+        resolution_val = 600
+        resolution     = command.make_resolution(resolution_val, 'PixelsPerInch')
+
+        arg_dict = {'input': source_dir, 'resolution': resolution_val}
+
+        multi_actions = change_resolution.process_args(arg_dict)
+
+        for action in multi_actions.values():
+            self.assertIsInstance(action, change_resolution.ChangeResolution)
+            self.assertIsInstance(action.resolution, command.Resolution)
+            self.assertEqual(action.resolution.resolution, resolution.resolution)
+            self.assertEqual(action.resolution.units, resolution.units)
+            self.assertTrue(action.source in source_files)
+
+
+    def test_process_args_should_reject_non_existent_input_directory(self):
+
+        source         = 'sample/directory_doesnotexist/'
+        target         = source
+        resolution_val = 600
+        resolution     = command.make_resolution(resolution_val, 'PixelsPerInch')
+        arg_dict       = {'input': source, 'resolution': resolution_val }
+
+        action = None
+
+        try:
+            action = change_resolution.process_args(arg_dict)
+        except FileNotFoundError as e:
+            # An exception should occur.
+            self.assertIsInstance(e, FileNotFoundError)
+
+        # Action should not have been assigned a value.
+        self.assertIsInstance(action, type(None))
+
+
+    def test_process_args_should_reject_nonnnegative_integer_resolutions(self):
+
+        source         = 'sample/sample_tiffs/'
+        target         = source
+        resolution_val = -600
+        
+        try:
+            resolution = command.make_resolution(resolution_val, 'PixelsPerInch')
+            arg_dict   = {'input': source, 'resolution': resolution_val }
+            action     = change_resolution.process_args(arg_dict)
+            # Action should not have been assigned a value.
+            self.fail('Nonnegative integer accepted for resolution value.')
+        except TypeError as e:
+            self.assertIsInstance(e, TypeError)
+        except ValueError as e:
+            self.assertIsInstance(e, ValueError)
+
+        resolution_val = 600.1
+
+        try:
+            resolution = command.make_resolution(resolution_val, 'PixelsPerInch')
+            arg_dict   = {'input': source, 'resolution': resolution_val}
+            action     = change_resolution.process_args(arg_dict)
+            # Action should not have been assigned a value.
+            self.fail('Fractional value accepted for resolution value.')
+        except TypeError as e:
+            self.assertIsInstance(e, TypeError)
+        except ValueError as e:
+            self.assertIsInstance(e, ValueError)
