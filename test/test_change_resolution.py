@@ -134,7 +134,7 @@ class TestMultiChangePageResolution(unittest.TestCase):
             arg_dict   = {'input': source, 'resolution': resolution_val }
             action     = change_resolution.process_args(arg_dict)
             # Action should not have been assigned a value.
-            self.fail('Nonnegative integer accepted for resolution value.')
+            self.fail('Negative integer accepted for resolution value.')
         except TypeError as e:
             self.assertIsInstance(e, TypeError)
         except ValueError as e:
