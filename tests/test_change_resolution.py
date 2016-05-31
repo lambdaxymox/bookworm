@@ -1,7 +1,8 @@
 import unittest
-import change_resolution
-import command
+import bookworm.change_resolution as change_resolution
+import bookworm.command           as command
 import os
+
 
 class TestChangeResolution(unittest.TestCase):
 

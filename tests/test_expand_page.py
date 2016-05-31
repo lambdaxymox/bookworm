@@ -1,6 +1,7 @@
 import unittest
 import os
-import expand_page
+import bookworm.expand_page as expand_page
+
 
 class TestExpandPageWithFill(unittest.TestCase):
 

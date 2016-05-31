@@ -1,7 +1,8 @@
 import unittest
-import unpack_pdf
-import command
+import bookworm.unpack_pdf as unpack_pdf
+import bookworm.command    as command
 import os, os.path
+
 
 class TestUnpackPDF(unittest.TestCase):
 
