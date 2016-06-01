@@ -1,5 +1,5 @@
 import subprocess
-import bookworm.command as command
+import command
 
 
 """

@@ -1,4 +1,4 @@
-import bookworm.command as command
+import command
 import os.path
 
 
