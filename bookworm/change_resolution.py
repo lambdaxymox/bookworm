@@ -1,7 +1,7 @@
-import command
+import bookworm.command as command
 import os.path
 
-from command import Resolution
+from bookworm.command import Resolution
 
 
 class ChangeResolution(command.PageCommand):

@@ -153,3 +153,4 @@ class TestMultiChangePageResolution(unittest.TestCase):
             self.assertIsInstance(e, TypeError)
         except ValueError as e:
             self.assertIsInstance(e, ValueError)
+            

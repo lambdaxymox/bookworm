@@ -1,11 +1,11 @@
+import bookworm.execute_commands  as execute_commands
+import bookworm.unpack_pdf        as unpack_pdf
+import bookworm.expand_page       as expand_page
+import bookworm.change_resolution as change_resolution
+import bookworm.detect_user       as detect_user
 import argparse
-import sys
-import execute_commands
 import os
-import unpack_pdf
-import expand_page
-import change_resolution
-import detect_user
+import sys
 
 
 """
