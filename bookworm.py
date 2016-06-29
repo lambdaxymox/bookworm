@@ -114,7 +114,8 @@ def main():
     parser = arg_processor()
     
     if detect_user.is_admin():
-        warning('You are currently running as superuser. You really should not run this program with root privileges.')
+        warning('You are currently running as superuser. \
+                You really should not run this program with root privileges.')
 
     if len(sys.argv) < 2:
         help_text(parser)
