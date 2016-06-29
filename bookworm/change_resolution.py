@@ -1,8 +1,6 @@
 import bookworm.command as command
 import os.path
 
-from bookworm.command import Resolution
-
 
 class ChangeResolution(command.PageCommand):
     """
@@ -22,7 +20,7 @@ class ChangeResolution(command.PageCommand):
 
     def as_terminal_command(self):
         return  '{} {} {} {} {}'.format(self.command, self.density, self.units, 
-                    command.quoted_string(self.source), command.quoted_string(target))
+                    command.quoted_string(self.source), command.quoted_string(self.target))
 
     def setup(self):
         pass

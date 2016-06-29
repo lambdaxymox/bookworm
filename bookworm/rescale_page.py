@@ -1,5 +1,4 @@
 import command
-import os.path
 
 
 class RescalePage(command.PageCommand):
@@ -28,7 +27,7 @@ def rescale_page(resolution, source, target=''):
     """
     if not target:
         new_target = command.temp_file_name(source)
-        return RescalePage(source, target, resolution)
+        return RescalePage(source, new_target, resolution)
 
     return RescalePage(source, target, resolution)
 

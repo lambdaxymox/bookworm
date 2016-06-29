@@ -4,7 +4,6 @@ import bookworm.expand_page       as expand_page
 import bookworm.change_resolution as change_resolution
 import bookworm.detect_user       as detect_user
 import argparse
-import os
 import sys
 
 

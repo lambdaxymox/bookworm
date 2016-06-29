@@ -107,9 +107,9 @@ class TestMultiChangePageResolution(unittest.TestCase):
     def test_process_args_should_reject_non_existent_input_directory(self):
 
         source         = 'sample/directory_doesnotexist/'
-        target         = source
+        #target         = source
         resolution_val = 600
-        resolution     = command.make_resolution(resolution_val, 'PixelsPerInch')
+        #resolution     = command.make_resolution(resolution_val, 'PixelsPerInch')
         arg_dict       = {'input': source, 'resolution': resolution_val }
 
         action = None
@@ -127,11 +127,11 @@ class TestMultiChangePageResolution(unittest.TestCase):
     def test_process_args_should_reject_nonnnegative_integer_resolutions(self):
 
         source         = 'sample/sample_tiffs/'
-        target         = source
+        #target         = source
         resolution_val = -600
         
         try:
-            resolution = command.make_resolution(resolution_val, 'PixelsPerInch')
+            #resolution = command.make_resolution(resolution_val, 'PixelsPerInch')
             arg_dict   = {'input': source, 'resolution': resolution_val }
             action     = change_resolution.process_args(arg_dict)
             # Action should not have been assigned a value.
@@ -144,7 +144,7 @@ class TestMultiChangePageResolution(unittest.TestCase):
         resolution_val = 600.1
 
         try:
-            resolution = command.make_resolution(resolution_val, 'PixelsPerInch')
+            #resolution = command.make_resolution(resolution_val, 'PixelsPerInch')
             arg_dict   = {'input': source, 'resolution': resolution_val}
             action     = change_resolution.process_args(arg_dict)
             # Action should not have been assigned a value.

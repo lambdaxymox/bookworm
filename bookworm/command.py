@@ -37,11 +37,11 @@ class Resolution:
         elif self.units == Resolution.ResolutionUnits.PixelsPerCentimeter:
             return 'PixelsPerCentimeter'
         else:
-            raise Error('')
+            raise ValueError('{}'.format(self.units))
 
 
     def __repr__(self):
-        return 'Resolution({}, {})'.format(self.resolution, self, units)
+        return 'Resolution({}, {})'.format(self.resolution, self.units)
 
     def __str__(self):
         return '{} {}'.format(self.resolution, self.units)

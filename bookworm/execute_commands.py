@@ -1,5 +1,5 @@
 import subprocess
-import bookworm.command as command
+import os
 
 
 """
@@ -7,7 +7,7 @@ Action cleanup handlers.
 """
 def handle_cleanup_file(target_file):
     try:
-        os.remove(target)
+        os.remove(target_file)
     except OSError as e:
         # File does not exist, or it is a directory, so nothing needs to be done.
         return

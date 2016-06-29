@@ -25,7 +25,7 @@ class TestExpandPageWithFill(unittest.TestCase):
     def test_process_args(self):
 
         source     = 'sample/sample.tiff'
-        target     = source
+        #target     = source
         width      = 2160
         height     = 3060
         dimensions = (width, height)
@@ -43,7 +43,7 @@ class TestExpandPageWithFill(unittest.TestCase):
     def test_process_args_should_reject_bad_dimensions(self):
 
         source     = 'sample/sample.tiff'
-        target     = source
+        #target     = source
         width      = 2160
         height     = "Potato"
         dimensions = (width, height)
@@ -64,7 +64,7 @@ class TestExpandPageWithFill(unittest.TestCase):
     def test_process_args_should_reject_non_existent_file(self):
 
         source     = 'sample/sample_doesnotexist.tiff'
-        target     = source
+        #target     = source
         width      = 2160
         height     = 3060
         dimensions = (width, height)
@@ -104,7 +104,7 @@ class TestMultipleExpandPages(unittest.TestCase):
     def test_process_args_should_reject_non_existent_input_directory(self):
 
         source     = 'sample/directory_doesnotexist/'
-        target     = source
+        #target     = source
         width      = 2160
         height     = 3060
         dimensions = (width, height)
