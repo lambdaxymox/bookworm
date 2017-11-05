@@ -47,38 +47,27 @@ class TestWithExtension(unittest.TestCase):
 
 class TestQuotedString(unittest.TestCase):
 
+    def run_with(self, string, expected):
+        result = util.quoted_string(string)
+
+        self.assertEqual(result, expected)
+
     def test_quoted_string_empty_string(self):
-        string = ""
-        expected = "\"\""
-        result = util.quoted_string(string)
-
-        self.assertEqual(result, expected)
-
+        self.run_with(string='', expected='\"\"')
+    
     def test_quoted_string_closed_in_quotes(self):
-        string = "\"foo bar baz quux!\""
-        expected = '{}'.format(string)
-        result = util.quoted_string(string)
-
-        self.assertEqual(result, expected)
-
+        string='\"foo bar baz quux!\"'
+        self.run_with(string=string, expected='{}'.format(string))
+    
     def test_quoted_string_with_one_quote_head(self):
-        string = '\"foo bar baz quux'
-        expected = '{}\"'.format(string)
-        result = util.quoted_string(string)
-
-        self.assertEqual(result, expected)
+        string='\"foo bar baz quux'
+        self.run_with(string=string, expected='{}\"'.format(string))
 
     def test_quoted_string_with_one_quote_tail(self):
-        string = 'foo bar baz quux\"'
-        expected = '\"{}'.format(string)
-        result = util.quoted_string(string)
-
-        self.assertEqual(expected, result)
+        string='foo bar baz quux\"'
+        self.run_with(string=string, expected='\"{}'.format(string))
 
     def test_quoted_string_no_quotes(self):
-        string = "foo bar baz quux!"
-        expected = '\"{}\"'.format(string)
-        result = util.quoted_string(string)
-
-        self.assertEqual(expected, result)
+        string = 'foo bar baz quux!'
+        self.run_with(string=string, expected='\"{}\"'.format(string))
 
