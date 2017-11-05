@@ -28,7 +28,11 @@ class TestChangeResolution(unittest.TestCase):
         source_file = 'sample/sample.tiff'
         target_file = 'sample/sample.tiff'
         resolution_val = 600
-        arg_dict = {'input': source_file, 'output': target_file, 'resolution': resolution_val}
+        arg_dict = {
+            'input': source_file,
+            'output': target_file,
+            'resolution': resolution_val
+        }
 
         try:
             action = change_resolution.process_args(arg_dict)
@@ -43,7 +47,11 @@ class TestChangeResolution(unittest.TestCase):
         source_file = 'sample/sample.tiff'
         target_file = 'sample/sample.tiff'
         resolution_val = "Potato"
-        arg_dict = {'input': source_file, 'output': target_file, 'resolution': resolution_val}
+        arg_dict = {
+            'input': source_file,
+            'output': target_file,
+            'resolution': resolution_val
+        }
 
         action = None
 
@@ -61,7 +69,11 @@ class TestChangeResolution(unittest.TestCase):
         source_file = 'sample/sample.tiff'
         target_file = 'sample/sample.tiff'
         resolution_val = -600
-        arg_dict = {'input': source_file, 'output': target_file, 'resolution': resolution_val}
+        arg_dict = {
+            'input': source_file,
+            'output': target_file,
+            'resolution': resolution_val
+        }
 
         action = None
 
@@ -75,7 +87,11 @@ class TestChangeResolution(unittest.TestCase):
         
         action = None
         resolution_val = 0
-        arg_dict = {'input': source_file, 'output': target_file, 'resolution': resolution_val}
+        arg_dict = {
+            'input': source_file,
+            'output': target_file,
+            'resolution': resolution_val
+        }
         
         try:
             action = change_resolution.process_args(arg_dict)

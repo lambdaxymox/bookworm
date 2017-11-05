@@ -1,3 +1,4 @@
+import os
 import bookworm.command as command
 import bookworm.util    as util
 
@@ -28,7 +29,7 @@ def resample_page(resolution, source, target=''):
     ``ResamplePage`` command.
     """
     if not target:
-        new_target = command.temp_file_name(source)
+        new_target = util.temp_file_name(source)
         return ResamplePage(source, new_target, resolution)
 
     return ResamplePage(source, target, resolution)
@@ -59,7 +60,6 @@ def process_args(arg_dict):
     except KeyError as e:
         raise e
 
-    print("foo")
     if resolution_val <= 0:
         raise ValueError(
             'Resolution needs to be a positive integer.' 
@@ -83,7 +83,6 @@ def process_args(arg_dict):
             output = input
         
         files_dict = {'path': input, 'files': os.listdir(input)}
-
         tiff_files_dict = util.with_extension('.tiff', files_dict)
 
         return multi_resample_page(resolution, tiff_files_dict['path'], tiff_files_dict['files'], output)

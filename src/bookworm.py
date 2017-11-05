@@ -138,8 +138,10 @@ def check_dims(value):
 def help_text(parser):
     return parser.parse_args(['--help'])
 
+
 def warning(*objs):
     print('WARNING: ', *objs, file=sys.stderr)
+
 
 def process_command(command_dict):
     """
@@ -209,3 +211,4 @@ if __name__ == 'main':
     main()
 else:
     main()
+
