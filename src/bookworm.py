@@ -3,44 +3,104 @@ import bookworm.unpack_pdf        as unpack_pdf
 import bookworm.expand_page       as expand_page
 import bookworm.change_resolution as change_resolution
 import bookworm.detect_user       as detect_user
+import bookworm.resample_page     as resample_page
 import argparse
 import sys
 
 
-"""
-The main pdf operations are:
-
-1. Unpack a PDF.
-3. Change image resolution.
-4. Rescale image.
-5. Expand image with fill.
-
-"""
 def arg_processor():
     """ 
-    Generate an argument parser for command line argument processing. The help menu is generated automatically.
+    Generate an argument parser for command line argument processing.
+    The help menu is generated automatically.
     """
     parser = argparse.ArgumentParser()
 
-    subparsers = parser.add_subparsers(title='subcommands', description='valid subcommands', help='subcommand help')
+    subparsers = parser.add_subparsers(
+        title='subcommands', 
+        description='valid subcommands', 
+        help='subcommand help'
+    )
 
-    parser_unpack_pdf = subparsers.add_parser('unpack-pdf', 
-        help='Unpack an input PDF file to the output directory')
-    parser_unpack_pdf.add_argument('-i', '--input',  help='Input file')
-    parser_unpack_pdf.add_argument('-o', '--output', help='Output directory', required=False)
 
-    parser_change_resolution = subparsers.add_parser('change-resolution', 
-        help='Change the resolution of the TIFF files in the input directory to RESOLUTION in UNITS')
-    parser_change_resolution.add_argument('-r', '--resolution', help='The value for RESOLUTION', type=check_positive)
-    parser_change_resolution.add_argument('-u', '--units',      help='The units for RESOLUTION', choices=['PixelsPerInch', 'PixelsPerCentimeter'])
-    parser_change_resolution.add_argument('-i', '--input',      help='Input file')
-    parser_change_resolution.add_argument('-o', '--output',     help='Output file')
+    parser_unpack_pdf = subparsers.add_parser(
+        'unpack-pdf', 
+        help='Unpack an input PDF file to the output directory'
+    )
+    parser_unpack_pdf.add_argument(
+        '-i', '--input',
+        help='Input file'
+    )
+    parser_unpack_pdf.add_argument(
+        '-o', '--output',
+        help='Output directory', required=False
+    )
 
-    parser_expand_page = subparsers.add_parser('expand-page', 
-        help='Expand the TIFF files in the the input directory to target WIDTH and HEIGHT in pixels')
-    parser_expand_page.add_argument('-i', '--input',      help='Input file')
-    parser_expand_page.add_argument('-o', '--output',     help='Output file')
-    parser_expand_page.add_argument('-d', '--dimensions', help='Dimensions to set the page to', type=check_dims)
+
+    parser_change_resolution = subparsers.add_parser(
+        'change-resolution', 
+        help='Change the resolution of the TIFF files in the input directory to RESOLUTION in UNITS'
+    )
+    parser_change_resolution.add_argument(
+        '-r', '--resolution', 
+        help='The value for RESOLUTION', 
+        type=check_positive
+    )
+    parser_change_resolution.add_argument(
+        '-u', '--units',
+        help='The units for RESOLUTION',
+        choices=['PixelsPerInch', 'PixelsPerCentimeter']
+    )
+    parser_change_resolution.add_argument(
+        '-i', '--input',
+        help='Input file'
+    )
+    parser_change_resolution.add_argument(
+        '-o', '--output',
+        help='Output file'
+    )
+
+
+    parser_expand_page = subparsers.add_parser(
+        'expand-page', 
+        help='Expand the TIFF files in the the input directory to target WIDTH and HEIGHT in pixels'
+    )
+    parser_expand_page.add_argument(
+        '-i', '--input',
+        help='Input file'
+    )
+    parser_expand_page.add_argument(
+        '-o', '--output',
+        help='Output file'
+    )
+    parser_expand_page.add_argument(
+        '-d', '--dimensions',
+        help='Dimensions to set the page to',
+        type=check_dims
+    )
+
+
+    parser_resample_page = subparsers.add_parser(
+        'resample-page',
+        help='Rescale a page by changing its resolution and resampling the image'
+    )
+    parser_resample_page.add_argument(
+        '-i', '--input',
+        help='Input file'
+    )
+    parser_resample_page.add_argument(
+        '-o', '--output',
+        help='Output file'
+    )
+    parser_resample_page.add_argument(
+        '-r', '--resolution', 
+        help='The value for RESOLUTION', 
+        type=check_positive
+    )
+    parser_resample_page.add_argument(
+        '-u', '--units',
+        help='The units for RESOLUTION',
+        choices=['PixelsPerInch', 'PixelsPerCentimeter']
+    )
 
     return parser
 
@@ -106,21 +166,32 @@ def process_command(command_dict):
     elif command == 'expand-page':
         return expand_page.process_args(arg_dict)
 
+    elif command == 'resample-page':
+        return resample_page.process_args(arg_dict)
+
     else:
         raise ValueError('Invalid command: {}'.format(command))
 
 
 def main():
+    """
+    The main pdf operations are:
+
+    1. Unpack a PDF.
+    3. Change image resolution.
+    4. Rescale image.
+    5. Expand image with fill.
+    """
     parser = arg_processor()
     
     if detect_user.is_admin():
         warning('You are currently running as superuser. \
-                You really should not run this program with root privileges.')
+                You really should not run this program with elevated privileges.')
 
     if len(sys.argv) < 2:
         help_text(parser)
 
-    args    = parser.parse_args(sys.argv[1:])
+    args = parser.parse_args(sys.argv[1:])
     command = sys.argv[1]
     
     try:
