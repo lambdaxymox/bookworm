@@ -8,14 +8,14 @@ class ExpandPageWithFill(command.PageCommand):
     color. This function only does this with the color white.
     """
     def __init__(self, source, target, width, height):
-        self.command    = 'convert'
-        self.extent     = '-extent {}x{}'.format(width, height)
+        self.command = 'convert'
+        self.extent = '-extent {}x{}'.format(width, height)
         self.background = '-background white'
-        self.gravity    = '-gravity Center'
-        self.source     = source
-        self.target     = target
-        self.width      = width
-        self.height     = height
+        self.gravity = '-gravity Center'
+        self.source = source
+        self.target = target
+        self.width = width
+        self.height = height
 
     def as_python_subprocess(self):
         quoted_source = command.quoted_string(self.source)

@@ -7,11 +7,11 @@ class ChangeResolution(command.PageCommand):
     Change a page's image resolution without modifying the page contents.
     """
     def __init__(self, source, target, resolution):
-        self.command    = 'convert'
-        self.density    = '-density {}'.format(resolution.resolution)
-        self.units      = '-units {}'.format(resolution.unit_str())
-        self.source     = source
-        self.target     = target
+        self.command = 'convert'
+        self.density = '-density {}'.format(resolution.resolution)
+        self.units = '-units {}'.format(resolution.unit_str())
+        self.source = source
+        self.target = target
         self.resolution = resolution
 
     def as_python_subprocess(self):
