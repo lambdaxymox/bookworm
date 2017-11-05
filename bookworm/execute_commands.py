@@ -28,10 +28,8 @@ def handle_cleanup(target):
         elif os.path.isfile(target):
             handle_cleanup_file(target)
         else:
-            # Do nothing
             return
     else:
-        # Do nothing
         return
 
 

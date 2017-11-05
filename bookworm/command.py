@@ -65,7 +65,7 @@ class PageCommand:
 
     def commit(self):
         """
-        Commit and clean up after a successful execution
+        Commit and clean up after a successful execution.
         """
         return NotImplemented
 
