@@ -23,7 +23,8 @@ class RescalePage(command.PageCommand):
 
 def rescale_page(resolution, source, target=''):
     """
-    Rescale a page by changing it's resolution and  then resampling the image.
+    The function ``rescale_page`` is a factory method that generates a
+    ``RescalePage`` command.
     """
     if not target:
         new_target = command.temp_file_name(source)
@@ -46,4 +47,9 @@ def multi_rescale_page(resolution, sources, target):
 
 
 def process_args(arg_dict):
+    """
+    The ``process_args`` method parses the command line arguments in ``arg_dict`` and 
+    uses them to construct a page command.
+    """
     return NotImplemented
+

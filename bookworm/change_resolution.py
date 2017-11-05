@@ -4,7 +4,7 @@ import os.path
 
 class ChangeResolution(command.PageCommand):
     """
-    Change a page's image resolution without modifying the page.
+    Change a page's image resolution without modifying the page contents.
     """
     def __init__(self, source, target, resolution):
         self.command    = 'convert'
@@ -31,7 +31,8 @@ class ChangeResolution(command.PageCommand):
 
 def change_page_resolution(resolution, source, target=''):
     """
-    Change a page's image resolution without modifying the page.
+    The function ``change_page_resolution`` is a factory method that generates a
+    ``ChangePageResolution`` command.
     """
     if resolution.resolution <= 0:
         raise ValueError('Resolution must be positive. Got: {}'.format(resolution))
@@ -57,6 +58,10 @@ def multi_change_page_resolution(resolution, source_path, source_files, target):
 
 
 def process_args(arg_dict):
+    """
+    The ``process_args`` method parses the command line arguments in ``arg_dict`` and 
+    uses them to construct a page command.
+    """
     try:
         input      = arg_dict['input']
         resolution = arg_dict['resolution']

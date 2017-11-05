@@ -62,7 +62,10 @@ def unpack_pdf(source_pdf, target_dir=''):
 
 def process_args(arg_dict):
     """
-    Parse through the command line arguments for unpack-pdf.
+    The ``process_args`` method parses the command line arguments in 
+    ``arg_dict`` and uses them to construct a page command. In particular,
+    parse through the command line arguments to product an ``UnpackPDF``
+    command.
     """
     try:
         input = arg_dict['input']

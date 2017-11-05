@@ -78,9 +78,6 @@ class PageCommand:
 
 class PDFCommand(PageCommand):
 
-    def commit(self):
-        return NotImplemented
-
     def image_dir(self):
         return NotImplemented
 

@@ -41,8 +41,10 @@ class ExpandPageWithFill(command.PageCommand):
 
 def expand_page_with_fill(width, height, source, target=''):
     """
-    Expand the side of a page by expanding the edges of the page with a fill
-    color. This function only does this with the color white.
+    The function ``expand_page_with_fill`` is a factory method that constructs
+    an ``ExpandPageWIithFill`` action. It expands the side of a page by 
+    expanding the edges of the page with a fill color. This function only does
+    this with the color white.
     """
     if not target:
         new_target = command.temp_file_name(source)
@@ -62,6 +64,10 @@ def multi_expand_page(width, height, source_path, source_files, target):
 
 
 def process_args(arg_dict):
+    """
+    The ``process_args`` method parses the command line arguments in ``arg_dict`` and 
+    uses them to construct a page command.
+    """
     try:
         input      = arg_dict['input']
         dimensions = arg_dict['dimensions']
