@@ -12,9 +12,17 @@ class ResolutionUnits(enum.Enum):
 
 class Resolution:
 
-    def __init__(self, resolution, units):
-        self.resolution = resolution
-        self.units = units
+    def __init__(self, value, units):
+        self._value = value
+        self._units = units
+
+    @property
+    def value(self):
+        return self._value
+
+    @property
+    def units(self):
+        return self._units
 
     def make_resolution(resolution_val, unit_str):
         if unit_str not in ResolutionUnits.__members__.keys():
@@ -38,8 +46,8 @@ class Resolution:
         return str(self.units)
 
     def __repr__(self):
-        return 'Resolution({}, {})'.format(self.resolution, self.units)
+        return 'Resolution({}, {})'.format(self.value, self.units)
 
     def __str__(self):
-        return '{} {}'.format(self.resolution, self.units)
+        return '{} {}'.format(self.value, self.units)
 

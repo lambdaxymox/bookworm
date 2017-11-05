@@ -13,8 +13,8 @@ class TestChangeResolution(unittest.TestCase):
         target_file = 'sample/sample.tiff'
         resolution_val = 600
         unit_str = 'PixelsPerInch'
-
         resolution = util.make_resolution(resolution_val, unit_str)
+
         try:
             action = change_resolution.change_page_resolution(resolution, source_file)
         except ValueError as e:
@@ -24,6 +24,8 @@ class TestChangeResolution(unittest.TestCase):
         self.assertEqual(action.source, target_file)
 
 
+class TestChangeResolution(unittest.TestCase):
+    
     def test_process_args(self):
         source_file = 'sample/sample.tiff'
         target_file = 'sample/sample.tiff'
@@ -53,15 +55,8 @@ class TestChangeResolution(unittest.TestCase):
             'resolution': resolution_val
         }
 
-        action = None
-        try:
-            action = change_resolution.process_args(arg_dict)
-        except TypeError as e:
-            # Successful trap.
-            self.assertIsInstance(e, TypeError)
-
-        # An error should occur from malformed input.
-        self.assertNotEqual(type(action), change_resolution.ChangeResolution)
+        with self.assertRaises(TypeError):
+            change_resolution.process_args(arg_dict)
 
 
     def test_process_args_should_reject_nonpositive_resolution_values(self):
@@ -74,15 +69,9 @@ class TestChangeResolution(unittest.TestCase):
             'resolution': resolution_val
         }
 
-        action = None
-        try:
-            action = change_resolution.process_args(arg_dict)
-        except ValueError as e:
-            self.assertIsInstance(action, type(None))
+        with self.assertRaises(ValueError):
+            change_resolution.process_args(arg_dict)
 
-        # An error should occur from malformed input.
-        self.assertNotEqual(type(action), change_resolution.ChangeResolution)
-     
 
     def test_process_args_should_reject_resolution_value_of_zero(self):
         source_file = 'sample/sample.tiff'
@@ -94,14 +83,8 @@ class TestChangeResolution(unittest.TestCase):
             'resolution': resolution_val
         }
         
-        action = None
-        try:
-            action = change_resolution.process_args(arg_dict)
-        except ValueError as e:
-            self.assertIsInstance(action, type(None))
-
-        # An error should occur from malformed input.
-        self.assertNotEqual(type(action), change_resolution.ChangeResolution)
+        with self.assertRaises(ValueError):
+            change_resolution.process_args(arg_dict)
 
 
 class TestMultiChangePageResolution(unittest.TestCase):
@@ -118,7 +101,7 @@ class TestMultiChangePageResolution(unittest.TestCase):
         for action in multi_actions.values():
             self.assertIsInstance(action, change_resolution.ChangeResolution)
             self.assertIsInstance(action.resolution, Resolution)
-            self.assertEqual(action.resolution.resolution, resolution.resolution)
+            self.assertEqual(action.resolution.value, resolution.value)
             self.assertEqual(action.resolution.units, resolution.units)
             self.assertTrue(action.source in source_files)
 
@@ -128,15 +111,8 @@ class TestMultiChangePageResolution(unittest.TestCase):
         resolution_val = 600
         arg_dict = {'input': source, 'resolution': resolution_val }
         
-        action = None
-        try:
-            action = change_resolution.process_args(arg_dict)
-        except FileNotFoundError as e:
-            # An exception should occur.
-            self.assertIsInstance(e, FileNotFoundError)
-
-        # Action should not have been assigned a value.
-        self.assertIsInstance(action, type(None))
+        with self.assertRaises(FileNotFoundError):
+            change_resolution.process_args(arg_dict)
 
 
     def test_process_args_should_reject_nonpositive_integer_resolutions(self):

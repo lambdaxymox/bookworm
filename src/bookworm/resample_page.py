@@ -9,8 +9,8 @@ class ResamplePage(command.PageCommand):
     """
     def __init__(self, source, target, resolution):
         self.command  = 'convert'
-        self.units    = '-units PixelsPerInch'
-        self.resample = '-resample {}'.format(resolution)
+        self.units    = '-units {}'.format(resolution.unit_str())
+        self.resample = '-resample {}'.format(resolution.value)
         self.source   = '\"{}\"'.format(source)
         self.target   = '\"{}\"'.format(target)
 
@@ -40,7 +40,6 @@ def multi_resample_page(resolution, source_path, source_files, target):
     Resample multiple pages.
     """
     actions = {}
-
     for source in sources:
         action = resample_page(resolution, os.path.join(source_path, source), target)
         actions[source] = action

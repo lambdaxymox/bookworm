@@ -18,20 +18,6 @@ class TestUnpackPDF(unittest.TestCase):
         self.assertEqual(terminal_command.image_dir(), target_dir)
 
 
-    def test_process_args(self):
-        source_pdf = 'sample/sample.pdf'
-        target_dir = 'sample/__bookworm__/'
-        arg_dict = {'input': source_pdf, 'output': target_dir}
-
-        if not os.path.isdir(target_dir):
-            os.mkdir(target_dir)
-        
-        action = unpack_pdf.process_args(arg_dict)
-        os.rmdir(target_dir)
-
-        self.assertIsInstance(action, unpack_pdf.UnpackPDF)
-
-
     def test_action_setup_should_reject_non_existent_output_directory(self):
         source_pdf = 'sample/doesnotexist.pdf'
         target_dir = 'sample/'
@@ -86,4 +72,20 @@ class TestUnpackPDF(unittest.TestCase):
         os.rmdir(target_dir)
 
         self.assertEqual(action.target_dir, target_dir)
+
+
+class TestUnpackPDFProcessArgs(unittest.TestCase):
+
+    def test_process_args(self):
+        source_pdf = 'sample/sample.pdf'
+        target_dir = 'sample/__bookworm__/'
+        arg_dict = {'input': source_pdf, 'output': target_dir}
+
+        if not os.path.isdir(target_dir):
+            os.mkdir(target_dir)
+        
+        action = unpack_pdf.process_args(arg_dict)
+        os.rmdir(target_dir)
+
+        self.assertIsInstance(action, unpack_pdf.UnpackPDF)
 

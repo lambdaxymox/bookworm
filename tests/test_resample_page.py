@@ -23,16 +23,18 @@ class TestResamplePage(unittest.TestCase):
         self.assertIsInstance(action, resample_page.ResamplePage)
 
 
+class TestResamplePageProcessArgs(unittest.TestCase):
+
     def test_process_args(self):
         source_file = 'sample/sample.tiff'
         target_file = 'sample/sample.tiff'
         resolution_val = 600
-        units = 'PixelsPerInch'
+        unit_str = 'PixelsPerInch'
         arg_dict = {
             'input': source_file,
             'output': target_file,
             'resolution': resolution_val,
-            'units': units
+            'units': unit_str
         }
 
         try:

@@ -12,7 +12,6 @@ class TestExpandPageWithFill(unittest.TestCase):
         height = 3060
 
         action = expand_page.expand_page_with_fill(width, height, source_file)
-
         correct_subcommand = [
                 'convert', '-extent {}x{}'.format(width, height), '-background white', 
                 '-gravity Center', '\"'+source_file+'\"', '\"'+target_file+'\"'
@@ -20,6 +19,8 @@ class TestExpandPageWithFill(unittest.TestCase):
 
         self.assertEqual(action.as_python_subprocess(), correct_subcommand)
 
+
+class TestExpandPageWithFillProcessArgs(unittest.TestCase):
 
     def test_process_args(self):
         source = 'sample/sample.tiff'
@@ -45,7 +46,6 @@ class TestExpandPageWithFill(unittest.TestCase):
         arg_dict = {'input': source, 'dimensions': dimensions}
 
         action = None
-
         try:
             action = expand_page.process_args(arg_dict)
         except TypeError as e:
@@ -64,7 +64,6 @@ class TestExpandPageWithFill(unittest.TestCase):
         arg_dict = {'input': source, 'dimensions': dimensions}
 
         action = None
-
         try:
             action = expand_page.process_args(arg_dict)
         except FileNotFoundError as e:
@@ -102,7 +101,6 @@ class TestMultipleExpandPages(unittest.TestCase):
         arg_dict = {'input': source, 'dimensions': dimensions}
 
         action = None
-
         try:
             action = expand_page.process_args(arg_dict)
         except FileNotFoundError as e:

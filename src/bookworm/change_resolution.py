@@ -9,7 +9,7 @@ class ChangeResolution(command.PageCommand):
     """
     def __init__(self, source, target, resolution):
         self.command = 'convert'
-        self.density = '-density {}'.format(resolution.resolution)
+        self.density = '-density {}'.format(resolution.value)
         self.units = '-units {}'.format(resolution.unit_str())
         self.source = source
         self.target = target
@@ -45,7 +45,7 @@ def change_page_resolution(resolution, source, target=''):
     The function ``change_page_resolution`` is a factory method that
     generates a ``ChangePageResolution`` command.
     """
-    if resolution.resolution <= 0:
+    if resolution.value <= 0:
         raise ValueError(
             'Resolution must be positive. Got: {}'
             .format(resolution)
