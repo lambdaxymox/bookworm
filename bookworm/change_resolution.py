@@ -15,12 +15,22 @@ class ChangeResolution(command.PageCommand):
         self.resolution = resolution
 
     def as_python_subprocess(self):
-        return [self.command, self.density, self.units, 
-                    command.quoted_string(self.source), command.quoted_string(self.target)]
+        return [
+            self.command, 
+            self.density, 
+            self.units, 
+            command.quoted_string(self.source), 
+            command.quoted_string(self.target)
+        ]
 
     def as_terminal_command(self):
-        return  '{} {} {} {} {}'.format(self.command, self.density, self.units, 
-                    command.quoted_string(self.source), command.quoted_string(self.target))
+        return  '{} {} {} {} {}'.format(
+            self.command, 
+            self.density, 
+            self.units, 
+            command.quoted_string(self.source), 
+            command.quoted_string(self.target)
+        )
 
     def setup(self):
         return NotImplemented
@@ -31,8 +41,8 @@ class ChangeResolution(command.PageCommand):
 
 def change_page_resolution(resolution, source, target=''):
     """
-    The function ``change_page_resolution`` is a factory method that generates a
-    ``ChangePageResolution`` command.
+    The function ``change_page_resolution`` is a factory method that 
+    generates a ``ChangePageResolution`` command.
     """
     if resolution.resolution <= 0:
         raise ValueError('Resolution must be positive. Got: {}'.format(resolution))
