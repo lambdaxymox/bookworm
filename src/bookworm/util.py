@@ -14,18 +14,24 @@ def temp_file_name(file_name):
 
     file, ext = os.path.splitext(file_name)
 
+    # If the file has no name, file and ext must be swapped
+    # because os.path.splitext will place the file extension into file.
+    if ext == '':
+        ext = file
+        file = ''
+
     return '{}.bookworm.{}'.format(file, remove_leading_period(ext))
+
+
+def default_subdirectory():
+    return '__bookworm__/'
 
 
 def temp_directory(file_name):
     file_path, ext = os.path.splitext(file_name)
     new_path = os.path.dirname(file_path)
 
-    return os.path.join(new_path, '__bookworm__/')
-
-
-def default_subdirectory():
-    return '__bookworm__/'
+    return os.path.join(new_path, default_subdirectory())
 
 
 def with_extension(extension, file_dict):
@@ -67,16 +73,19 @@ def make_resolution(resolution_val, unit_str):
 
 def quoted_string(string):
     """
-    Determines whether a string begins and ends with quotes or not. If not, it closes
-    the input string in quotes.
+    The function ``quoted_string`` determines whether a string begins and ends
+    with quotes or not. If not, it closes the input ``string`` in quotes.
     """
-    new_string = string
+    if string:
+        new_string = string
 
-    if string[0] != '\"':
-        new_string = '\"' + new_string
+        if string[0] != '\"':
+            new_string = '\"' + new_string
     
-    if string[len(string)-1] != '\"':
-        new_string = new_string + '\"'
+        if string[len(string)-1] != '\"':
+            new_string = new_string + '\"'
 
+    else:
+        new_string = "\"\""
+    
     return new_string
-
