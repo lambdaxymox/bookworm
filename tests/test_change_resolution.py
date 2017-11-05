@@ -7,7 +7,6 @@ import os
 class TestChangeResolution(unittest.TestCase):
 
     def test_change_resolution(self):
-
         source_file = 'sample/sample.tiff'
         target_file = 'sample/sample.tiff'
         resolution_val = 600
@@ -105,7 +104,6 @@ class TestMultiChangePageResolution(unittest.TestCase):
 
 
     def test_process_args_should_reject_non_existent_input_directory(self):
-
         source         = 'sample/directory_doesnotexist/'
         #target         = source
         resolution_val = 600
@@ -125,7 +123,6 @@ class TestMultiChangePageResolution(unittest.TestCase):
 
 
     def test_process_args_should_reject_nonnnegative_integer_resolutions(self):
-
         source         = 'sample/sample_tiffs/'
         #target         = source
         resolution_val = -600

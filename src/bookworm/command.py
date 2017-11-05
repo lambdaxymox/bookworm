@@ -1,43 +1,7 @@
 import os.path
-import enum
 import subprocess
 
-
-@enum.unique
-class ResolutionUnits(enum.Enum):
-    PixelsPerInch       = 1
-    PixelsPerCentimeter = 2
-
-    def __str__(self):
-        return self.name
-
-
-class Resolution:
-
-    def __init__(self, resolution, units):
-        self.resolution = resolution
-        self.units      = units
-
-    def make_resolution(resolution_val, unit_str):
-        if unit_str not in ResolutionUnits.__members__.keys():
-            raise ValueError('\'unit_str\' must be one of: {}'.format(ResolutionUnits.__members__.keys()))
-        
-        if type(resolution_val) is not int:
-            raise TypeError('\'resolution_val\' must be a positive integer')
-
-        if resolution_val <= 0:
-            raise ValueError('\'resolution_val\' must be a positive integer')
-        
-        return Resolution(resolution_val, ResolutionUnits.__members__[unit_str])
-
-    def unit_str(self):
-        return str(self.units)
-
-    def __repr__(self):
-        return 'Resolution({}, {})'.format(self.resolution, self.units)
-
-    def __str__(self):
-        return '{} {}'.format(self.resolution, self.units)
+from bookworm.resolution import Resolution
 
 
 class PageCommand:
@@ -83,7 +47,7 @@ class PDFCommand(PageCommand):
 
 
 def temp_file_name(file_name):
-    
+
     def remove_leading_period(file_ext):
         if file_ext[0] == '.':
             return file_ext[1:]
@@ -98,7 +62,6 @@ def temp_file_name(file_name):
 
 def temp_directory(file_name):
     file_path, ext = os.path.splitext(file_name)
-
     new_path = os.path.dirname(file_path)
 
     return os.path.join(new_path, '__bookworm__/')

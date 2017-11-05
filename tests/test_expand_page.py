@@ -6,7 +6,6 @@ import bookworm.expand_page as expand_page
 class TestExpandPageWithFill(unittest.TestCase):
 
     def test_expand_page_with_fill(self):
-
         source_file = 'sample/sample1.tiff'
         target_file = 'sample/sample1.bookworm.tiff'
         width = 2160
@@ -23,7 +22,6 @@ class TestExpandPageWithFill(unittest.TestCase):
 
 
     def test_process_args(self):
-
         source     = 'sample/sample.tiff'
         #target     = source
         width      = 2160
@@ -41,7 +39,6 @@ class TestExpandPageWithFill(unittest.TestCase):
 
 
     def test_process_args_should_reject_bad_dimensions(self):
-
         source     = 'sample/sample.tiff'
         #target     = source
         width      = 2160
@@ -62,7 +59,6 @@ class TestExpandPageWithFill(unittest.TestCase):
 
 
     def test_process_args_should_reject_non_existent_file(self):
-
         source     = 'sample/sample_doesnotexist.tiff'
         #target     = source
         width      = 2160
@@ -102,7 +98,6 @@ class TestMultipleExpandPages(unittest.TestCase):
 
 
     def test_process_args_should_reject_non_existent_input_directory(self):
-
         source     = 'sample/directory_doesnotexist/'
         #target     = source
         width      = 2160
