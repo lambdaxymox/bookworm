@@ -3,24 +3,24 @@ import enum
 import subprocess
 
 
+@enum.unique
+class ResolutionUnits(enum.Enum):
+    PixelsPerInch       = 1
+    PixelsPerCentimeter = 2
+
+    def __str__(self):
+        return self.name
+
+
 class Resolution:
-
-    class ResolutionUnits(enum.Enum):
-        PixelsPerInch       = 1
-        PixelsPerCentimeter = 2
-
-    valid_unit_strings = {
-            'PixelsPerInch':       ResolutionUnits.PixelsPerInch,
-            'PixelsPerCentimeter': ResolutionUnits.PixelsPerCentimeter
-        }
 
     def __init__(self, resolution, units):
         self.resolution = resolution
         self.units      = units
 
     def make_resolution(resolution_val, unit_str):
-        if unit_str not in Resolution.valid_unit_strings.keys():
-            raise ValueError('\'unit_str\' must be one of: {}'.format(Resolution.valid_unit_strings.keys()))
+        if unit_str not in ResolutionUnits.__members__.keys():
+            raise ValueError('\'unit_str\' must be one of: {}'.format(ResolutionUnits.__members__.keys()))
         
         if type(resolution_val) is not int:
             raise TypeError('\'resolution_val\' must be a positive integer')
@@ -28,17 +28,10 @@ class Resolution:
         if resolution_val <= 0:
             raise ValueError('\'resolution_val\' must be a positive integer')
         
-        return Resolution(resolution_val, Resolution.valid_unit_strings[unit_str])
-
+        return Resolution(resolution_val, ResolutionUnits.__members__[unit_str])
 
     def unit_str(self):
-        if self.units == Resolution.ResolutionUnits.PixelsPerInch:
-            return 'PixelsPerInch'
-        elif self.units == Resolution.ResolutionUnits.PixelsPerCentimeter:
-            return 'PixelsPerCentimeter'
-        else:
-            raise ValueError('{}'.format(self.units))
-
+        return str(self.units)
 
     def __repr__(self):
         return 'Resolution({}, {})'.format(self.resolution, self.units)
@@ -91,7 +84,7 @@ class PageCommand(TerminalCommand):
 class PDFCommand(TerminalCommand):
 
     def commit(self):
-        pass
+        return NotImplemented
 
     def image_dir(self):
         return NotImplemented
@@ -149,7 +142,6 @@ def files_exist(files):
     """
     Check that the files actually exist.
     """
-    # Check  that files actually exist
     for file in files:
         if not os.path.isfile(file):
             return False
@@ -175,3 +167,4 @@ def quoted_string(string):
         new_string = new_string + '\"'
 
     return new_string
+
