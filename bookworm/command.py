@@ -40,7 +40,7 @@ class Resolution:
         return '{} {}'.format(self.resolution, self.units)
 
 
-class TerminalCommand:
+class PageCommand:
 
     def __init__(self, **kwargs):
         pass
@@ -76,12 +76,7 @@ class TerminalCommand:
         return 'Command({})'.format(self.as_python_subprocess())
 
 
-class PageCommand(TerminalCommand):
-    def commit(self):
-        return NotImplemented
-
-
-class PDFCommand(TerminalCommand):
+class PDFCommand(PageCommand):
 
     def commit(self):
         return NotImplemented

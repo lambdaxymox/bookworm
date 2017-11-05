@@ -3,7 +3,7 @@ import command
 
 class RescalePage(command.PageCommand):
     """
-    Rescale a page by changing it's resolution and  then resampling the image.
+    Rescale a page by changing it's resolution and then resampling the image.
     """
     def __init__(self, source, target, resolution):
         self.command  = 'convert'

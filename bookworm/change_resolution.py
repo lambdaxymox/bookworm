@@ -99,3 +99,4 @@ def process_args(arg_dict):
 
     else:
         raise FileNotFoundError('File or directory does not exist: {}'.format(input))
+
