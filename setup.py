@@ -26,10 +26,13 @@ config = {
     'download_url': 'https://github.com/stallmanifold/bookworm.git',
     'author_email': 'stallmanifold@gmail.com',
     'version': '0.1',
-    'install_requires': ['nose'],
+    'install_requires': ['pytest'],
+    'package_dir': {'': 'src'},
     'packages': ['bookworm'],
     'scripts': [],
-    'name': 'bookworm'
+    'name': 'bookworm',
+    'tests_require': ['pytest'],
+    'cmdclass' : {'test': PyTest},
 }
 
 setup(**config)
