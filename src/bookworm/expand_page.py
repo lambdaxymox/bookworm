@@ -1,4 +1,5 @@
 import bookworm.command as command
+import bookworm.util    as util
 import os.path
 
 
@@ -18,14 +19,14 @@ class ExpandPageWithFill(command.PageCommand):
         self.height = height
 
     def as_python_subprocess(self):
-        quoted_source = command.quoted_string(self.source)
-        quoted_target = command.quoted_string(self.target)
+        quoted_source = util.quoted_string(self.source)
+        quoted_target = util.quoted_string(self.target)
 
         return [self.command, self.extent, self.background, self.gravity, quoted_source, quoted_target]
 
     def as_terminal_command(self):
-        quoted_source = command.quoted_string(self.source)
-        quoted_target = command.quoted_string(self.target)
+        quoted_source = util.quoted_string(self.source)
+        quoted_target = util.quoted_string(self.target)
         final_arg = '{}[{}x{}]'.format(quoted_target, self.width, self.height)
         
         return \
@@ -47,7 +48,7 @@ def expand_page_with_fill(width, height, source, target=''):
     this with the color white.
     """
     if not target:
-        new_target = command.temp_file_name(source)
+        new_target = util.temp_file_name(source)
         return ExpandPageWithFill(source, new_target, width, height)
 
     return ExpandPageWithFill(source, target, width, height)
@@ -101,11 +102,11 @@ def process_args(arg_dict):
             output = arg_dict['output']
         except KeyError as e:
             # Derive output directory from input directory
-            output = os.path.join(input, command.default_subdirectory())
+            output = os.path.join(input, util.default_subdirectory())
 
         files_dict = {'path': input, 'files': os.listdir(input)}
 
-        new_files_dict = command.with_extension('.tiff', files_dict)
+        new_files_dict = util.with_extension('.tiff', files_dict)
 
         return multi_expand_page(width, height, new_files_dict['path'], new_files_dict['files'], output)
 

@@ -1,4 +1,5 @@
 import bookworm.command as command
+import bookworm.util    as util
 import os.path
 
 
@@ -16,20 +17,20 @@ class ChangeResolution(command.PageCommand):
 
     def as_python_subprocess(self):
         return [
-            self.command, 
-            self.density, 
-            self.units, 
-            command.quoted_string(self.source), 
-            command.quoted_string(self.target)
+            self.command,
+            self.density,
+            self.units,
+            util.quoted_string(self.source),
+            util.quoted_string(self.target)
         ]
 
     def as_terminal_command(self):
-        return  '{} {} {} {} {}'.format(
-            self.command, 
-            self.density, 
-            self.units, 
-            command.quoted_string(self.source), 
-            command.quoted_string(self.target)
+        return '{} {} {} {} {}'.format(
+            self.command,
+            self.density,
+            self.units,
+            util.quoted_string(self.source),
+            util.quoted_string(self.target)
         )
 
     def setup(self):
@@ -41,20 +42,23 @@ class ChangeResolution(command.PageCommand):
 
 def change_page_resolution(resolution, source, target=''):
     """
-    The function ``change_page_resolution`` is a factory method that 
+    The function ``change_page_resolution`` is a factory method that
     generates a ``ChangePageResolution`` command.
     """
     if resolution.resolution <= 0:
-        raise ValueError('Resolution must be positive. Got: {}'.format(resolution))
+        raise ValueError(
+            'Resolution must be positive. Got: {}'
+            .format(resolution)
+        )
 
     if not target:
-        new_target = command.temp_file_name(source)
+        new_target = util.temp_file_name(source)
         return ChangeResolution(source, new_target, resolution)
 
     return ChangeResolution(source, target, resolution)
 
 
-def multi_change_page_resolution(resolution, source_path, source_files, target):    
+def multi_change_page_resolution(resolution, source_path, source_files, target):
     """
     Change the properties of multiple pages in a single directory.
     """
@@ -82,7 +86,7 @@ def process_args(arg_dict):
         if resolution <= 0:
             raise ValueError('Resolution needs to be a positive integer. Got negative value: {}'.format(resolution))
 
-        resolution = command.make_resolution(resolution, 'PixelsPerInch')
+        resolution = util.make_resolution(resolution, 'PixelsPerInch')
     except TypeError as e:
         raise e
     except ValueError as e:
@@ -98,7 +102,7 @@ def process_args(arg_dict):
         
         files_dict = {'path': input, 'files': os.listdir(input)}
 
-        tiff_files_dict = command.with_extension('.tiff', files_dict)
+        tiff_files_dict = util.with_extension('.tiff', files_dict)
 
         return multi_change_page_resolution(resolution, tiff_files_dict['path'], tiff_files_dict['files'], output)
 

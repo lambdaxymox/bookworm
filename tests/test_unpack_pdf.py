@@ -1,6 +1,6 @@
 import unittest
 import bookworm.unpack_pdf as unpack_pdf
-import bookworm.command    as command
+import bookworm.util       as util
 import os, os.path
 
 
@@ -11,7 +11,7 @@ class TestUnpackPDF(unittest.TestCase):
         UnpackPDF should derive a local directory from the path to the source pdf file.
         """
         source_pdf = './foo/bar/baz/quux.pdf'
-        target_dir = './foo/bar/baz/' + command.default_subdirectory()
+        target_dir = './foo/bar/baz/' + util.default_subdirectory()
 
         terminal_command = unpack_pdf.unpack_pdf(source_pdf)
 
@@ -68,7 +68,7 @@ class TestUnpackPDF(unittest.TestCase):
         An UnpackPDF object's setup function should make the target directory if it does not exist.
         """
         source_pdf = 'sample/sample.pdf'
-        target_dir = 'sample/' + command.default_subdirectory()
+        target_dir = 'sample/' + util.default_subdirectory()
         arg_dict = {'input': source_pdf, 'output': target_dir}
 
         action = unpack_pdf.process_args(arg_dict)

@@ -22,10 +22,9 @@ class TestExpandPageWithFill(unittest.TestCase):
 
 
     def test_process_args(self):
-        source     = 'sample/sample.tiff'
-        #target     = source
-        width      = 2160
-        height     = 3060
+        source = 'sample/sample.tiff'
+        width = 2160
+        height = 3060
         dimensions = (width, height)
         arg_dict = {'input': source, 'dimensions': dimensions}
 
@@ -39,10 +38,9 @@ class TestExpandPageWithFill(unittest.TestCase):
 
 
     def test_process_args_should_reject_bad_dimensions(self):
-        source     = 'sample/sample.tiff'
-        #target     = source
-        width      = 2160
-        height     = "Potato"
+        source = 'sample/sample.tiff'
+        width = 2160
+        height = "Potato"
         dimensions = (width, height)
         arg_dict = {'input': source, 'dimensions': dimensions}
 
@@ -59,10 +57,9 @@ class TestExpandPageWithFill(unittest.TestCase):
 
 
     def test_process_args_should_reject_non_existent_file(self):
-        source     = 'sample/sample_doesnotexist.tiff'
-        #target     = source
-        width      = 2160
-        height     = 3060
+        source = 'sample/sample_doesnotexist.tiff'
+        width = 2160
+        height = 3060
         dimensions = (width, height)
         arg_dict = {'input': source, 'dimensions': dimensions}
 
@@ -98,10 +95,9 @@ class TestMultipleExpandPages(unittest.TestCase):
 
 
     def test_process_args_should_reject_non_existent_input_directory(self):
-        source     = 'sample/directory_doesnotexist/'
-        #target     = source
-        width      = 2160
-        height     = 3060
+        source = 'sample/directory_doesnotexist/'
+        width = 2160
+        height = 3060
         dimensions = (width, height)
         arg_dict = {'input': source, 'dimensions': dimensions}
 

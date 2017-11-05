@@ -1,7 +1,9 @@
 import unittest
 import bookworm.change_resolution as change_resolution
-import bookworm.command           as command
+import bookworm.util as util
 import os
+
+from bookworm.resolution import Resolution
 
 
 class TestChangeResolution(unittest.TestCase):
@@ -12,7 +14,7 @@ class TestChangeResolution(unittest.TestCase):
         resolution_val = 600
         unit_str = 'PixelsPerInch'
 
-        resolution = command.make_resolution(resolution_val, unit_str)
+        resolution = util.make_resolution(resolution_val, unit_str)
         try:
             action = change_resolution.change_page_resolution(resolution, source_file)
         except ValueError as e:
@@ -86,10 +88,10 @@ class TestChangeResolution(unittest.TestCase):
 class TestMultiChangePageResolution(unittest.TestCase):
 
     def test_multi_page_change_resolution_should_generation_multiple_actions_from_input_directory(self):
-        source_dir     = 'sample/test_tiffs/'
-        source_files   = list(map(lambda f: os.path.join(source_dir, f), os.listdir(source_dir)))
+        source_dir = 'sample/test_tiffs/'
+        source_files = list(map(lambda f: os.path.join(source_dir, f), os.listdir(source_dir)))
         resolution_val = 600
-        resolution     = command.make_resolution(resolution_val, 'PixelsPerInch')
+        resolution = util.make_resolution(resolution_val, 'PixelsPerInch')
 
         arg_dict = {'input': source_dir, 'resolution': resolution_val}
 
@@ -97,19 +99,16 @@ class TestMultiChangePageResolution(unittest.TestCase):
 
         for action in multi_actions.values():
             self.assertIsInstance(action, change_resolution.ChangeResolution)
-            self.assertIsInstance(action.resolution, command.Resolution)
+            self.assertIsInstance(action.resolution, Resolution)
             self.assertEqual(action.resolution.resolution, resolution.resolution)
             self.assertEqual(action.resolution.units, resolution.units)
             self.assertTrue(action.source in source_files)
 
 
     def test_process_args_should_reject_non_existent_input_directory(self):
-        source         = 'sample/directory_doesnotexist/'
-        #target         = source
+        source = 'sample/directory_doesnotexist/'
         resolution_val = 600
-        #resolution     = command.make_resolution(resolution_val, 'PixelsPerInch')
-        arg_dict       = {'input': source, 'resolution': resolution_val }
-
+        arg_dict = {'input': source, 'resolution': resolution_val }
         action = None
 
         try:
@@ -123,14 +122,13 @@ class TestMultiChangePageResolution(unittest.TestCase):
 
 
     def test_process_args_should_reject_nonnnegative_integer_resolutions(self):
-        source         = 'sample/sample_tiffs/'
-        #target         = source
+        source = 'sample/sample_tiffs/'
         resolution_val = -600
         
         try:
-            #resolution = command.make_resolution(resolution_val, 'PixelsPerInch')
-            arg_dict   = {'input': source, 'resolution': resolution_val }
-            action     = change_resolution.process_args(arg_dict)
+            arg_dict = {'input': source, 'resolution': resolution_val }
+            action = change_resolution.process_args(arg_dict)
+
             # Action should not have been assigned a value.
             self.fail('Negative integer accepted for resolution value.')
         except TypeError as e:
@@ -141,9 +139,9 @@ class TestMultiChangePageResolution(unittest.TestCase):
         resolution_val = 600.1
 
         try:
-            #resolution = command.make_resolution(resolution_val, 'PixelsPerInch')
-            arg_dict   = {'input': source, 'resolution': resolution_val}
-            action     = change_resolution.process_args(arg_dict)
+            arg_dict = {'input': source, 'resolution': resolution_val}
+            action = change_resolution.process_args(arg_dict)
+
             # Action should not have been assigned a value.
             self.fail('Fractional value accepted for resolution value.')
         except TypeError as e:
