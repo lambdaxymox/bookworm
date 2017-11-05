@@ -1,4 +1,4 @@
-import command
+import bookworm.command as command
 
 
 class RescalePage(command.PageCommand):
