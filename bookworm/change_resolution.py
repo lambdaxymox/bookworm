@@ -23,10 +23,10 @@ class ChangeResolution(command.PageCommand):
                     command.quoted_string(self.source), command.quoted_string(self.target))
 
     def setup(self):
-        pass
+        return NotImplemented
 
     def commit(self):
-        pass
+        return NotImplemented
 
 
 def change_page_resolution(resolution, source, target=''):

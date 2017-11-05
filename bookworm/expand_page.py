@@ -33,10 +33,10 @@ class ExpandPageWithFill(command.PageCommand):
             .format(self.command, self.extent, self.background, self.gravity, quoted_source, final_arg)
 
     def setup(self):
-        pass
+        return NotImplemented
 
     def commit(self):
-        pass
+        return NotImplemented
 
 
 def expand_page_with_fill(width, height, source, target=''):

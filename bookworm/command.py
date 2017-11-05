@@ -53,16 +53,16 @@ class TerminalCommand:
         pass
 
     def as_arg_list(self):
-        raise NotImplemented
+        return NotImplemented
 
     def as_terminal_command(self):
-        raise NotImplemented
+        return NotImplemented
 
     def as_python_subprocess(self):
-        raise NotImplemented
+        return NotImplemented
 
     def setup(self):
-        raise NotImplemented
+        return NotImplemented
 
     def run(self):
         """
@@ -74,7 +74,7 @@ class TerminalCommand:
         """
         Commit and clean up after a successful execution
         """
-        raise NotImplemented
+        return NotImplemented
 
     def __str__(self):
         return self.as_terminal_command()
@@ -85,7 +85,7 @@ class TerminalCommand:
 
 class PageCommand(TerminalCommand):
     def commit(self):
-        raise NotImplemented
+        return NotImplemented
 
 
 class PDFCommand(TerminalCommand):
@@ -94,7 +94,7 @@ class PDFCommand(TerminalCommand):
         pass
 
     def image_dir(self):
-        raise NotImplemented
+        return NotImplemented
 
 
 def temp_file_name(file_name):
