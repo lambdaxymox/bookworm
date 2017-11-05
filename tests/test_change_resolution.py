@@ -54,7 +54,6 @@ class TestChangeResolution(unittest.TestCase):
         }
 
         action = None
-
         try:
             action = change_resolution.process_args(arg_dict)
         except TypeError as e:
@@ -76,7 +75,6 @@ class TestChangeResolution(unittest.TestCase):
         }
 
         action = None
-
         try:
             action = change_resolution.process_args(arg_dict)
         except ValueError as e:
@@ -84,8 +82,11 @@ class TestChangeResolution(unittest.TestCase):
 
         # An error should occur from malformed input.
         self.assertNotEqual(type(action), change_resolution.ChangeResolution)
-        
-        action = None
+     
+
+    def test_process_args_should_reject_resolution_value_of_zero(self):
+        source_file = 'sample/sample.tiff'
+        target_file = 'sample/sample.tiff'
         resolution_val = 0
         arg_dict = {
             'input': source_file,
@@ -93,6 +94,7 @@ class TestChangeResolution(unittest.TestCase):
             'resolution': resolution_val
         }
         
+        action = None
         try:
             action = change_resolution.process_args(arg_dict)
         except ValueError as e:
@@ -111,7 +113,6 @@ class TestMultiChangePageResolution(unittest.TestCase):
         resolution = util.make_resolution(resolution_val, 'PixelsPerInch')
 
         arg_dict = {'input': source_dir, 'resolution': resolution_val}
-
         multi_actions = change_resolution.process_args(arg_dict)
 
         for action in multi_actions.values():
@@ -126,8 +127,8 @@ class TestMultiChangePageResolution(unittest.TestCase):
         source = 'sample/directory_doesnotexist/'
         resolution_val = 600
         arg_dict = {'input': source, 'resolution': resolution_val }
+        
         action = None
-
         try:
             action = change_resolution.process_args(arg_dict)
         except FileNotFoundError as e:
@@ -138,12 +139,12 @@ class TestMultiChangePageResolution(unittest.TestCase):
         self.assertIsInstance(action, type(None))
 
 
-    def test_process_args_should_reject_nonnnegative_integer_resolutions(self):
+    def test_process_args_should_reject_nonpositive_integer_resolutions(self):
         source = 'sample/sample_tiffs/'
         resolution_val = -600
-        
+        arg_dict = {'input': source, 'resolution': resolution_val }
+
         try:
-            arg_dict = {'input': source, 'resolution': resolution_val }
             action = change_resolution.process_args(arg_dict)
 
             # Action should not have been assigned a value.
@@ -153,10 +154,13 @@ class TestMultiChangePageResolution(unittest.TestCase):
         except ValueError as e:
             self.assertIsInstance(e, ValueError)
 
+
+    def test_process_args_should_reject_fractional_resolution_values(self):
+        source = 'sample/sample_tiffs/'
         resolution_val = 600.1
+        arg_dict = {'input': source, 'resolution': resolution_val}
 
         try:
-            arg_dict = {'input': source, 'resolution': resolution_val}
             action = change_resolution.process_args(arg_dict)
 
             # Action should not have been assigned a value.
