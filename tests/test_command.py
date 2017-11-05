@@ -76,3 +76,4 @@ class TestResolution(unittest.TestCase):
         resolution_units = 'PixelsPerInch'
 
         self.assertRaises(TypeError, command.Resolution.make_resolution, resolution_val, resolution_units)
+

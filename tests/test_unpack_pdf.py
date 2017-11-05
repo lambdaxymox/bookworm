@@ -86,3 +86,4 @@ class TestUnpackPDF(unittest.TestCase):
         os.rmdir(target_dir)
 
         self.assertEqual(action.target_dir, target_dir)
+

@@ -120,3 +120,4 @@ class TestMultipleExpandPages(unittest.TestCase):
 
         # Action should not have been assigned a value.
         self.assertIsInstance(action, type(None))
+
