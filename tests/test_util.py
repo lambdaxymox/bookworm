@@ -68,6 +68,10 @@ class TestWithExtension(unittest.TestCase):
         res = util.with_extension('.tiff', before)
         self.assertEqual(res, after)
 
+    def test_with_extension_should_correct_with_no_leading_period_in_input_extension(self):
+        before = {'path': '/foo/bar/baz/', 'files': ['quux1.tiff', 'quux2.tiff', 'quux3.tiff', 'quux4.jpg']}
+        after  = {'path': '/foo/bar/baz/', 'files': ['quux1.tiff', 'quux2.tiff', 'quux3.tiff']}
+        
         # with_extension should be able to correct for no leading period.
         res = util.with_extension('tiff', before)
         self.assertEqual(res, after)
