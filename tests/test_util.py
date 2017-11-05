@@ -11,6 +11,7 @@ class TestTempFileName(unittest.TestCase):
 
         self.assertEqual(result, expected)
 
+
     def test_temp_file_name_should_correctly_apply_to_nameless_file(self):
         old_file = '.pdf'
         expected = '.bookworm.pdf'
@@ -25,17 +26,21 @@ class TestFilesExist(unittest.TestCase):
         existing_file = ['sample/sample.pdf']
         self.assertTrue(util.files_exist(existing_file))
 
+
     def test_files_exists_with_multiple_existing_files(self):
         existing_files = ['sample/sample.pdf', 'sample/sample.tiff']
         self.assertTrue(util.files_exist(existing_files))
+
 
     def test_files_exist_with_empty_input(self):
         empty_file_list = []
         self.assertTrue(util.files_exist(empty_file_list))
 
+
     def test_files_exist_with_nonexistent_file(self):
         nonexisting_files = ['foo.pdf', 'bar.pdf', 'baz.pdf']
         self.assertFalse(util.files_exist(nonexisting_files))
+
 
     def test_files_exist_with_nameless_file_with_extension(self):
         file_name = ['.pdf']
@@ -43,6 +48,7 @@ class TestFilesExist(unittest.TestCase):
             util.files_exist(file_name)
         except:
             self.fail('files_exist threw an exception.')
+
 
     def test_files_exist_with_nameless_file_without_extension(self):
         file_name = ['']
@@ -58,6 +64,13 @@ class TestTempDirectory(unittest.TestCase):
 
         self.assertEqual(result, expected)
 
+    def test_root_temp_directory(self):
+        old_dir = '/'
+        expected = '/__bookworm__/'
+        result = util.temp_directory(old_dir)
+
+        self.assertEqual(result, expected)
+
 
 class TestWithExtension(unittest.TestCase):
 
@@ -67,6 +80,7 @@ class TestWithExtension(unittest.TestCase):
 
         res = util.with_extension('.tiff', before)
         self.assertEqual(res, after)
+
 
     def test_with_extension_should_correct_with_no_leading_period_in_input_extension(self):
         before = {'path': '/foo/bar/baz/', 'files': ['quux1.tiff', 'quux2.tiff', 'quux3.tiff', 'quux4.jpg']}
@@ -83,6 +97,7 @@ class TestQuotedString(unittest.TestCase):
         result = util.quoted_string(string)
 
         self.assertEqual(result, expected)
+
 
     def test_quoted_string_empty_string(self):
         self.run_with(string='', expected='\"\"')
