@@ -18,7 +18,7 @@ class TestChangeResolution(unittest.TestCase):
         resolution = Resolution.make(resolution_val, unit_str)
 
         try:
-            action = change_resolution.change_page_resolution(resolution, source_file)
+            action = change_resolution.make(resolution, source_file)
         except ValueError as e:
             self.fail()
 

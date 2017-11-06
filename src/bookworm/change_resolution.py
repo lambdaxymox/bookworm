@@ -42,7 +42,7 @@ class ChangeResolution(command.PageCommand):
         return NotImplemented
 
 
-def change_page_resolution(resolution, source, target=''):
+def make(resolution, source, target=''):
     """
     The function ``change_page_resolution`` is a factory method that
     generates a ``ChangePageResolution`` command.
@@ -63,7 +63,7 @@ def multi_change_page_resolution(resolution, source_path, source_files, target):
     """
     actions = {}
     for source in source_files:
-        action = change_page_resolution(
+        action = make(
             resolution, os.path.join(source_path, source), target
         )
         actions[source] = action
@@ -118,7 +118,7 @@ def process_args(arg_dict):
             # Use input as the target file.
             output = input
 
-        return change_page_resolution(resolution, input, output)
+        return make(resolution, input, output)
 
     else:
         raise FileNotFoundError(f'File or directory does not exist: {input}')
