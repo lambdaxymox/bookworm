@@ -24,7 +24,16 @@ class Resolution:
     def units(self):
         return self._units
 
-    def make_resolution(resolution_val, unit_str):
+    def unit_str(self):
+        return str(self.units)
+
+    def __repr__(self):
+        return 'Resolution({}, {})'.format(self.value, self.units)
+
+    def __str__(self):
+        return '{} {}'.format(self.value, self.units)
+
+    def make(resolution_val, unit_str):
         if unit_str not in ResolutionUnits.__members__.keys():
             raise ValueError(
                 '\'unit_str\' must be one of: {}'
@@ -41,13 +50,4 @@ class Resolution:
             resolution_val,
             ResolutionUnits.__members__[unit_str]
         )
-
-    def unit_str(self):
-        return str(self.units)
-
-    def __repr__(self):
-        return 'Resolution({}, {})'.format(self.value, self.units)
-
-    def __str__(self):
-        return '{} {}'.format(self.value, self.units)
 

@@ -2,6 +2,8 @@ import bookworm.command as command
 import bookworm.util    as util
 import os.path
 
+from bookworm.resolution import Resolution
+
 
 class ChangeResolution(command.PageCommand):
     """
@@ -86,7 +88,7 @@ def process_args(arg_dict):
         if resolution <= 0:
             raise ValueError('Resolution needs to be a positive integer. Got negative value: {}'.format(resolution))
 
-        resolution = util.make_resolution(resolution, 'PixelsPerInch')
+        resolution = Resolution.make(resolution, 'PixelsPerInch')
     except TypeError as e:
         raise e
     except ValueError as e:

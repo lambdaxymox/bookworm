@@ -2,6 +2,8 @@ import os
 import bookworm.command as command
 import bookworm.util    as util
 
+from bookworm.resolution import Resolution
+
 
 class ResamplePage(command.PageCommand):
     """
@@ -67,7 +69,7 @@ def process_args(arg_dict):
         )
 
     try:
-        resolution = util.make_resolution(resolution_val, units)
+        resolution = Resolution.make(resolution_val, units)
     except TypeError as e:
         raise e
     except ValueError as e:

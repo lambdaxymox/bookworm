@@ -14,7 +14,7 @@ class TestResamplePage(unittest.TestCase):
         resolution_val = 600
         unit_str = 'PixelsPerInch'
 
-        resolution = util.make_resolution(resolution_val, unit_str)
+        resolution = Resolution.make(resolution_val, unit_str)
         try:
             action = resample_page.resample_page(resolution, source_file)
         except ValueError as e:

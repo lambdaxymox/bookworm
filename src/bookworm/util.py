@@ -67,10 +67,6 @@ def files_exist(files):
     return True
 
 
-def make_resolution(resolution_val, unit_str):
-    return Resolution.make_resolution(resolution_val, unit_str)
-
-
 def quoted_string(string):
     """
     The function ``quoted_string`` determines whether a string begins and ends

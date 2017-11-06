@@ -13,7 +13,7 @@ class TestChangeResolution(unittest.TestCase):
         target_file = 'sample/sample.tiff'
         resolution_val = 600
         unit_str = 'PixelsPerInch'
-        resolution = util.make_resolution(resolution_val, unit_str)
+        resolution = Resolution.make(resolution_val, unit_str)
 
         try:
             action = change_resolution.change_page_resolution(resolution, source_file)
@@ -93,7 +93,7 @@ class TestMultiChangePageResolution(unittest.TestCase):
         source_dir = 'sample/test_tiffs/'
         source_files = list(map(lambda f: os.path.join(source_dir, f), os.listdir(source_dir)))
         resolution_val = 600
-        resolution = util.make_resolution(resolution_val, 'PixelsPerInch')
+        resolution = Resolution.make(resolution_val, 'PixelsPerInch')
 
         arg_dict = {'input': source_dir, 'resolution': resolution_val}
         multi_actions = change_resolution.process_args(arg_dict)
