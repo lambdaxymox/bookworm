@@ -33,7 +33,8 @@ class TestChangeResolution(unittest.TestCase):
         arg_dict = {
             'input': source_file,
             'output': target_file,
-            'resolution': resolution_val
+            'resolution': resolution_val,
+            'units': 'PixelsPerInch'
         }
 
         try:
@@ -45,14 +46,29 @@ class TestChangeResolution(unittest.TestCase):
         self.assertEqual(action.source, target_file)
 
 
-    def test_process_args_should_reject_bad_resolution_values(self):
+    def test_process_args_should_reject_missing_units(self):
+        source_file = 'sample/sample.tiff'
+        target_file = 'sample/sample.tiff'
+        resolution_val = 600
+        arg_dict = {
+            'input': source_file,
+            'output': target_file,
+            'resolution': resolution_val
+        }
+
+        with self.assertRaises(KeyError):
+            change_resolution.process_args(arg_dict)
+
+
+    def test_process_args_should_reject_noninteger_values(self):
         source_file = 'sample/sample.tiff'
         target_file = 'sample/sample.tiff'
         resolution_val = "Potato"
         arg_dict = {
             'input': source_file,
             'output': target_file,
-            'resolution': resolution_val
+            'resolution': resolution_val,
+            'units': 'PixelsPerInch'
         }
 
         with self.assertRaises(TypeError):
@@ -66,7 +82,8 @@ class TestChangeResolution(unittest.TestCase):
         arg_dict = {
             'input': source_file,
             'output': target_file,
-            'resolution': resolution_val
+            'resolution': resolution_val,
+            'units': 'PixelsPerInch'
         }
 
         with self.assertRaises(ValueError):
@@ -80,7 +97,8 @@ class TestChangeResolution(unittest.TestCase):
         arg_dict = {
             'input': source_file,
             'output': target_file,
-            'resolution': resolution_val
+            'resolution': resolution_val,
+            'units': 'PixelsPerInch'
         }
         
         with self.assertRaises(ValueError):
@@ -94,10 +112,13 @@ class TestMultiChangePageResolution(unittest.TestCase):
         source_files = list(map(lambda f: os.path.join(source_dir, f), os.listdir(source_dir)))
         resolution_val = 600
         resolution = Resolution.make(resolution_val, 'PixelsPerInch')
+        arg_dict = {
+            'input': source_dir,
+            'resolution': resolution_val,
+            'units': 'PixelsPerInch'
+        }
 
-        arg_dict = {'input': source_dir, 'resolution': resolution_val}
         multi_actions = change_resolution.process_args(arg_dict)
-
         for action in multi_actions.values():
             self.assertIsInstance(action, change_resolution.ChangeResolution)
             self.assertIsInstance(action.resolution, Resolution)
@@ -109,7 +130,11 @@ class TestMultiChangePageResolution(unittest.TestCase):
     def test_process_args_should_reject_non_existent_input_directory(self):
         source = 'sample/directory_doesnotexist/'
         resolution_val = 600
-        arg_dict = {'input': source, 'resolution': resolution_val }
+        arg_dict = {
+            'input': source,
+            'resolution': resolution_val,
+            'units': 'PixelsPerInch'
+        }
         
         with self.assertRaises(FileNotFoundError):
             change_resolution.process_args(arg_dict)
@@ -118,7 +143,11 @@ class TestMultiChangePageResolution(unittest.TestCase):
     def test_process_args_should_reject_nonpositive_integer_resolutions(self):
         source = 'sample/sample_tiffs/'
         resolution_val = -600
-        arg_dict = {'input': source, 'resolution': resolution_val }
+        arg_dict = {
+            'input': source,
+            'resolution': resolution_val,
+            'units': 'PixelsPerInch'
+        }
 
         try:
             action = change_resolution.process_args(arg_dict)
@@ -134,7 +163,11 @@ class TestMultiChangePageResolution(unittest.TestCase):
     def test_process_args_should_reject_fractional_resolution_values(self):
         source = 'sample/sample_tiffs/'
         resolution_val = 600.1
-        arg_dict = {'input': source, 'resolution': resolution_val}
+        arg_dict = {
+            'input': source,
+            'resolution': resolution_val,
+            'units': 'PixelsPerInch'
+        }
 
         try:
             action = change_resolution.process_args(arg_dict)

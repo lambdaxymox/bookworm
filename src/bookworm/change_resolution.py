@@ -82,6 +82,7 @@ def process_args(arg_dict):
     try:
         input = arg_dict['input']
         resolution_val = arg_dict['resolution']
+        unit_str = arg_dict['units']
     except KeyError as e:
         raise e
     
@@ -93,7 +94,7 @@ def process_args(arg_dict):
         )
 
     try:
-        resolution = Resolution.make(resolution_val, 'PixelsPerInch')
+        resolution = Resolution.make(resolution_val, unit_str)
     except TypeError as e:
         raise e
     except ValueError as e:
