@@ -21,7 +21,7 @@ def arg_processor():
         help='subcommand help'
     )
 
-
+    # Subparser for the unpack-pdf command.
     parser_unpack_pdf = subparsers.add_parser(
         'unpack-pdf', 
         help='Unpack an input PDF file to the output directory'
@@ -35,7 +35,7 @@ def arg_processor():
         help='Output directory', required=False
     )
 
-
+    # Subparser for the change-resolution command.
     parser_change_resolution = subparsers.add_parser(
         'change-resolution', 
         help='Change the resolution of the TIFF files in the input directory to RESOLUTION in UNITS'
@@ -59,7 +59,7 @@ def arg_processor():
         help='Output file'
     )
 
-
+    # Subparser for the expand-page command.
     parser_expand_page = subparsers.add_parser(
         'expand-page', 
         help='Expand the TIFF files in the the input directory to target WIDTH and HEIGHT in pixels'
@@ -78,7 +78,7 @@ def arg_processor():
         type=check_dims
     )
 
-
+    # Subparser for the resample-page command.
     parser_resample_page = subparsers.add_parser(
         'resample-page',
         help='Rescale a page by changing its resolution and resampling the image'
@@ -107,12 +107,14 @@ def arg_processor():
 
 def check_positive(value):
     """
-    Determine whether the input value is a positive
-    integer.
+    Determine whether the input value is a positive integer.
     """
     ivalue = int(value)
     if ivalue <= 0:
-        raise argparse.ArgumentTypeError(f'{ivalue} needs to be a positive integer')
+        raise argparse.ArgumentTypeError(
+            f'{ivalue} needs to be a positive integer'
+        )
+
     return ivalue
 
 
@@ -122,22 +124,33 @@ def check_dims(value):
     """
     dims = value.split('x')
     if len(dims) != 2:
-        raise argparse.ArgumentTypeError(f'{value} needs to be of the form WIDTHxHEIGHT')
+        raise argparse.ArgumentTypeError(
+            f'{value} needs to be of the form WIDTHxHEIGHT'
+        )
 
     try:
         iwidth  = int(dims[0])
     except ValueError as ve:
-        raise argparse.ArgumentTypeError(f'{dims[0]} needs to be an integer')
+        raise argparse.ArgumentTypeError(
+            f'{dims[0]} needs to be an integer'
+        )
 
     try:
         iheight = int(dims[1])
     except ValueError as ve:
-        raise argparse.ArgumentTypeError(f'{dims[1]} needs to be an integer')
+        raise argparse.ArgumentTypeError(
+            f'{dims[1]} needs to be an integer'
+        )
 
     if iwidth < 0:
-        raise argparse.ArgumentTypeError(f'{iwidth} needs to be positive')
+        raise argparse.ArgumentTypeError(
+            f'{iwidth} needs to be positive'
+        )
+
     if iheight < 0:
-        raise argparse.ArgumentTypeError(f'{iheight} needs to be positive') 
+        raise argparse.ArgumentTypeError(
+            f'{iheight} needs to be positive'
+        ) 
 
     return (iwidth, iheight)
 
