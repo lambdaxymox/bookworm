@@ -7,6 +7,9 @@ from bookworm.resolution import Resolution
 class TestResamplePage(unittest.TestCase):
 
     def test_resample_page(self):
+        """
+        The factory method should generate valid instances of ``ResamplePage``.
+        """
         source_file = 'sample/sample.tiff'
         target_file = 'sample/sample.tiff'
         resolution_val = 600
@@ -24,6 +27,10 @@ class TestResamplePage(unittest.TestCase):
 class TestResamplePageProcessArgs(unittest.TestCase):
 
     def test_process_args(self):
+        """
+        The argument process should create a valid ``ResamplePage``
+        given valid input values.
+        """
         source_file = 'sample/sample.tiff'
         target_file = 'sample/sample.tiff'
         resolution_val = 600
@@ -44,6 +51,11 @@ class TestResamplePageProcessArgs(unittest.TestCase):
 
 
     def test_process_args_should_reject_zero_resolution(self):
+        """
+        Given an input resolution value of zero, the argument processor
+        should reject it. It is impossible to have a pdf page with a
+        resolution of zero.
+        """
         source_file = 'sample/sample.tiff'
         target_file = 'sample/sample.tiff'
         resolution_val = 0
@@ -60,6 +72,11 @@ class TestResamplePageProcessArgs(unittest.TestCase):
 
 
     def test_process_args_should_reject_negative_resolution(self):
+        """
+        Given a negative input resolution value, the argument processor
+        should not accept it. Having a negative resolution value makes no
+        sense.
+        """
         source_file = 'sample/sample.tiff'
         target_file = 'sample/sample.tiff'
         resolution_val = -300
@@ -76,6 +93,9 @@ class TestResamplePageProcessArgs(unittest.TestCase):
 
 
     def test_process_args_should_reject_noninteger_resolutions(self):
+        """
+        The argument processor only supports positive integer resolutions.
+        """
         source_file = 'sample/sample.tiff'
         target_file = 'sample/sample.tiff'
         resolution_val = 300.1
@@ -92,6 +112,10 @@ class TestResamplePageProcessArgs(unittest.TestCase):
 
 
     def test_process_args_should_reject_missing_units(self):
+        """
+        The argument processor should not accept an input resolution
+        that has missing units.
+        """
         source_file = 'sample/sample.tiff'
         target_file = 'sample/sample.tiff'
         resolution_val = 300
