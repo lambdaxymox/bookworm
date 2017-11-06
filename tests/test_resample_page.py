@@ -17,7 +17,7 @@ class TestResamplePage(unittest.TestCase):
 
         resolution = Resolution.make(resolution_val, unit_str)
         try:
-            action = resample_page.resample_page(resolution, source_file, target_file)
+            action = resample_page.make(resolution, source_file, target_file)
         except ValueError as e:
             self.fail("An error should not have occurred here.")
 

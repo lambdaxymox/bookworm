@@ -17,7 +17,13 @@ class ResamplePage(command.PageCommand):
         self.target   = '\"{}\"'.format(target)
 
     def as_python_subprocess(self):
-        return [self.command, self.units, self.resample, self.source, self.target]
+        return [
+            self.command,
+            self.units,
+            self.resample,
+            self.source,
+            self.target
+        ]
 
     def as_terminal_command(self):
         return \
@@ -25,7 +31,7 @@ class ResamplePage(command.PageCommand):
             .format(self.command, self.units, self.resample, self.quoted_old_file, self.quoted_new_file)
 
 
-def resample_page(resolution, source, target=''):
+def make(resolution, source, target=''):
     """
     The function ``resample_page`` is a factory method that generates a
     ``ResamplePage`` command.
@@ -96,7 +102,7 @@ def process_args(arg_dict):
             # Use input as the target file.
             output = input
 
-        return resample_page(resolution, input, output)
+        return make(resolution, input, output)
 
     else:
         raise FileNotFoundError('File or directory does not exist: {}'.format(input))
