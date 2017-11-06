@@ -148,15 +148,10 @@ def process_command(command_dict):
     Unpack the command and the arguments
     """
     try:
-        command  = command_dict['command']
+        command = command_dict['command']
         arg_dict = command_dict['args']
     except KeyError as e:
         raise e
-
-    try:
-        input = arg_dict['input']
-    except KeyError as e:
-        raise ValueError('Input file or directory not specified.')
 
     # Unpack the command arguments
     if command == 'unpack-pdf':

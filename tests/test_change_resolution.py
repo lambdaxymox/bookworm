@@ -1,6 +1,5 @@
 import unittest
 import bookworm.change_resolution as change_resolution
-import bookworm.util as util
 import os
 
 from bookworm.resolution import Resolution
@@ -24,7 +23,7 @@ class TestChangeResolution(unittest.TestCase):
         self.assertEqual(action.source, target_file)
 
 
-class TestChangeResolution(unittest.TestCase):
+class TestChangeResolutionProcessArgs(unittest.TestCase):
     
     def test_process_args(self):
         source_file = 'sample/sample.tiff'
@@ -153,7 +152,7 @@ class TestMultiChangePageResolution(unittest.TestCase):
             action = change_resolution.process_args(arg_dict)
 
             # Action should not have been assigned a value.
-            self.fail('Negative integer accepted for resolution value.')
+            self.fail(f'Negative integer accepted: {action}')
         except TypeError as e:
             self.assertIsInstance(e, TypeError)
         except ValueError as e:
@@ -173,7 +172,7 @@ class TestMultiChangePageResolution(unittest.TestCase):
             action = change_resolution.process_args(arg_dict)
 
             # Action should not have been assigned a value.
-            self.fail('Fractional value accepted for resolution value.')
+            self.fail(f'Fractional value accepted: {action}')
         except TypeError as e:
             self.assertIsInstance(e, TypeError)
         except ValueError as e:

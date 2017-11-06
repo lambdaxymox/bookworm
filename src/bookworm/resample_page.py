@@ -42,9 +42,9 @@ def multi_resample_page(resolution, source_path, source_files, target):
     Resample multiple pages.
     """
     actions = {}
-    for source in sources:
-        action = resample_page(resolution, os.path.join(source_path, source), target)
-        actions[source] = action
+    for source_file in source_files:
+        action = resample_page(resolution, os.path.join(source_path, source_file), target)
+        actions[source_file] = action
 
     return actions
 

@@ -1,7 +1,5 @@
 import unittest
 import bookworm.resample_page as resample_page
-import bookworm.util as util
-import os
 
 from bookworm.resolution import Resolution
 
@@ -16,7 +14,7 @@ class TestResamplePage(unittest.TestCase):
 
         resolution = Resolution.make(resolution_val, unit_str)
         try:
-            action = resample_page.resample_page(resolution, source_file)
+            action = resample_page.resample_page(resolution, source_file, target_file)
         except ValueError as e:
             self.fail("An error should not have occurred here.")
 

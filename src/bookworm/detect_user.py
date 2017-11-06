@@ -2,11 +2,16 @@ import os
 
 
 def is_admin():
+    """
+    The function ``is_admin`` detects whether the calling process is running
+    with administrator/superuser privileges. It works cross-platform on 
+    either Windows NT systems or Unix-based systems.
+    """
     if os.name == 'nt':
         try:
             # Only windows users with admin privileges can read 
             # the C:\windows\temp directory.
-            temp = os.listdir(os.sep.join([os.environ.get('SystemRoot','C:\\windows'),'temp']))
+            os.listdir(os.sep.join([os.environ.get('SystemRoot','C:\\windows'),'temp']))
         except:
             return False
         else:
