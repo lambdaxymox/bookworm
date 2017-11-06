@@ -34,9 +34,9 @@ to change the resolution of a page, in pixels per inch, without modifying the pa
 Dependencies
 ============
 
-These following programs are required to run bookworm:
+These following programs are required to run bookworm.
 ```
 GhostScript
 ImageMagick
-Python 3 ( >= 3.2)
+Python 3 ( >= 3.6)
 ```

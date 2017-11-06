@@ -104,17 +104,17 @@ class TestQuotedString(unittest.TestCase):
     
     def test_quoted_string_closed_in_quotes(self):
         string='\"foo bar baz quux!\"'
-        self.run_with(string=string, expected='{}'.format(string))
+        self.run_with(string=string, expected=f'{string}')
     
     def test_quoted_string_with_one_quote_head(self):
         string='\"foo bar baz quux'
-        self.run_with(string=string, expected='{}\"'.format(string))
+        self.run_with(string=string, expected=f'{string}\"')
 
     def test_quoted_string_with_one_quote_tail(self):
         string='foo bar baz quux\"'
-        self.run_with(string=string, expected='\"{}'.format(string))
+        self.run_with(string=string, expected=f'\"{string}')
 
     def test_quoted_string_no_quotes(self):
         string = 'foo bar baz quux!'
-        self.run_with(string=string, expected='\"{}\"'.format(string))
+        self.run_with(string=string, expected=f'\"{string}\"')
 

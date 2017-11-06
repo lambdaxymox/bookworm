@@ -108,29 +108,29 @@ def arg_processor():
 def check_positive(value):
     ivalue = int(value)
     if ivalue <= 0:
-        raise argparse.ArgumentTypeError('{} needs to be a positive integer'.format(ivalue))
+        raise argparse.ArgumentTypeError(f'{ivalue} needs to be a positive integer')
     return ivalue
 
 
 def check_dims(value):
     dims = value.split('x')
     if len(dims) != 2:
-        raise argparse.ArgumentTypeError('{} needs to be of the form WIDTHxHEIGHT'.format(value))
+        raise argparse.ArgumentTypeError(f'{value} needs to be of the form WIDTHxHEIGHT')
 
     try:
         iwidth  = int(dims[0])
     except ValueError as ve:
-        raise argparse.ArgumentTypeError('{} needs to be an integer'.format(dims[0]))
+        raise argparse.ArgumentTypeError(f'{dims[0]} needs to be an integer')
 
     try:
         iheight = int(dims[1])
     except ValueError as ve:
-        raise argparse.ArgumentTypeError('{} needs to be an integer'.format(dims[1]))
+        raise argparse.ArgumentTypeError(f'{dims[1]} needs to be an integer')
 
     if iwidth < 0:
-        raise argparse.ArgumentTypeError('{} needs to be positive'.format(iwidth))
+        raise argparse.ArgumentTypeError(f'{iwidth} needs to be positive')
     if iheight < 0:
-        raise argparse.ArgumentTypeError('{} needs to be positive'.format(iheight)) 
+        raise argparse.ArgumentTypeError(f'{iheight} needs to be positive') 
 
     return (iwidth, iheight)
 
@@ -172,7 +172,7 @@ def process_command(command_dict):
         return resample_page.process_args(arg_dict)
 
     else:
-        raise ValueError('Invalid command: {}'.format(command))
+        raise ValueError(f'Invalid command: {command}')
 
 
 def main():
@@ -187,8 +187,8 @@ def main():
     parser = arg_processor()
     
     if detect_user.is_admin():
-        warning('You are currently running as superuser. \
-                You really should not run this program with elevated privileges.')
+        warning('You are currently running as superuser. '
+                'You really should not run this program with elevated privileges.')
 
     if len(sys.argv) < 2:
         help_text(parser)

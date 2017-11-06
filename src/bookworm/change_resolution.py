@@ -11,8 +11,8 @@ class ChangeResolution(command.PageCommand):
     """
     def __init__(self, source, target, resolution):
         self.command = 'convert'
-        self.density = '-density {}'.format(resolution.value)
-        self.units = '-units {}'.format(resolution.unit_str())
+        self.density = f'-density {resolution.value}'
+        self.units = f'-units {resolution.unit_str()}'
         self.source = source
         self.target = target
         self.resolution = resolution
@@ -48,10 +48,7 @@ def change_page_resolution(resolution, source, target=''):
     generates a ``ChangePageResolution`` command.
     """
     if resolution.value <= 0:
-        raise ValueError(
-            'Resolution must be positive. Got: {}'
-            .format(resolution)
-        )
+        raise ValueError(f'Resolution must be positive. Got: {resolution}')
 
     if not target:
         new_target = util.temp_file_name(source)
@@ -124,5 +121,5 @@ def process_args(arg_dict):
         return change_page_resolution(resolution, input, output)
 
     else:
-        raise FileNotFoundError('File or directory does not exist: {}'.format(input))
+        raise FileNotFoundError(f'File or directory does not exist: {input}')
 

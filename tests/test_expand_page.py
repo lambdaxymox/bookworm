@@ -13,7 +13,7 @@ class TestExpandPageWithFill(unittest.TestCase):
 
         action = expand_page.expand_page_with_fill(width, height, source_file)
         correct_subcommand = [
-                'convert', '-extent {}x{}'.format(width, height), '-background white', 
+                'convert', f'-extent {width}x{height}', '-background white', 
                 '-gravity Center', '\"'+source_file+'\"', '\"'+target_file+'\"'
             ]
 
