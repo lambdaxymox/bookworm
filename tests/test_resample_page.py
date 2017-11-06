@@ -44,3 +44,64 @@ class TestResamplePageProcessArgs(unittest.TestCase):
 
         self.assertIsInstance(action, resample_page.ResamplePage)
 
+
+    def test_process_args_should_reject_zero_resolution(self):
+        source_file = 'sample/sample.tiff'
+        target_file = 'sample/sample.tiff'
+        resolution_val = 0
+        unit_str = 'PixelsPerInch'
+        arg_dict = {
+            'input': source_file,
+            'output': target_file,
+            'resolution': resolution_val,
+            'units': unit_str
+        }
+
+        with self.assertRaises(ValueError):
+            resample_page.process_args(arg_dict)
+
+
+    def test_process_args_should_reject_negative_resolution(self):
+        source_file = 'sample/sample.tiff'
+        target_file = 'sample/sample.tiff'
+        resolution_val = -300
+        unit_str = 'PixelsPerInch'
+        arg_dict = {
+            'input': source_file,
+            'output': target_file,
+            'resolution': resolution_val,
+            'units': unit_str
+        }
+
+        with self.assertRaises(ValueError):
+            resample_page.process_args(arg_dict)
+
+
+    def test_process_args_should_reject_noninteger_resolutions(self):
+        source_file = 'sample/sample.tiff'
+        target_file = 'sample/sample.tiff'
+        resolution_val = 300.1
+        unit_str = 'PixelsPerInch'
+        arg_dict = {
+            'input': source_file,
+            'output': target_file,
+            'resolution': resolution_val,
+            'units': unit_str
+        }
+
+        with self.assertRaises(TypeError):
+            resample_page.process_args(arg_dict)
+
+
+    def test_process_args_should_reject_missing_units(self):
+        source_file = 'sample/sample.tiff'
+        target_file = 'sample/sample.tiff'
+        resolution_val = 300
+        arg_dict = {
+            'input': source_file,
+            'output': target_file,
+            'resolution': resolution_val
+        }
+
+        with self.assertRaises(KeyError):
+            resample_page.process_args(arg_dict)
