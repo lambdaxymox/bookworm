@@ -1,7 +1,5 @@
 import os.path
 
-from bookworm.resolution import Resolution
-
 
 def temp_file_name(file_name):
 

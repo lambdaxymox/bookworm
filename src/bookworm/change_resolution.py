@@ -65,9 +65,10 @@ def multi_change_page_resolution(resolution, source_path, source_files, target):
     Change the properties of multiple pages in a single directory.
     """
     actions = {}
-
     for source in source_files:
-        action = change_page_resolution(resolution, os.path.join(source_path, source), target)
+        action = change_page_resolution(
+            resolution, os.path.join(source_path, source), target
+        )
         actions[source] = action
 
     return actions
@@ -79,16 +80,20 @@ def process_args(arg_dict):
     uses them to construct a page command.
     """
     try:
-        input      = arg_dict['input']
-        resolution = arg_dict['resolution']
+        input = arg_dict['input']
+        resolution_val = arg_dict['resolution']
     except KeyError as e:
         raise e
     
-    try:
-        if resolution <= 0:
-            raise ValueError('Resolution needs to be a positive integer. Got negative value: {}'.format(resolution))
+    if resolution_val <= 0:
+        raise ValueError(
+            'Resolution needs to be a positive integer.'
+            ' Got negative value: {}'
+            .format(resolution_val)
+        )
 
-        resolution = Resolution.make(resolution, 'PixelsPerInch')
+    try:
+        resolution = Resolution.make(resolution_val, 'PixelsPerInch')
     except TypeError as e:
         raise e
     except ValueError as e:
@@ -103,7 +108,6 @@ def process_args(arg_dict):
             output = input
         
         files_dict = {'path': input, 'files': os.listdir(input)}
-
         tiff_files_dict = util.with_extension('.tiff', files_dict)
 
         return multi_change_page_resolution(resolution, tiff_files_dict['path'], tiff_files_dict['files'], output)

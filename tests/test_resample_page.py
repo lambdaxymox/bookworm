@@ -18,7 +18,7 @@ class TestResamplePage(unittest.TestCase):
         try:
             action = resample_page.resample_page(resolution, source_file)
         except ValueError as e:
-            self.fail()
+            self.fail("An error should not have occurred here.")
 
         self.assertIsInstance(action, resample_page.ResamplePage)
 
