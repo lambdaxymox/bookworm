@@ -13,7 +13,7 @@ class TestUnpackPDF(unittest.TestCase):
         source_pdf = './foo/bar/baz/quux.pdf'
         target_dir = f'./foo/bar/baz/{util.default_subdirectory()}'
 
-        terminal_command = unpack_pdf.unpack_pdf(source_pdf)
+        terminal_command = unpack_pdf.make(source_pdf)
 
         self.assertEqual(terminal_command.image_dir(), target_dir)
 

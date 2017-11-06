@@ -47,7 +47,7 @@ class UnpackPDF(command.PDFCommand):
         pass
 
 
-def unpack_pdf(source_pdf, target_dir=''):
+def make(source_pdf, target_dir=''):
     """
     Unpack a PDF file into a collection of TIFF files, one for each page, into
     a target directory. If a target directory is not specified, a default one is
@@ -84,5 +84,5 @@ def process_args(arg_dict):
         # Derive a default output directory from the input file.
         output = util.temp_directory(input)
 
-    return unpack_pdf(input, output)
+    return make(input, output)
 
