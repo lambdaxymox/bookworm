@@ -63,15 +63,8 @@ class TestExpandPageWithFillProcessArgs(unittest.TestCase):
         dimensions = (width, height)
         arg_dict = {'input': source, 'dimensions': dimensions}
 
-        action = None
-        try:
-            action = expand_page.process_args(arg_dict)
-        except FileNotFoundError as e:
-            # An exception should occur.
-            self.assertIsInstance(e, FileNotFoundError)
-
-        # Action should not have been assigned a value.
-        self.assertIsInstance(action, type(None))
+        with self.assertRaises(FileNotFoundError):
+            expand_page.process_args(arg_dict)
 
 
 class TestMultipleExpandPages(unittest.TestCase):
@@ -100,13 +93,6 @@ class TestMultipleExpandPages(unittest.TestCase):
         dimensions = (width, height)
         arg_dict = {'input': source, 'dimensions': dimensions}
 
-        action = None
-        try:
-            action = expand_page.process_args(arg_dict)
-        except FileNotFoundError as e:
-            # An exception should occur.
-            self.assertIsInstance(e, FileNotFoundError)
-
-        # Action should not have been assigned a value.
-        self.assertIsInstance(action, type(None))
+        with self.assertRaises(FileNotFoundError):
+            expand_page.process_args(arg_dict)
 

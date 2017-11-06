@@ -11,7 +11,7 @@ class TestUnpackPDF(unittest.TestCase):
         UnpackPDF should derive a local directory from the path to the source pdf file.
         """
         source_pdf = './foo/bar/baz/quux.pdf'
-        target_dir = './foo/bar/baz/' + util.default_subdirectory()
+        target_dir = f'./foo/bar/baz/{util.default_subdirectory()}'
 
         terminal_command = unpack_pdf.unpack_pdf(source_pdf)
 
@@ -19,6 +19,10 @@ class TestUnpackPDF(unittest.TestCase):
 
 
     def test_action_setup_should_reject_non_existent_output_directory(self):
+        """
+        The UnpackPDF class's ``setup`` method should fail when the 
+        output directory does not exist.
+        """
         source_pdf = 'sample/doesnotexist.pdf'
         target_dir = 'sample/'
         arg_dict = {'input': source_pdf, 'output': target_dir}
@@ -29,8 +33,11 @@ class TestUnpackPDF(unittest.TestCase):
 
 
     def test_unpack_pdf_generates_correct_terminal_command(self):
+        """
+        An ``UnpackPDF`` object should be a valid python subprocess.
+        """
         source_pdf = 'sample/sample.pdf'
-        target_dir = 'sample/__bookworm__/'
+        target_dir = f'sample/{util.default_subdirectory()}'
         arg_dict = {'input': source_pdf, 'output': target_dir}
 
         if not os.path.isdir(target_dir):
@@ -49,12 +56,15 @@ class TestUnpackPDF(unittest.TestCase):
         self.assertEqual(action.as_python_subprocess(), terminal_command)
 
 
+class TestUnpackPDFSetup(unittest.TestCase):
+
     def test_unpack_pdf_setup(self):
         """
-        An UnpackPDF object's setup function should make the target directory if it does not exist.
+        An UnpackPDF object's setup function should make the target directory
+        if it does not exist.
         """
         source_pdf = 'sample/sample.pdf'
-        target_dir = 'sample/' + util.default_subdirectory()
+        target_dir = f'sample/{util.default_subdirectory()}'
         arg_dict = {'input': source_pdf, 'output': target_dir}
 
         action = unpack_pdf.process_args(arg_dict)
@@ -77,8 +87,14 @@ class TestUnpackPDF(unittest.TestCase):
 class TestUnpackPDFProcessArgs(unittest.TestCase):
 
     def test_process_args(self):
+        """
+        The ``UnpackPDF`` class's ``process_args`` method should correctly
+        take an input pdf, and create an action that will pass the contents
+        of the pdf into a default subdirectory in the same directory as the 
+        pdf file.
+        """
         source_pdf = 'sample/sample.pdf'
-        target_dir = 'sample/__bookworm__/'
+        target_dir = f'sample/{util.default_subdirectory()}'
         arg_dict = {'input': source_pdf, 'output': target_dir}
 
         if not os.path.isdir(target_dir):

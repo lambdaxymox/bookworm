@@ -5,7 +5,7 @@ import os.path
 
 class UnpackPDF(command.PDFCommand):
     """
-    Unpack a pdf into a collection of TIFF files.
+    Unpack a pdf into a collection of TIFF files inside a target directory.
     """
     def __init__(self, source_pdf, target_dir, resolution=600):
         self.command = 'gs'
@@ -14,7 +14,7 @@ class UnpackPDF(command.PDFCommand):
         self.args = [
             '-q', '-dNOPAUSE',   '-dBATCH',
             '-sDEVICE=tiff24nc', '-sCompression=lzw', 
-            '-r{}x{}'.format(resolution, resolution),
+            f'-r{resolution}x{resolution}',
             '-sOutputFile={}'.format(os.path.join(self.target_dir, '_Page_%04d.tiff'))
         ]
 
