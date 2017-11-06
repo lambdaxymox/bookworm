@@ -47,7 +47,7 @@ class ExpandPageWithFill(command.PageCommand):
         return NotImplemented
 
 
-def expand_page_with_fill(width, height, source, target=''):
+def make(width, height, source, target=''):
     """
     The function ``expand_page_with_fill`` is a factory method that constructs
     an ``ExpandPageWIithFill`` action. It expands the side of a page by 
@@ -65,7 +65,7 @@ def multi_expand_page(width, height, source_path, source_files, target):
     actions = {}
 
     for source in source_files:
-        action = expand_page_with_fill(width, height, os.path.join(source_path, source), target)
+        action = make(width, height, os.path.join(source_path, source), target)
         actions[source] = action
 
     return actions
@@ -101,7 +101,7 @@ def process_args(arg_dict):
             output = input
 
 
-        return expand_page_with_fill(width, height, input, output)
+        return make(width, height, input, output)
 
     elif os.path.isdir(input):
         try:

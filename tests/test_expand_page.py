@@ -15,7 +15,7 @@ class TestExpandPageWithFill(unittest.TestCase):
         width = 2160
         height = 3060
 
-        action = expand_page.expand_page_with_fill(width, height, source_file)
+        action = expand_page.make(width, height, source_file)
         correct_subcommand = [
                 'convert', f'-extent {width}x{height}', '-background white', 
                 '-gravity Center', '\"'+source_file+'\"', '\"'+target_file+'\"'
