@@ -106,6 +106,10 @@ def arg_processor():
 
 
 def check_positive(value):
+    """
+    Determine whether the input value is a positive
+    integer.
+    """
     ivalue = int(value)
     if ivalue <= 0:
         raise argparse.ArgumentTypeError(f'{ivalue} needs to be a positive integer')
@@ -113,6 +117,9 @@ def check_positive(value):
 
 
 def check_dims(value):
+    """
+    Check that the input dimensions for a page are valid.
+    """
     dims = value.split('x')
     if len(dims) != 2:
         raise argparse.ArgumentTypeError(f'{value} needs to be of the form WIDTHxHEIGHT')
@@ -136,16 +143,22 @@ def check_dims(value):
 
 
 def help_text(parser):
+    """
+    Return the help information for how to use the interface.
+    """
     return parser.parse_args(['--help'])
 
 
 def warning(*objs):
+    """
+    A helper method for printing warnings.
+    """
     print('WARNING: ', *objs, file=sys.stderr)
 
 
 def process_command(command_dict):
     """
-    Unpack the command and the arguments
+    Unpack the command and the arguments.
     """
     try:
         command = command_dict['command']
@@ -175,9 +188,9 @@ def main():
     The main pdf operations are:
 
     1. Unpack a PDF.
-    3. Change image resolution.
-    4. Rescale image.
-    5. Expand image with fill.
+    2. Change image resolution.
+    3. Rescale image.
+    4. Expand image with fill.
     """
     parser = arg_processor()
     
