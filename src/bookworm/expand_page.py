@@ -22,7 +22,14 @@ class ExpandPageWithFill(command.PageCommand):
         quoted_source = util.quoted_string(self.source)
         quoted_target = util.quoted_string(self.target)
 
-        return [self.command, self.extent, self.background, self.gravity, quoted_source, quoted_target]
+        return [
+            self.command,
+            self.extent,
+            self.background,
+            self.gravity,
+            quoted_source,
+            quoted_target
+        ]
 
     def as_terminal_command(self):
         quoted_source = util.quoted_string(self.source)
@@ -78,14 +85,13 @@ def process_args(arg_dict):
     try: 
         width  = dimensions[0]
         height = dimensions[1]
-
-        if width <= 0 or height <= 0:
-            raise ValueError('Dimensions must be positive integers: Got {}x{}'.format(width, height))
     except TypeError as e:
         raise e
     except ValueError as e:
         raise e
 
+    if width <= 0 or height <= 0:
+        raise ValueError('Dimensions must be positive integers: Got {}x{}'.format(width, height))
 
     if os.path.isfile(input):
         try:
