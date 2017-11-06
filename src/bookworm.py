@@ -156,6 +156,17 @@ def warning(*objs):
     print('WARNING: ', *objs, file=sys.stderr)
 
 
+def load_module(module):
+    ALLOWED_COMMANDS = {
+        'unpack-pdf': unpack_pdf,
+        'change-resolution': change_resolution,
+        'expand-page': expand_page,
+        'resample-page': resample_page,
+    }
+
+    return ALLOWED_COMMANDS[module]
+
+
 def process_command(command_dict):
     """
     Unpack the command and the arguments.
@@ -166,21 +177,17 @@ def process_command(command_dict):
     except KeyError as e:
         raise e
 
-    # Unpack the command arguments
-    if command == 'unpack-pdf':
-        return unpack_pdf.process_args(arg_dict)
-    
-    elif command == 'change-resolution':
-        return change_resolution.process_args(arg_dict)
-
-    elif command == 'expand-page':
-        return expand_page.process_args(arg_dict)
-
-    elif command == 'resample-page':
-        return resample_page.process_args(arg_dict)
-
-    else:
+    try:
+        module = load_module(command)
+    except:
         raise ValueError(f'Invalid command: {command}')
+
+    try:
+        action = module.process_args(arg_dict)
+    except:
+        raise ValueError(f'Invalid arguments. Got: {arg_dict}')
+
+    return action
 
 
 def main():
