@@ -17,7 +17,7 @@ class ChangeResolution(abstract.Command):
         self.target = target
         self.resolution = resolution
 
-    def as_python_subprocess(self):
+    def as_subprocess(self):
         return [
             self.command,
             self.density,

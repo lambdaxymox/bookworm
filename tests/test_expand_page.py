@@ -21,7 +21,7 @@ class TestExpandPageWithFill(unittest.TestCase):
                 '-gravity Center', '\"'+source_file+'\"', '\"'+target_file+'\"'
             ]
 
-        self.assertEqual(action.as_python_subprocess(), correct_subcommand)
+        self.assertEqual(action.as_subprocess(), correct_subcommand)
 
 
 class TestExpandPageWithFillProcessArgs(unittest.TestCase):

@@ -16,7 +16,7 @@ class ResamplePage(abstract.Command):
         self.source   = '\"{}\"'.format(source)
         self.target   = '\"{}\"'.format(target)
 
-    def as_python_subprocess(self):
+    def as_subprocess(self):
         return [
             self.command,
             self.units,

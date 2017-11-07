@@ -54,7 +54,7 @@ class TestUnpackPDF(unittest.TestCase):
 
         os.rmdir(target_dir)
         
-        self.assertEqual(action.as_python_subprocess(), terminal_command)
+        self.assertEqual(action.as_subprocess(), terminal_command)
 
 
 class TestUnpackPDFSetup(unittest.TestCase):

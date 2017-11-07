@@ -18,7 +18,7 @@ class UnpackPDF(abstract.Command):
             '-sOutputFile={}'.format(os.path.join(self.target_dir, '_Page_%04d.tiff'))
         ]
 
-    def as_python_subprocess(self):
+    def as_subprocess(self):
         return [self.command] + self.args + [self.source_pdf]
 
     def as_terminal_command(self):

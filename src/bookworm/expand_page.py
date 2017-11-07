@@ -18,7 +18,7 @@ class ExpandPageWithFill(abstract.Command):
         self.width = width
         self.height = height
 
-    def as_python_subprocess(self):
+    def as_subprocess(self):
         quoted_source = util.quoted_string(self.source)
         quoted_target = util.quoted_string(self.target)
 

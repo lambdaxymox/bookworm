@@ -13,7 +13,7 @@ class Command(abc.ABC):
         return NotImplemented
 
     @abc.abstractmethod
-    def as_python_subprocess(self):
+    def as_subprocess(self):
         return NotImplemented
 
     def __str__(self):
