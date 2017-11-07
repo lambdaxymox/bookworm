@@ -35,12 +35,6 @@ class ChangeResolution(command.Command):
             util.quoted_string(self.target)
         )
 
-    def setup(self):
-        return NotImplemented
-
-    def commit(self):
-        return NotImplemented
-
 
 def make(resolution, source, target=''):
     """
@@ -73,7 +67,7 @@ def multi_change_page_resolution(resolution, source_path, source_files, target):
 
 def process_args(arg_dict):
     """
-    The ``process_args`` method parses the command line arguments in 
+    The ``process_args`` factory method parses the command line arguments in 
     ``arg_dict`` and uses them to construct a page command.
     """
     try:

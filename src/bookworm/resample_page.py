@@ -33,8 +33,7 @@ class ResamplePage(command.Command):
 
 def make(resolution, source, target=''):
     """
-    The function ``make`` is a factory method that generates a 
-    ``ResamplePage`` command.
+    The ``make`` factory method that generates a ``ResamplePage`` command.
     """
     if not target:
         new_target = util.temp_file_name(source)
@@ -57,7 +56,7 @@ def multi_resample_page(resolution, source_path, source_files, target):
 
 def process_args(arg_dict):
     """
-    The ``process_args`` method parses the command line arguments in 
+    The ``process_args`` factory method parses the command line arguments in 
     ``arg_dict`` and uses them to construct a ``ResamplePage`` command.
     """
     try:

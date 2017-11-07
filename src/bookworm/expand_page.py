@@ -40,12 +40,6 @@ class ExpandPageWithFill(command.Command):
             '{} {} {} {} {} {}' \
             .format(self.command, self.extent, self.background, self.gravity, quoted_source, final_arg)
 
-    def setup(self):
-        return NotImplemented
-
-    def commit(self):
-        return NotImplemented
-
 
 def make(width, height, source, target=''):
     """
@@ -62,8 +56,11 @@ def make(width, height, source, target=''):
 
 
 def multi_expand_page(width, height, source_path, source_files, target):
+    """
+    Create multiple ExpandPageWithFill actions, one per page, in a single
+    directory.
+    """
     actions = {}
-
     for source in source_files:
         action = make(width, height, os.path.join(source_path, source), target)
         actions[source] = action
@@ -73,8 +70,8 @@ def multi_expand_page(width, height, source_path, source_files, target):
 
 def process_args(arg_dict):
     """
-    The ``process_args`` method parses the command line arguments in ``arg_dict`` and 
-    uses them to construct a page command.
+    The ``process_args`` factory method parses the command line arguments in
+    ``arg_dict`` and uses them to construct a page command.
     """
     try:
         input      = arg_dict['input']

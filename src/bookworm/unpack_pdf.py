@@ -27,31 +27,13 @@ class UnpackPDF(command.Command):
     def image_dir(self):
         return self.target_dir
 
-    def setup(self):
-        """
-        Prepare an action for execution by setting up folders and IO.
-        """
-        # The input file does not exist.
-        if (not os.path.isfile(self.source_pdf)) and os.path.isdir(self.target_dir):
-            raise FileNotFoundError('Input file does not exist: {}'.format(self.source_pdf))
-
-        # The output file does not exist.
-        elif (os.path.isfile(self.source_pdf)) and (not os.path.isdir(self.target_dir)):
-            os.mkdir(self.target_dir)
-
-        else:
-            # Nothing needs to be done.
-            return
-
-    def commit(self):
-        pass
-
 
 def make(source_pdf, target_dir=''):
     """
-    Unpack a PDF file into a collection of TIFF files, one for each page, into
-    a target directory. If a target directory is not specified, a default one is
-    used in the directory of the source pdf file.
+    The ``make`` factory method unpacks a PDF file into a collection of TIFF 
+    files, one per page, into the target directory. If a target directory is
+    not specified, a default one is used in the directory of the source pdf
+    file.
     """
     if not target_dir:
         # Use a default directory.
@@ -64,7 +46,7 @@ def make(source_pdf, target_dir=''):
 
 def process_args(arg_dict):
     """
-    The ``process_args`` method parses the command line arguments in
+    The ``process_args`` factory method parses the command line arguments in
     ``arg_dict`` and uses them to construct a page command. In particular,
     parse through the command line arguments to product an ``UnpackPDF``
     command.
@@ -85,4 +67,24 @@ def process_args(arg_dict):
         output = util.temp_directory(input)
 
     return make(input, output)
+
+#
+#    def setup(self):
+#        """
+#        Prepare an action for execution by setting up folders and IO.
+#        """
+#        # The input file does not exist.
+#        if (not os.path.isfile(self.source_pdf)) and os.path.isdir(self.target_dir):
+#            raise FileNotFoundError('Input file does not exist: {}'.format(self.source_pdf))
+#
+#        # The output file does not exist.
+#        elif (os.path.isfile(self.source_pdf)) and (not os.path.isdir(self.target_dir)):
+#            os.mkdir(self.target_dir)
+#
+#        else:
+#            # Nothing needs to be done.
+#            return
+#
+#    def commit(self):
+#        pass
 
