@@ -13,9 +13,9 @@ class TestUnpackPDF(unittest.TestCase):
         source_pdf = './foo/bar/baz/quux.pdf'
         target_dir = f'./foo/bar/baz/{util.default_subdirectory()}'
 
-        terminal_command = unpack_pdf.make(source_pdf)
+        action = unpack_pdf.make(source_pdf)
 
-        self.assertEqual(terminal_command.image_dir(), target_dir)
+        self.assertEqual(action.image_dir(), target_dir)
 
 
     def test_action_setup_should_reject_non_existent_output_directory(self):
@@ -47,10 +47,11 @@ class TestUnpackPDF(unittest.TestCase):
         action = unpack_pdf.process_args(arg_dict)
 
         terminal_command = [
-                'gs', '-q', '-dNOPAUSE', '-dBATCH',   '-sDEVICE=tiff24nc', 
-                '-sCompression=lzw',     '-r600x600', '-sOutputFile='+target_dir+'_Page_%04d.tiff', 
-                source_pdf
-            ]
+            'gs', '-q', '-dNOPAUSE', '-dBATCH',   '-sDEVICE=tiff24nc', 
+            '-sCompression=lzw',     '-r600x600', 
+            f'-sOutputFile={target_dir}_Page_%04d.tiff',
+            source_pdf
+        ]
 
         os.rmdir(target_dir)
         
