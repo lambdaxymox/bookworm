@@ -18,7 +18,6 @@ class TestUnpackPDF(unittest.TestCase):
         self.assertEqual(terminal_command.image_dir(), target_dir)
 
 
-    @unittest.skip
     def test_action_setup_should_reject_non_existent_output_directory(self):
         """
         The UnpackPDF class's ``setup`` method should fail when the 
@@ -30,7 +29,8 @@ class TestUnpackPDF(unittest.TestCase):
 
         action = unpack_pdf.process_args(arg_dict)
 
-        self.assertRaises(FileNotFoundError, action.setup)
+        with self.assertRaises(FileNotFoundError):
+            unpack_pdf.Runner.setup(action)
 
 
     def test_unpack_pdf_generates_correct_terminal_command(self):
@@ -59,7 +59,6 @@ class TestUnpackPDF(unittest.TestCase):
 
 class TestUnpackPDFSetup(unittest.TestCase):
 
-    @unittest.skip
     def test_unpack_pdf_setup(self):
         """
         An UnpackPDF object's setup function should make the target directory
@@ -72,7 +71,7 @@ class TestUnpackPDFSetup(unittest.TestCase):
         action = unpack_pdf.process_args(arg_dict)
 
         try:
-            action.setup()
+            unpack_pdf.Runner.setup(action)
         except FileNotFoundError as e:
             os.rmdir(target_dir)
             self.fail()

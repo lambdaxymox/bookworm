@@ -68,23 +68,28 @@ def process_args(arg_dict):
 
     return make(input, output)
 
-#
-#    def setup(self):
-#        """
-#        Prepare an action for execution by setting up folders and IO.
-#        """
-#        # The input file does not exist.
-#        if (not os.path.isfile(self.source_pdf)) and os.path.isdir(self.target_dir):
-#            raise FileNotFoundError('Input file does not exist: {}'.format(self.source_pdf))
-#
-#        # The output file does not exist.
-#        elif (os.path.isfile(self.source_pdf)) and (not os.path.isdir(self.target_dir)):
-#            os.mkdir(self.target_dir)
-#
-#        else:
-#            # Nothing needs to be done.
-#            return
-#
-#    def commit(self):
-#        pass
+
+class Runner(abstract.Runner):
+
+    def setup(command):
+        """
+        Prepare an action for execution by setting up folders and IO.
+        """
+        # The input file does not exist.
+        if (not os.path.isfile(command.source_pdf)) and os.path.isdir(command.target_dir):
+            raise FileNotFoundError('Input file does not exist: {}'.format(command.source_pdf))
+
+        # The output file does not exist.
+        elif (os.path.isfile(command.source_pdf)) and (not os.path.isdir(command.target_dir)):
+            os.mkdir(command.target_dir)
+
+        else:
+            # Nothing needs to be done.
+            return
+
+    def execute(command):
+        pass
+
+    def commit(command):
+        pass
 
