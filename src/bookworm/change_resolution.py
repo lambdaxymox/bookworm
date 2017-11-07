@@ -44,8 +44,8 @@ class ChangeResolution(command.PageCommand):
 
 def make(resolution, source, target=''):
     """
-    The function ``change_page_resolution`` is a factory method that
-    generates a ``ChangePageResolution`` command.
+    The function ``make`` is a factory method that creates a 
+    ``ChangePageResolution`` action.
     """
     if resolution.value <= 0:
         raise ValueError(f'Resolution must be positive. Got: {resolution}')
@@ -73,8 +73,8 @@ def multi_change_page_resolution(resolution, source_path, source_files, target):
 
 def process_args(arg_dict):
     """
-    The ``process_args`` method parses the command line arguments in ``arg_dict`` and 
-    uses them to construct a page command.
+    The ``process_args`` method parses the command line arguments in 
+    ``arg_dict`` and uses them to construct a page command.
     """
     try:
         input = arg_dict['input']

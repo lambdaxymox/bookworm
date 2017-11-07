@@ -33,7 +33,7 @@ class ResamplePage(command.PageCommand):
 
 def make(resolution, source, target=''):
     """
-    The function ``resample_page`` is a factory method that generates a
+    The function ``make`` is a factory method that generates a 
     ``ResamplePage`` command.
     """
     if not target:
@@ -57,8 +57,8 @@ def multi_resample_page(resolution, source_path, source_files, target):
 
 def process_args(arg_dict):
     """
-    The ``process_args`` method parses the command line arguments in ``arg_dict`` and 
-    uses them to construct a ``ResamplePage`` command.
+    The ``process_args`` method parses the command line arguments in 
+    ``arg_dict`` and uses them to construct a ``ResamplePage`` command.
     """
     try:
         input = arg_dict['input']
@@ -105,5 +105,5 @@ def process_args(arg_dict):
         return make(resolution, input, output)
 
     else:
-        raise FileNotFoundError('File or directory does not exist: {}'.format(input))
+        raise FileNotFoundError(f'File or directory does not exist: {input}')
 

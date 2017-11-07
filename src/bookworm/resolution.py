@@ -28,10 +28,10 @@ class Resolution:
         return str(self.units)
 
     def __repr__(self):
-        return 'Resolution({}, {})'.format(self.value, self.units)
+        return f'Resolution({self.value}, {self.units})'
 
     def __str__(self):
-        return '{} {}'.format(self.value, self.units)
+        return f'{self.value} {self.units}'
 
     def make(resolution_val, unit_str):
         if unit_str not in ResolutionUnits.__members__.keys():
