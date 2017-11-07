@@ -1,11 +1,11 @@
-import bookworm.command as command
-import bookworm.util    as util
+import bookworm.abstract as abstract
+import bookworm.util     as util
 import os.path
 
 from bookworm.resolution import Resolution
 
 
-class ChangeResolution(command.Command):
+class ChangeResolution(abstract.Command):
     """
     Change a page's image resolution without modifying the page contents.
     """
@@ -38,8 +38,8 @@ class ChangeResolution(command.Command):
 
 def make(resolution, source, target=''):
     """
-    The function ``make`` is a factory method that creates a 
-    ``ChangePageResolution`` action.
+    The ``make`` factory method that creates a ``ChangePageResolution``
+    action.
     """
     if resolution.value <= 0:
         raise ValueError(f'Resolution must be positive. Got: {resolution}')

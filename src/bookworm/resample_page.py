@@ -1,11 +1,11 @@
 import os
-import bookworm.command as command
-import bookworm.util    as util
+import bookworm.abstract as abstract
+import bookworm.util     as util
 
 from bookworm.resolution import Resolution
 
 
-class ResamplePage(command.Command):
+class ResamplePage(abstract.Command):
     """
     Rescale a page by changing its resolution and then resampling the image.
     """
