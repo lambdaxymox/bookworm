@@ -1,5 +1,6 @@
 import bookworm.abstract as abstract
 import bookworm.util     as util
+import subprocess
 import os.path
 
 
@@ -88,7 +89,7 @@ class Runner(abstract.Runner):
             return
 
     def execute(command):
-        pass
+        subprocess.run(command.as_subprocess())
 
     def commit(command):
         pass
