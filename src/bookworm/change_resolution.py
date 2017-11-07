@@ -5,7 +5,7 @@ import os.path
 from bookworm.resolution import Resolution
 
 
-class ChangeResolution(command.PageCommand):
+class ChangeResolution(command.Command):
     """
     Change a page's image resolution without modifying the page contents.
     """

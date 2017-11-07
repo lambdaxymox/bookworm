@@ -1,7 +1,7 @@
 import subprocess
 
 
-class PageCommand:
+class Command:
 
     def __init__(self, **kwargs):
         pass
@@ -37,7 +37,7 @@ class PageCommand:
         return 'Command({})'.format(self.as_python_subprocess())
 
 
-class PDFCommand(PageCommand):
+class PDFCommand(Command):
 
     def image_dir(self):
         return NotImplemented

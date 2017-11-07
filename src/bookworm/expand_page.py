@@ -3,7 +3,7 @@ import bookworm.util    as util
 import os.path
 
 
-class ExpandPageWithFill(command.PageCommand):
+class ExpandPageWithFill(command.Command):
     """
     Expand the side of a page by expanding the edges of the page with a fill
     color. This function only does this with the color white.
