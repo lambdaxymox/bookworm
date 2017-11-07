@@ -49,7 +49,7 @@ class ExpandPageWithFill(command.PageCommand):
 
 def make(width, height, source, target=''):
     """
-    The ``make`` is a factory method that constructs an 
+    The ``make`` function is a factory method that constructs an 
     ``ExpandPageWIithFill`` action. It expands the side of a page by 
     expanding the edges of the page with a fill color. This function only does
     this with the color white.
