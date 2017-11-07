@@ -3,7 +3,7 @@ import bookworm.util    as util
 import os.path
 
 
-class UnpackPDF(command.PDFCommand):
+class UnpackPDF(command.Command):
     """
     Unpack a pdf into a collection of TIFF files inside a target directory.
     """

@@ -36,9 +36,3 @@ class Command:
     def __repr__(self):
         return 'Command({})'.format(self.as_python_subprocess())
 
-
-class PDFCommand(Command):
-
-    def image_dir(self):
-        return NotImplemented
-
