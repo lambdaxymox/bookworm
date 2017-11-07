@@ -58,7 +58,29 @@ class TestUnpackPDF(unittest.TestCase):
         self.assertEqual(action.as_subprocess(), terminal_command)
 
 
-class TestUnpackPDFSetup(unittest.TestCase):
+class TestUnpackPDFProcessArgs(unittest.TestCase):
+
+    def test_process_args(self):
+        """
+        The ``UnpackPDF`` class's ``process_args`` method should correctly
+        take an input pdf, and create an action that will pass the contents
+        of the pdf into a default subdirectory in the same directory as the 
+        pdf file.
+        """
+        source_pdf = 'sample/sample.pdf'
+        target_dir = f'sample/{util.default_subdirectory()}'
+        arg_dict = {'input': source_pdf, 'output': target_dir}
+
+        if not os.path.isdir(target_dir):
+            os.mkdir(target_dir)
+        
+        action = unpack_pdf.process_args(arg_dict)
+        os.rmdir(target_dir)
+
+        self.assertIsInstance(action, unpack_pdf.UnpackPDF)
+
+
+class TestRunner(unittest.TestCase):
 
     def test_unpack_pdf_setup(self):
         """
@@ -84,26 +106,4 @@ class TestUnpackPDFSetup(unittest.TestCase):
         os.rmdir(target_dir)
 
         self.assertEqual(action.target_dir, target_dir)
-
-
-class TestUnpackPDFProcessArgs(unittest.TestCase):
-
-    def test_process_args(self):
-        """
-        The ``UnpackPDF`` class's ``process_args`` method should correctly
-        take an input pdf, and create an action that will pass the contents
-        of the pdf into a default subdirectory in the same directory as the 
-        pdf file.
-        """
-        source_pdf = 'sample/sample.pdf'
-        target_dir = f'sample/{util.default_subdirectory()}'
-        arg_dict = {'input': source_pdf, 'output': target_dir}
-
-        if not os.path.isdir(target_dir):
-            os.mkdir(target_dir)
-        
-        action = unpack_pdf.process_args(arg_dict)
-        os.rmdir(target_dir)
-
-        self.assertIsInstance(action, unpack_pdf.UnpackPDF)
 
