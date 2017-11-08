@@ -42,7 +42,9 @@ def make(source_pdf, target_dir=''):
     """
     if not target_dir:
         # Use a default directory.
-        new_target_dir = os.path.join(os.path.dirname(source_pdf), util.default_subdirectory())
+        new_target_dir = os.path.join(
+            os.path.dirname(source_pdf), util.default_subdirectory()
+        )
         return UnpackPDF(source_pdf, new_target_dir)
     else:
         # use the target directory
