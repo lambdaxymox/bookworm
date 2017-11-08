@@ -36,9 +36,14 @@ class ExpandPageWithFill(abstract.Command):
         quoted_target = util.quoted_string(self.target)
         final_arg = '{}[{}x{}]'.format(quoted_target, self.width, self.height)
         
-        return \
-            '{} {} {} {} {} {}' \
-            .format(self.command, self.extent, self.background, self.gravity, quoted_source, final_arg)
+        return '{} {} {} {} {} {}'.format(
+            self.command,
+            self.extent,
+            self.background,
+            self.gravity,
+            quoted_source,
+            final_arg
+        )
 
 
 def make(width, height, source, target=''):
@@ -88,7 +93,9 @@ def process_args(arg_dict):
         raise e
 
     if width <= 0 or height <= 0:
-        raise ValueError('Dimensions must be positive integers: Got {}x{}'.format(width, height))
+        raise ValueError(
+            f'Dimensions must be positive integers: Got {width}x{height}'
+        )
 
     if os.path.isfile(input):
         try:

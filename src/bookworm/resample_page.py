@@ -26,9 +26,13 @@ class ResamplePage(abstract.Command):
         ]
 
     def as_terminal_command(self):
-        return \
-            '{} {} {} {} {}' \
-            .format(self.command, self.units, self.resample, self.quoted_old_file, self.quoted_new_file)
+        return '{} {} {} {} {}'.format(
+            self.command, 
+            self.units, 
+            self.resample, 
+            self.quoted_old_file, 
+            self.quoted_new_file
+        )
 
 
 def make(resolution, source, target=''):
@@ -48,7 +52,11 @@ def multi_resample_page(resolution, source_path, source_files, target):
     """
     actions = {}
     for source_file in source_files:
-        action = resample_page(resolution, os.path.join(source_path, source_file), target)
+        action = resample_page(
+            resolution,
+            os.path.join(source_path, source_file),
+            target
+        )
         actions[source_file] = action
 
     return actions
