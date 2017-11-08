@@ -106,3 +106,4 @@ class Runner(abstract.Runner):
             os.remove(file_path)
 
         os.rmdir(command.target_dir)
+
