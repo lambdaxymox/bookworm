@@ -23,7 +23,11 @@ class UnpackPDF(abstract.Command):
         return [self.command] + self.args + [self.source_pdf]
 
     def as_terminal_command(self):
-        return self.command + ' ' + ' '.join(self.args) + ' ' + util.quoted_string(self.source_pdf)
+        return '{} {} {}'.format(
+            self.command,
+            ' '.join(self.args),
+            util.quoted_string(self.source_pdf)
+        )
 
     def image_dir(self):
         return self.target_dir
