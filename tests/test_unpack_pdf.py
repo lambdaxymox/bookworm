@@ -41,9 +41,6 @@ class TestUnpackPDF(unittest.TestCase):
         target_dir = f'sample/{util.default_subdirectory()}'
         arg_dict = {'input': source_pdf, 'output': target_dir}
 
-        if not os.path.isdir(target_dir):
-            os.mkdir(target_dir)
-
         action = unpack_pdf.process_args(arg_dict)
 
         terminal_command = [
@@ -52,8 +49,6 @@ class TestUnpackPDF(unittest.TestCase):
             f'-sOutputFile={target_dir}_Page_%04d.tiff',
             source_pdf
         ]
-
-        os.rmdir(target_dir)
         
         self.assertEqual(action.as_subprocess(), terminal_command)
 
@@ -69,13 +64,8 @@ class TestUnpackPDFProcessArgs(unittest.TestCase):
         """
         source_pdf = 'sample/sample.pdf'
         target_dir = f'sample/{util.default_subdirectory()}'
-        arg_dict = {'input': source_pdf, 'output': target_dir}
-
-        if not os.path.isdir(target_dir):
-            os.mkdir(target_dir)
-        
+        arg_dict = {'input': source_pdf, 'output': target_dir}     
         action = unpack_pdf.process_args(arg_dict)
-        os.rmdir(target_dir)
 
         self.assertIsInstance(action, unpack_pdf.UnpackPDF)
 
@@ -96,14 +86,14 @@ class TestRunner(unittest.TestCase):
         try:
             unpack_pdf.Runner.setup(action)
         except FileNotFoundError as e:
-            os.rmdir(target_dir)
+            unpack_pdf.Runner.cleanup(action)
             self.fail()
 
         if not os.path.isdir(target_dir):
-            os.rmdir(target_dir)
+            unpack_pdf.Runner.cleanup(action)
             self.fail()
 
-        os.rmdir(target_dir)
+        unpack_pdf.Runner.cleanup(action)
 
         self.assertEqual(action.target_dir, target_dir)
 
@@ -124,10 +114,10 @@ class TestRunner(unittest.TestCase):
             unpack_pdf.Runner.execute(action)
             unpack_pdf.Runner.commit(action)
         except FileNotFoundError as e:
-            os.rmdir(target_dir)
+            unpack_pdf.Runner.cleanup(action)
             self.fail()
 
-        os.rmdir(target_dir)
+        unpack_pdf.Runner.cleanup(action)
 
         self.assertEqual(action.target_dir, target_dir)
 
@@ -136,7 +126,6 @@ class TestRunner(unittest.TestCase):
         source_pdf = 'sample/sample.pdf'
         target_dir = f'sample/{util.default_subdirectory()}'
         arg_dict = {'input': source_pdf, 'output': target_dir}
-
         action = unpack_pdf.process_args(arg_dict)
 
         try:
@@ -144,14 +133,30 @@ class TestRunner(unittest.TestCase):
             unpack_pdf.Runner.execute(action)
             unpack_pdf.Runner.commit(action)
         except FileNotFoundError as e:
-            os.rmdir(target_dir)
+            unpack_pdf.Runner.cleanup(action)
             self.fail()
 
         if not os.path.isdir(target_dir):
-            os.rmdir(target_dir)
+            unpack_pdf.Runner.cleanup(action)
             self.fail()
 
-        os.rmdir(target_dir)
+        unpack_pdf.Runner.cleanup(action)
 
         self.assertEqual(action.target_dir, target_dir)
+
+
+    def test_unpack_pdf_cleanup_should_remove_files_and_directory(self):
+        """
+        An UnpackPDF object's setup function should make the target directory
+        if it does not exist.
+        """
+        source_pdf = 'sample/sample.pdf'
+        target_dir = f'sample/{util.default_subdirectory()}'
+        arg_dict = {'input': source_pdf, 'output': target_dir}
+        action = unpack_pdf.process_args(arg_dict)
+            
+        unpack_pdf.Runner.setup(action)
+        unpack_pdf.Runner.cleanup(action)
+
+        self.assertFalse(os.path.exists(action.target_dir))
 
