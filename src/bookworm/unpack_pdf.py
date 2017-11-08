@@ -94,3 +94,5 @@ class Runner(abstract.Runner):
     def commit(command):
         pass
 
+    def cleanup(command):
+        

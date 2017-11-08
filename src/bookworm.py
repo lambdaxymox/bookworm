@@ -164,7 +164,7 @@ def help_text(parser):
 
 def warning(*objs):
     """
-    A helper method for printing warnings.
+    The function ``warning`` is a helper method for printing warnings.
     """
     print('WARNING: ', *objs, file=sys.stderr)
 
@@ -212,6 +212,8 @@ def main():
     3. Rescale image.
     4. Expand image with fill.
     """
+    parser = arg_processor()
+
     if detect_user.is_admin():
         warning('You are currently running as superuser. '
                 'You really should not run this program with elevated privileges.')
@@ -219,7 +221,6 @@ def main():
     if len(sys.argv) < 2:
         help_text(parser)
 
-    parser = arg_processor()
     args = parser.parse_args(sys.argv[1:])
     command = sys.argv[1]
     

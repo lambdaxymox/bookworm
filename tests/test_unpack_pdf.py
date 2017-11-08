@@ -107,3 +107,51 @@ class TestRunner(unittest.TestCase):
 
         self.assertEqual(action.target_dir, target_dir)
 
+
+    def test_unpack_pdf_should_not_write_to_a_directory_with_existing_files(self):
+        pass
+
+
+    def test_unpack_pdf_runner_executes_entire_process(self):
+        source_pdf = 'sample/sample.pdf'
+        target_dir = f'sample/{util.default_subdirectory()}'
+        arg_dict = {'input': source_pdf, 'output': target_dir}
+
+        action = unpack_pdf.process_args(arg_dict)
+
+        try:
+            unpack_pdf.Runner.setup(action)
+            unpack_pdf.Runner.execute(action)
+            unpack_pdf.Runner.commit(action)
+        except FileNotFoundError as e:
+            os.rmdir(target_dir)
+            self.fail()
+
+        os.rmdir(target_dir)
+
+        self.assertEqual(action.target_dir, target_dir)
+
+
+    def test_unpack_pdf_runner_unpacks_a_pdf_to_a_directory(self):
+        source_pdf = 'sample/sample.pdf'
+        target_dir = f'sample/{util.default_subdirectory()}'
+        arg_dict = {'input': source_pdf, 'output': target_dir}
+
+        action = unpack_pdf.process_args(arg_dict)
+
+        try:
+            unpack_pdf.Runner.setup(action)
+            unpack_pdf.Runner.execute(action)
+            unpack_pdf.Runner.commit(action)
+        except FileNotFoundError as e:
+            os.rmdir(target_dir)
+            self.fail()
+
+        if not os.path.isdir(target_dir):
+            os.rmdir(target_dir)
+            self.fail()
+
+        os.rmdir(target_dir)
+
+        self.assertEqual(action.target_dir, target_dir)
+
