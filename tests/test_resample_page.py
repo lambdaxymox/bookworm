@@ -127,3 +127,27 @@ class TestResamplePageProcessArgs(unittest.TestCase):
 
         with self.assertRaises(KeyError):
             resample_page.process_args(arg_dict)
+
+
+class TestRunner(unittest.TestCase):
+
+    def test_resample_page_runner(self):
+        source_file = 'sample/sample.tiff'
+        target_file = 'sample/sample2.tiff'
+        resolution = 600
+        arg_dict = {
+            'input': source_file,
+            'output': target_file,
+            'resolution': resolution,
+            'units': 'PixelsPerInch'
+        }
+        
+        action = resample_page.process_args(arg_dict)
+        resample_page.Runner.setup(action)
+        resample_page.Runner.execute(action)
+
+        target_file_exists = os.path.exists(target_file)
+        os.remove(target_file)
+
+        self.assertTrue(target_file_exists)
+

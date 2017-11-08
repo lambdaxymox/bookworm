@@ -8,7 +8,8 @@ import subprocess
 class ExpandPageWithFill(abstract.Command):
     """
     Expand the side of a page by expanding the edges of the page with a fill
-    color. This function only does this with the color white.
+    color. This function only does this with the color white. This action does
+    NOT resample the page at a different resolution.
     """
     def __init__(self, source_file, target_file, width, height):
         self.command = 'convert'
