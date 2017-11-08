@@ -1,6 +1,8 @@
-import os
 import bookworm.abstract as abstract
 import bookworm.util     as util
+import os
+import os.path
+import subprocess
 
 from bookworm.resolution import Resolution
 
@@ -11,27 +13,40 @@ class ResamplePage(abstract.Command):
     """
     def __init__(self, source_file, target_file, resolution):
         self.command = 'convert'
-        self.units = f'-units {resolution.unit_str()}'
-        self.resample = f'-resample {resolution.value}'
-        self.source_file = f'\"{source_file}\"'
-        self.target_file = f'\"{target_file}\"'
+        self.resample_flag = '-resample' 
+        self.resample = f'{resolution.value}x{resolution.value}'
+        self.units_flag = '-units'
+        self.units = resolution.unit_str()
+        self.source_file = source_file
+        self.target_file = target_file
+        self.target_path = os.path.split(target_file)[0]
 
     def as_subprocess(self):
+        quoted_source = f'./{self.source_file}'
+        quoted_target = f'./{self.target_file}'
+
         return [
             self.command,
-            self.units,
+            self.resample_flag,
             self.resample,
-            self.source_file,
-            self.target_file
+            self.units_flag,
+            self.units,
+            quoted_source,
+            quoted_target
         ]
 
     def as_terminal_command(self):
-        return '{} {} {} {} {}'.format(
+        quoted_source = util.quoted_string(f'./{self.source_file}')
+        quoted_target = util.quoted_string(f'./{self.target_file}')
+
+        return '{} {} {} {} {} {} {}'.format(
             self.command, 
-            self.units, 
+            self.resample_flag,
             self.resample, 
-            self.source_file, 
-            self.target_file
+            self.units_flag,
+            self.units, 
+            quoted_source, 
+            quoted_target
         )
 
 

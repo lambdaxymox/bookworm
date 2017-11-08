@@ -1,5 +1,7 @@
 import unittest
 import bookworm.resample_page as resample_page
+import os
+import os.path
 
 from bookworm.resolution import Resolution
 
@@ -141,12 +143,11 @@ class TestRunner(unittest.TestCase):
             'resolution': resolution,
             'units': 'PixelsPerInch'
         }
-        
         action = resample_page.process_args(arg_dict)
+
         resample_page.Runner.setup(action)
         resample_page.Runner.execute(action)
-
-        target_file_exists = os.path.exists(target_file)
+        target_file_exists = os.path.exists(action.target_file)
         os.remove(target_file)
 
         self.assertTrue(target_file_exists)

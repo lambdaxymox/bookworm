@@ -159,7 +159,6 @@ class Runner(abstract.Runner):
             )
 
     def execute(command):
-        print(command.as_terminal_command())
         subprocess.run(command.as_subprocess())
 
     def cleanup(command):
