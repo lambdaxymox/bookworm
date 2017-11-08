@@ -9,20 +9,20 @@ class ResamplePage(abstract.Command):
     """
     Rescale a page by changing its resolution and then resampling the image.
     """
-    def __init__(self, source, target, resolution):
+    def __init__(self, source_file, target_file, resolution):
         self.command = 'convert'
         self.units = f'-units {resolution.unit_str()}'
         self.resample = f'-resample {resolution.value}'
-        self.source = f'\"{source}\"'
-        self.target = f'\"{target}\"'
+        self.source_file = f'\"{source_file}\"'
+        self.target_file = f'\"{target_file}\"'
 
     def as_subprocess(self):
         return [
             self.command,
             self.units,
             self.resample,
-            self.source,
-            self.target
+            self.source_file,
+            self.target_file
         ]
 
     def as_terminal_command(self):
@@ -30,20 +30,20 @@ class ResamplePage(abstract.Command):
             self.command, 
             self.units, 
             self.resample, 
-            self.quoted_old_file, 
-            self.quoted_new_file
+            self.source_file, 
+            self.target_file
         )
 
 
-def make(resolution, source, target=''):
+def make(resolution, source_file, target_file=''):
     """
     The ``make`` factory method that generates a ``ResamplePage`` command.
     """
-    if not target:
-        new_target = util.temp_file_name(source)
-        return ResamplePage(source, new_target, resolution)
+    if not target_file:
+        new_target_file = util.temp_file_name(source_file)
+        return ResamplePage(source_file, new_target_file, resolution)
 
-    return ResamplePage(source, target, resolution)
+    return ResamplePage(source_file, target_file, resolution)
 
 
 def multi_resample_page(resolution, source_path, source_files, target):
@@ -118,4 +118,25 @@ def process_args(arg_dict):
 
     else:
         raise FileNotFoundError(f'File or directory does not exist: {input}')
+
+
+class Runner(abstract.Runner):
+
+    def setup(command):
+        """
+        Prepare an action for execution by setting up folders and I/O.
+        """
+        if os.path.isfile(command.source_file):
+            if not os.path.isdir(command.target_path):
+                os.mkdir(command.target_path)
+        else:
+            raise FileNotFoundError(
+                f'File does not exist: {command.source_file}'
+            )
+
+    def execute(command):
+        subprocess.run(command.as_subprocess())
+
+    def cleanup(command):
+        return
 
