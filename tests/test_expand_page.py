@@ -14,14 +14,9 @@ class TestExpandPageWithFill(unittest.TestCase):
         target_file = 'sample/sample1.bookworm.tiff'
         width = 2160
         height = 3060
-
         action = expand_page.make(width, height, source_file)
-        correct_subcommand = [
-                'convert', f'-extent {width}x{height}', '-background white', 
-                '-gravity Center', f'\"{source_file}\"', f'\"{target_file}\"'
-            ]
 
-        self.assertEqual(action.as_subprocess(), correct_subcommand)
+        self.assertIsInstance(action, expand_page.ExpandPageWithFill)
 
 
 class TestExpandPageWithFillProcessArgs(unittest.TestCase):
@@ -121,3 +116,27 @@ class TestMultipleExpandPages(unittest.TestCase):
 
         with self.assertRaises(FileNotFoundError):
             expand_page.process_args(arg_dict)
+
+
+class TestRunner(unittest.TestCase):
+
+    def test_expand_page_runner(self):
+        source_file = 'sample/sample.tiff'
+        target_file = 'sample/sample2.tiff'
+        width = 2160
+        height = 3060
+        dimensions = (width, height)
+        arg_dict = {
+            'input': source_file,
+            'output': target_file,
+            'dimensions': dimensions
+        }
+        
+        action = expand_page.process_args(arg_dict)
+        expand_page.Runner.setup(action)
+        expand_page.Runner.execute(action)
+
+        self.assertTrue(os.path.exists(target_file))
+
+        expand_page.Runner.cleanup(action)
+

@@ -1,6 +1,8 @@
 import bookworm.abstract as abstract
 import bookworm.util     as util
 import os.path
+import os
+import subprocess
 
 
 class ExpandPageWithFill(abstract.Command):
@@ -10,54 +12,65 @@ class ExpandPageWithFill(abstract.Command):
     """
     def __init__(self, source_file, target_file, width, height):
         self.command = 'convert'
-        self.extent = f'-extent {width}x{height}'
-        self.background = '-background white'
-        self.gravity = '-gravity Center'
+        self.extent_flag = '-extent' 
+        self.extent = f'{width}x{height}'
+        self.background_flag = '-background' 
+        self.background = 'white'
+        self.gravity_flag = '-gravity'
+        self.gravity = 'Center'
         self.source_file = source_file
         self.target_file = target_file
+        self.target_path = os.path.split(target_file)[0]
         self.width = width
         self.height = height
 
     def as_subprocess(self):
-        quoted_source = util.quoted_string(self.source_file)
-        quoted_target = util.quoted_string(self.target_file)
+        quoted_source = f'./{self.source_file}'
+        quoted_target = f'./{self.target_file}'
+        final_arg = f'{quoted_target}[{self.width}x{self.height}]'
 
         return [
             self.command,
+            self.extent_flag,
             self.extent,
+            self.background_flag,
             self.background,
+            self.gravity_flag,
             self.gravity,
             quoted_source,
-            quoted_target
+            final_arg
         ]
 
     def as_terminal_command(self):
-        quoted_source = util.quoted_string(self.source_file)
-        quoted_target = util.quoted_string(self.target_file)
+        quoted_source = util.quoted_string(f'./{self.source_file}')
+        quoted_target = util.quoted_string(f'./{self.target_file}')
         final_arg = f'{quoted_target}[{self.width}x{self.height}]'
         
-        return '{} {} {} {} {} {}'.format(
+        return '{} {} {} {} {} {} {} {} {}'.format(
             self.command,
+            self.extent_flag,
             self.extent,
+            self.background_flag,
             self.background,
+            self.gravity_flag,
             self.gravity,
             quoted_source,
             final_arg
         )
 
 
-def make(width, height, source, target=''):
+def make(width, height, source_file, target_file=''):
     """
     The ``make`` function is a factory method that constructs an 
     ``ExpandPageWIithFill`` action. It expands the side of a page by 
     expanding the edges of the page with a fill color. This function only does
     this with the color white.
     """
-    if not target:
-        new_target = util.temp_file_name(source)
-        return ExpandPageWithFill(source, new_target, width, height)
+    if not target_file:
+        new_target_file = util.temp_file_name(source_file)
+        return ExpandPageWithFill(source_file, new_target_file, width, height)
 
-    return ExpandPageWithFill(source, target, width, height)
+    return ExpandPageWithFill(source_file, target_file, width, height)
 
 
 def multi_expand_page(width, height, source_path, source_files, target):
@@ -106,7 +119,6 @@ def process_args(arg_dict):
             # Use input as the target file.
             output = input
 
-
         return make(width, height, input, output)
 
     elif os.path.isdir(input):
@@ -146,8 +158,9 @@ class Runner(abstract.Runner):
             )
 
     def execute(command):
+        print(command.as_terminal_command())
         subprocess.run(command.as_subprocess())
 
     def cleanup(command):
-        pass
+        return
 
