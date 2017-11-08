@@ -138,11 +138,11 @@ class TestRunner(unittest.TestCase):
         try:
             unpack_pdf.Runner.setup(action)
             unpack_pdf.Runner.execute(action)
-            unpack_pdf.Runner.commit(action)
-            unpack_pdf.Runner.cleanup(action)
         except FileNotFoundError as e:
             unpack_pdf.Runner.cleanup(action)
             self.fail()
+        else:
+            unpack_pdf.Runner.cleanup(action)
 
 
     def test_unpack_pdf_runner_unpacks_a_pdf_to_a_directory(self):
@@ -157,7 +157,6 @@ class TestRunner(unittest.TestCase):
         try:
             unpack_pdf.Runner.setup(action)
             unpack_pdf.Runner.execute(action)
-            unpack_pdf.Runner.commit(action)
         except FileNotFoundError as e:
             unpack_pdf.Runner.cleanup(action)
             self.fail()
