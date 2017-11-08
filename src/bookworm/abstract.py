@@ -46,18 +46,10 @@ class Runner(abc.ABC):
 
     @classmethod
     @abc.abstractmethod
-    def commit(command):
-        """
-        The ``commit`` method performs cleanup after a successful execution.
-        """
-        return NotImplemented
-
-
-    @classmethod
-    @abc.abstractmethod
     def cleanup(command):
         """
-        The ``cleanup`` method performs cleanup after a failed execution.
+        The ``cleanup`` method performs cleanup after execution. It is
+        typically used to gracefully handle failure.
         """
         return NotImplemented
 
