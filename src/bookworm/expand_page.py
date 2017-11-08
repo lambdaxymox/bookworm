@@ -10,7 +10,7 @@ class ExpandPageWithFill(abstract.Command):
     """
     def __init__(self, source, target, width, height):
         self.command = 'convert'
-        self.extent = '-extent {}x{}'.format(width, height)
+        self.extent = f'-extent {width}x{height}'
         self.background = '-background white'
         self.gravity = '-gravity Center'
         self.source = source
@@ -34,7 +34,7 @@ class ExpandPageWithFill(abstract.Command):
     def as_terminal_command(self):
         quoted_source = util.quoted_string(self.source)
         quoted_target = util.quoted_string(self.target)
-        final_arg = '{}[{}x{}]'.format(quoted_target, self.width, self.height)
+        final_arg = f'{quoted_target}[{self.width}x{self.height}]'
         
         return '{} {} {} {} {} {}'.format(
             self.command,
@@ -70,7 +70,7 @@ def multi_expand_page(width, height, source_path, source_files, target):
         action = make(
             width, height, os.path.join(source_path, source_file), target
         )
-        actions[source] = action
+        actions[source_file] = action
 
     return actions
 
@@ -117,11 +117,16 @@ def process_args(arg_dict):
             output = os.path.join(input, util.default_subdirectory())
 
         files_dict = {'path': input, 'files': os.listdir(input)}
-
         new_files_dict = util.with_extension('.tiff', files_dict)
 
-        return multi_expand_page(width, height, new_files_dict['path'], new_files_dict['files'], output)
+        return multi_expand_page(
+            width, 
+            height,
+            new_files_dict['path'],
+            new_files_dict['files'], 
+            output
+        )
 
     else:
-        raise FileNotFoundError('File or directory does not exist: {}'.format(input))
+        raise FileNotFoundError(f'File or directory does not exist: {input}')
 

@@ -84,7 +84,9 @@ class Runner(abstract.Runner):
         """
         # The input file does not exist.
         if (not os.path.isfile(command.source_pdf)) and os.path.isdir(command.target_dir):
-            raise FileNotFoundError('Input file does not exist: {}'.format(command.source_pdf))
+            raise FileNotFoundError(
+                f'Input file does not exist: {command.source_pdf}'
+            )
 
         # The output file does not exist.
         elif (os.path.isfile(command.source_pdf)) and (not os.path.isdir(command.target_dir)):

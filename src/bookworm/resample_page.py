@@ -10,11 +10,11 @@ class ResamplePage(abstract.Command):
     Rescale a page by changing its resolution and then resampling the image.
     """
     def __init__(self, source, target, resolution):
-        self.command  = 'convert'
-        self.units    = '-units {}'.format(resolution.unit_str())
-        self.resample = '-resample {}'.format(resolution.value)
-        self.source   = '\"{}\"'.format(source)
-        self.target   = '\"{}\"'.format(target)
+        self.command = 'convert'
+        self.units = f'-units {resolution.unit_str()}'
+        self.resample = f'-resample {resolution.value}'
+        self.source = f'\"{source}\"'
+        self.target = f'\"{target}\"'
 
     def as_subprocess(self):
         return [
@@ -76,7 +76,7 @@ def process_args(arg_dict):
 
     if resolution_val <= 0:
         raise ValueError(
-            'Resolution needs to be a positive integer.' 
+            'Resolution needs to be a positive integer. '
             'Got nonpositive value: {}'
             .format(resolution_val)
         )
