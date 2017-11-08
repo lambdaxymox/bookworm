@@ -167,5 +167,3 @@ class TestRunner(unittest.TestCase):
 
         unpack_pdf.Runner.cleanup(action)
 
-        self.assertEqual(action.target_dir, target_dir)
-
