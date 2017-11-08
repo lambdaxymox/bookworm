@@ -13,26 +13,35 @@ class ChangeResolution(abstract.Command):
     """
     def __init__(self, source_file, target_file, resolution):
         self.command = 'convert'
-        self.density = f'-density {resolution.value}'
-        self.units = f'-units {resolution.unit_str()}'
+        self.density_flag = '-density' 
+        self.density = f'{resolution.value}'
+        self.units_flag = '-units' 
+        self.units = f'{resolution.unit_str()}'
         self.source_file = source_file
         self.target_file = target_file
         self.target_path = os.path.split(target_file)[0]
         self.resolution = resolution
 
     def as_subprocess(self):
+        quoted_source = f'./{self.source_file}'
+        quoted_target = f'./{self.target_file}'
+        
         return [
             self.command,
+            self.density_flag,
             self.density,
+            self.units_flag,
             self.units,
-            util.quoted_string(self.source_file),
-            util.quoted_string(self.target_file)
+            quoted_source,
+            quoted_target
         ]
 
     def as_terminal_command(self):
         return '{} {} {} {} {}'.format(
             self.command,
+            self.density_flag,
             self.density,
+            self.units_flag,
             self.units,
             util.quoted_string(self.source_file),
             util.quoted_string(self.target_file)
