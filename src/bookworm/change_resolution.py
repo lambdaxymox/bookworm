@@ -1,6 +1,8 @@
 import bookworm.abstract as abstract
 import bookworm.util     as util
+import os
 import os.path
+import subprocess
 
 from bookworm.resolution import Resolution
 
@@ -121,4 +123,25 @@ def process_args(arg_dict):
 
     else:
         raise FileNotFoundError(f'File or directory does not exist: {input}')
+
+
+class Runner(abstract.Runner):
+
+    def setup(command):
+        """
+        Prepare an action for execution by setting up folders and I/O.
+        """
+        if os.path.isfile(command.source):
+            if not os.path.isdir(command.target_dir):
+                os.mkdir(command.target_dir)
+        else:
+            raise FileNotFoundError(
+                f'File does not exist: {command.source}'
+            )
+
+    def execute(command):
+        subprocess.run(command.as_subprocess())
+
+    def cleanup(command):
+        pass
 

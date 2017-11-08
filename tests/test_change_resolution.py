@@ -12,7 +12,7 @@ class TestChangeResolution(unittest.TestCase):
         We should be able to create a page action that has the correct type.
         """
         source_file = 'sample/sample.tiff'
-        target_file = 'sample/sample.tiff'
+        target_file = 'sample/sample2.tiff'
         resolution_val = 600
         unit_str = 'PixelsPerInch'
         resolution = Resolution.make(resolution_val, unit_str)
@@ -35,7 +35,7 @@ class TestChangeResolutionProcessArgs(unittest.TestCase):
         given.
         """
         source_file = 'sample/sample.tiff'
-        target_file = 'sample/sample.tiff'
+        target_file = 'sample/sample2.tiff'
         resolution_val = 600
         arg_dict = {
             'input': source_file,
@@ -59,7 +59,7 @@ class TestChangeResolutionProcessArgs(unittest.TestCase):
         if the input resolution desired has no units.
         """
         source_file = 'sample/sample.tiff'
-        target_file = 'sample/sample.tiff'
+        target_file = 'sample/sample2.tiff'
         resolution_val = 600
         arg_dict = {
             'input': source_file,
@@ -77,7 +77,7 @@ class TestChangeResolutionProcessArgs(unittest.TestCase):
         the image resolution.
         """
         source_file = 'sample/sample.tiff'
-        target_file = 'sample/sample.tiff'
+        target_file = 'sample/sample2.tiff'
         resolution_val = "Potato"
         arg_dict = {
             'input': source_file,
@@ -96,7 +96,7 @@ class TestChangeResolutionProcessArgs(unittest.TestCase):
         the image resolution.
         """
         source_file = 'sample/sample.tiff'
-        target_file = 'sample/sample.tiff'
+        target_file = 'sample/sample2.tiff'
         resolution_val = -600
         arg_dict = {
             'input': source_file,
@@ -115,7 +115,7 @@ class TestChangeResolutionProcessArgs(unittest.TestCase):
         the image resolution.
         """
         source_file = 'sample/sample.tiff'
-        target_file = 'sample/sample.tiff'
+        target_file = 'sample/sample2.tiff'
         resolution_val = 0
         arg_dict = {
             'input': source_file,
@@ -126,6 +126,29 @@ class TestChangeResolutionProcessArgs(unittest.TestCase):
         
         with self.assertRaises(ValueError):
             change_resolution.process_args(arg_dict)
+
+
+class TestChangeResolutionRunner(unittest.TestCase):
+
+    def test_change_resolution_runner_process(self):
+        source_file = 'sample/sample.tiff'
+        target_file = 'sample/sample2.tiff'
+        resolution_val = 600
+        arg_dict = {
+            'input': source_file,
+            'output': target_file,
+            'resolution': resolution_val,
+            'units': 'PixelsPerInch'
+        }
+
+        try:
+            change_resolution.Runner.setup(action)
+            change_resolution.Runner.execute(action)
+        except FileNotFoundError as e:
+            change_resolution.Runner.cleanup(action)
+            self.fail()
+        else:
+            change_resolution.Runner.cleanup(action)
 
 
 class TestMultiChangePageResolution(unittest.TestCase):

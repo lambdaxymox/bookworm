@@ -123,7 +123,7 @@ class TestRunner(unittest.TestCase):
 
 
     def test_unpack_pdf_should_not_write_to_a_directory_with_existing_files(self):
-        pass
+        self.fail("Implement me!")
 
 
     def test_unpack_pdf_runner_executes_entire_process(self):

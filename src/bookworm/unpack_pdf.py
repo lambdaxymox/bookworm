@@ -80,7 +80,7 @@ class Runner(abstract.Runner):
 
     def setup(command):
         """
-        Prepare an action for execution by setting up folders and IO.
+        Prepare an action for execution by setting up folders and I/O.
         """
         # The input file does not exist.
         if (not os.path.isfile(command.source_pdf)) and os.path.isdir(command.target_dir):
