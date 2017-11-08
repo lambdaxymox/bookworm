@@ -11,12 +11,13 @@ class ChangeResolution(abstract.Command):
     """
     Change a page's image resolution without modifying the page contents.
     """
-    def __init__(self, source, target, resolution):
+    def __init__(self, source_file, target_file, resolution):
         self.command = 'convert'
         self.density = f'-density {resolution.value}'
         self.units = f'-units {resolution.unit_str()}'
-        self.source = source
-        self.target = target
+        self.source_file = source_file
+        self.target_file = target_file
+        self.target_path = os.path.split(target_file)[0]
         self.resolution = resolution
 
     def as_subprocess(self):
@@ -24,8 +25,8 @@ class ChangeResolution(abstract.Command):
             self.command,
             self.density,
             self.units,
-            util.quoted_string(self.source),
-            util.quoted_string(self.target)
+            util.quoted_string(self.source_file),
+            util.quoted_string(self.target_file)
         ]
 
     def as_terminal_command(self):
@@ -33,12 +34,12 @@ class ChangeResolution(abstract.Command):
             self.command,
             self.density,
             self.units,
-            util.quoted_string(self.source),
-            util.quoted_string(self.target)
+            util.quoted_string(self.source_file),
+            util.quoted_string(self.target_file)
         )
 
 
-def make(resolution, source, target=''):
+def make(resolution, source_file, target_file=''):
     """
     The ``make`` factory method that creates a ``ChangePageResolution`` 
     action.
@@ -46,11 +47,11 @@ def make(resolution, source, target=''):
     if resolution.value <= 0:
         raise ValueError(f'Resolution must be positive. Got: {resolution}')
 
-    if not target:
-        new_target = util.temp_file_name(source)
-        return ChangeResolution(source, new_target, resolution)
+    if not target_file:
+        new_target_file = util.temp_file_name(source_file)
+        return ChangeResolution(source_file, new_target_file, resolution)
 
-    return ChangeResolution(source, target, resolution)
+    return ChangeResolution(source_file, target_file, resolution)
 
 
 def multi_change_page_resolution(resolution, source_path, source_files, target):
@@ -58,11 +59,11 @@ def multi_change_page_resolution(resolution, source_path, source_files, target):
     Change the properties of multiple pages in a single directory.
     """
     actions = {}
-    for source in source_files:
+    for source_file in source_files:
         action = make(
-            resolution, os.path.join(source_path, source), target
+            resolution, os.path.join(source_path, source_file), target
         )
-        actions[source] = action
+        actions[source_file] = action
 
     return actions
 
@@ -131,12 +132,12 @@ class Runner(abstract.Runner):
         """
         Prepare an action for execution by setting up folders and I/O.
         """
-        if os.path.isfile(command.source):
-            if not os.path.isdir(command.target_dir):
-                os.mkdir(command.target_dir)
+        if os.path.isfile(command.source_file):
+            if not os.path.isdir(command.target_path):
+                os.mkdir(command.target_path)
         else:
             raise FileNotFoundError(
-                f'File does not exist: {command.source}'
+                f'File does not exist: {command.source_file}'
             )
 
     def execute(command):

@@ -12,7 +12,6 @@ class TestChangeResolution(unittest.TestCase):
         We should be able to create a page action that has the correct type.
         """
         source_file = 'sample/sample.tiff'
-        target_file = 'sample/sample2.tiff'
         resolution_val = 600
         unit_str = 'PixelsPerInch'
         resolution = Resolution.make(resolution_val, unit_str)
@@ -23,7 +22,7 @@ class TestChangeResolution(unittest.TestCase):
             self.fail()
 
         self.assertIsInstance(action, change_resolution.ChangeResolution)
-        self.assertEqual(action.source, target_file)
+        self.assertNotEqual(action.target_file, action.source_file)
 
 
 class TestChangeResolutionProcessArgs(unittest.TestCase):
@@ -31,15 +30,15 @@ class TestChangeResolutionProcessArgs(unittest.TestCase):
     def test_process_args(self):
         """
         The argument processor should correctly create a ``ChangeResolution``
-        action under conditions where there is a positive resolution value, with units
-        given.
+        action under conditions where there is a positive resolution value when
+        units are given.
         """
         source_file = 'sample/sample.tiff'
-        target_file = 'sample/sample2.tiff'
+        target_path = 'sample/'
         resolution_val = 600
         arg_dict = {
             'input': source_file,
-            'output': target_file,
+            'output': target_path,
             'resolution': resolution_val,
             'units': 'PixelsPerInch'
         }
@@ -50,7 +49,7 @@ class TestChangeResolutionProcessArgs(unittest.TestCase):
             self.fail("An error should not have occurred here.")
 
         self.assertIsInstance(action, change_resolution.ChangeResolution)
-        self.assertEqual(action.source, target_file)
+        self.assertNotEqual(action.source_file, action.target_file)
 
 
     def test_process_args_should_reject_missing_units(self):
@@ -59,11 +58,11 @@ class TestChangeResolutionProcessArgs(unittest.TestCase):
         if the input resolution desired has no units.
         """
         source_file = 'sample/sample.tiff'
-        target_file = 'sample/sample2.tiff'
+        target_path = 'sample/'
         resolution_val = 600
         arg_dict = {
             'input': source_file,
-            'output': target_file,
+            'output': target_path,
             'resolution': resolution_val
         }
 
@@ -77,11 +76,11 @@ class TestChangeResolutionProcessArgs(unittest.TestCase):
         the image resolution.
         """
         source_file = 'sample/sample.tiff'
-        target_file = 'sample/sample2.tiff'
+        target_path = 'sample/'
         resolution_val = "Potato"
         arg_dict = {
             'input': source_file,
-            'output': target_file,
+            'output': target_path,
             'resolution': resolution_val,
             'units': 'PixelsPerInch'
         }
@@ -96,11 +95,11 @@ class TestChangeResolutionProcessArgs(unittest.TestCase):
         the image resolution.
         """
         source_file = 'sample/sample.tiff'
-        target_file = 'sample/sample2.tiff'
+        target_path = 'sample/'
         resolution_val = -600
         arg_dict = {
             'input': source_file,
-            'output': target_file,
+            'output': target_path,
             'resolution': resolution_val,
             'units': 'PixelsPerInch'
         }
@@ -115,11 +114,11 @@ class TestChangeResolutionProcessArgs(unittest.TestCase):
         the image resolution.
         """
         source_file = 'sample/sample.tiff'
-        target_file = 'sample/sample2.tiff'
+        target_path = 'sample/'
         resolution_val = 0
         arg_dict = {
             'input': source_file,
-            'output': target_file,
+            'output': target_path,
             'resolution': resolution_val,
             'units': 'PixelsPerInch'
         }
@@ -132,14 +131,15 @@ class TestChangeResolutionRunner(unittest.TestCase):
 
     def test_change_resolution_runner_process(self):
         source_file = 'sample/sample.tiff'
-        target_file = 'sample/sample2.tiff'
+        target_path = 'sample/'
         resolution_val = 600
         arg_dict = {
             'input': source_file,
-            'output': target_file,
+            'output': target_path,
             'resolution': resolution_val,
             'units': 'PixelsPerInch'
         }
+        action = change_resolution.process_args(arg_dict)
 
         try:
             change_resolution.Runner.setup(action)
@@ -151,6 +151,22 @@ class TestChangeResolutionRunner(unittest.TestCase):
             change_resolution.Runner.cleanup(action)
 
 
+    def test_runner_should_fail_if_source_does_not_exist(self):
+        source_file = 'sample/doesnotexist.tiff'
+        target_path = 'sample/'
+        resolution_val = 600
+        arg_dict = {
+            'input': source_file,
+            'output': target_path,
+            'resolution': resolution_val,
+            'units': 'PixelsPerInch'
+        }
+
+        with self.assertRaises(FileNotFoundError):
+            action = change_resolution.process_args(arg_dict)
+            change_resolution.Runner.setup(action)
+
+
 class TestMultiChangePageResolution(unittest.TestCase):
 
     def test_multi_page_change_resolution_should_generate_multiple_actions_from_input_directory(self):
@@ -159,12 +175,12 @@ class TestMultiChangePageResolution(unittest.TestCase):
         page change resolution action argument processor should correctly
         every valid input image and group them together into one action.
         """
-        source_dir = 'sample/test_tiffs/'
-        source_files = list(map(lambda f: os.path.join(source_dir, f), os.listdir(source_dir)))
+        source_path = 'sample/test_tiffs/'
+        source_files = list(map(lambda f: os.path.join(source_path, f), os.listdir(source_path)))
         resolution_val = 600
         resolution = Resolution.make(resolution_val, 'PixelsPerInch')
         arg_dict = {
-            'input': source_dir,
+            'input': source_path,
             'resolution': resolution_val,
             'units': 'PixelsPerInch'
         }
@@ -175,7 +191,7 @@ class TestMultiChangePageResolution(unittest.TestCase):
             self.assertIsInstance(action.resolution, Resolution)
             self.assertEqual(action.resolution.value, resolution.value)
             self.assertEqual(action.resolution.units, resolution.units)
-            self.assertTrue(action.source in source_files)
+            self.assertTrue(action.source_file in source_files)
 
 
     def test_process_args_should_reject_non_existent_input_directory(self):
@@ -183,10 +199,10 @@ class TestMultiChangePageResolution(unittest.TestCase):
         The arument processor should not accept an input directory that does
         not exist. Surely it is impossible to read a nonexistent input.
         """
-        source = 'sample/directory_doesnotexist/'
+        source_path = 'sample/directory_doesnotexist/'
         resolution_val = 600
         arg_dict = {
-            'input': source,
+            'input': source_path,
             'resolution': resolution_val,
             'units': 'PixelsPerInch'
         }
@@ -201,10 +217,10 @@ class TestMultiChangePageResolution(unittest.TestCase):
         the new resolution for the image. It does not make sense to have 
         negative pixels per inch.
         """
-        source = 'sample/sample_tiffs/'
+        source_path = 'sample/sample_tiffs/'
         resolution_val = -600
         arg_dict = {
-            'input': source,
+            'input': source_path,
             'resolution': resolution_val,
             'units': 'PixelsPerInch'
         }
@@ -225,10 +241,10 @@ class TestMultiChangePageResolution(unittest.TestCase):
         The ``ChangeResolution`` action's argument processor should not accept
         fractional resolution values.
         """
-        source = 'sample/sample_tiffs/'
+        source_path = 'sample/sample_tiffs/'
         resolution_val = 600.1
         arg_dict = {
-            'input': source,
+            'input': source_path,
             'resolution': resolution_val,
             'units': 'PixelsPerInch'
         }
