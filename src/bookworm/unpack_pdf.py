@@ -95,5 +95,14 @@ class Runner(abstract.Runner):
         pass
 
     def cleanup(command):
-        pass
+        """
+        The ``cleanup`` method is applied after a failure occurs to clean up
+        the target directory by removing the data created during setup or
+        execution.
+        """
+        files = os.listdir(command.target_dir)
+        for file in files:
+            file_path = os.path.join(command.target_dir, file)
+            os.remove(file_path)
 
+        os.rmdir(command.target_dir)
