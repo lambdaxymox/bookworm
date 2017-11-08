@@ -14,7 +14,7 @@ class TestUnpackPDF(unittest.TestCase):
         target_dir = f'./foo/bar/baz/{util.default_subdirectory()}'
         action = unpack_pdf.make(source_pdf)
 
-        self.assertEqual(action.image_dir(), target_dir)
+        self.assertEqual(action.image_dir, target_dir)
 
 
     def test_unpack_pdf_generates_correct_terminal_command(self):
@@ -123,7 +123,19 @@ class TestRunner(unittest.TestCase):
 
 
     def test_unpack_pdf_should_not_write_to_a_directory_with_existing_files(self):
-        self.fail("Implement me!")
+        source_pdf = 'sample/sample.pdf'
+        target_dir = 'sample/test_tiffs'
+        arg_dict = {
+            'input': source_pdf,
+            'output': target_dir
+        }
+        action = unpack_pdf.process_args(arg_dict)
+        
+        try:
+            unpack_pdf.Runner.setup(action)
+            unpack_pdf.Runner.execute(action)
+        except FileExistsError:
+            self.assertTrue(os.path.exists(action.target_dir))
 
 
     def test_unpack_pdf_runner_executes_entire_process(self):

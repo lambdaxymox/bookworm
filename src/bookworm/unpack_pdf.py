@@ -29,6 +29,7 @@ class UnpackPDF(abstract.Command):
             util.quoted_string(self.source_pdf)
         )
 
+    @property
     def image_dir(self):
         return self.target_dir
 
@@ -88,7 +89,7 @@ class Runner(abstract.Runner):
                 f'Input file does not exist: {command.source_pdf}'
             )
 
-        # The output file does not exist.
+        # The output folder does not exist.
         elif (os.path.isfile(command.source_pdf)) and (not os.path.isdir(command.target_dir)):
             os.mkdir(command.target_dir)
 
@@ -97,7 +98,14 @@ class Runner(abstract.Runner):
             return
 
     def execute(command):
-        subprocess.run(command.as_subprocess())
+        # The target directory should be empty.
+        if not os.listdir(command.target_dir):
+            subprocess.run(command.as_subprocess())
+        else:
+            raise FileExistsError(
+                'This directory contains other files. '
+                'Unpack PDF will not write to an occupied directory.'
+            )
 
     def cleanup(command):
         """
