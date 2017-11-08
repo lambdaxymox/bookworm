@@ -136,7 +136,8 @@ class TestRunner(unittest.TestCase):
         expand_page.Runner.setup(action)
         expand_page.Runner.execute(action)
 
-        self.assertTrue(os.path.exists(target_file))
+        target_file_exists = os.path.exists(target_file)
+        os.remove(target_file)
 
-        expand_page.Runner.cleanup(action)
+        self.assertTrue(target_file_exists)
 

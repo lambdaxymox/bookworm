@@ -259,3 +259,26 @@ class TestMultiChangePageResolution(unittest.TestCase):
         except ValueError as e:
             self.assertIsInstance(e, ValueError)
             
+
+class TestRunner(unittest.TestCase):
+
+    def test_change_resolution_runner(self):
+        source_file = 'sample/sample.tiff'
+        target_file = 'sample/sample2.tiff'
+        resolution_val = 600
+        arg_dict = {
+            'input': source_file,
+            'output': target_file,
+            'resolution': resolution_val,
+            'units': 'PixelsPerInch'
+        }
+        
+        action = change_resolution.process_args(arg_dict)
+        change_resolution.Runner.setup(action)
+        change_resolution.Runner.execute(action)
+
+        target_file_exists = os.path.exists(target_file)
+        os.remove(target_file)
+
+        self.assertTrue(target_file_exists)
+

@@ -144,5 +144,5 @@ class Runner(abstract.Runner):
         subprocess.run(command.as_subprocess())
 
     def cleanup(command):
-        pass
+        return
 
