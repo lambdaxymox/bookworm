@@ -8,19 +8,19 @@ class ExpandPageWithFill(abstract.Command):
     Expand the side of a page by expanding the edges of the page with a fill
     color. This function only does this with the color white.
     """
-    def __init__(self, source, target, width, height):
+    def __init__(self, source_file, target_file, width, height):
         self.command = 'convert'
         self.extent = f'-extent {width}x{height}'
         self.background = '-background white'
         self.gravity = '-gravity Center'
-        self.source = source
-        self.target = target
+        self.source_file = source_file
+        self.target_file = target_file
         self.width = width
         self.height = height
 
     def as_subprocess(self):
-        quoted_source = util.quoted_string(self.source)
-        quoted_target = util.quoted_string(self.target)
+        quoted_source = util.quoted_string(self.source_file)
+        quoted_target = util.quoted_string(self.target_file)
 
         return [
             self.command,
@@ -32,8 +32,8 @@ class ExpandPageWithFill(abstract.Command):
         ]
 
     def as_terminal_command(self):
-        quoted_source = util.quoted_string(self.source)
-        quoted_target = util.quoted_string(self.target)
+        quoted_source = util.quoted_string(self.source_file)
+        quoted_target = util.quoted_string(self.target_file)
         final_arg = f'{quoted_target}[{self.width}x{self.height}]'
         
         return '{} {} {} {} {} {}'.format(
@@ -81,7 +81,7 @@ def process_args(arg_dict):
     ``arg_dict`` and uses them to construct a page command.
     """
     try:
-        input      = arg_dict['input']
+        input = arg_dict['input']
         dimensions = arg_dict['dimensions']
     except KeyError as e:
         raise e
@@ -129,4 +129,25 @@ def process_args(arg_dict):
 
     else:
         raise FileNotFoundError(f'File or directory does not exist: {input}')
+
+
+class Runner(abstract.Runner):
+
+    def setup(command):
+        """
+        Prepare an action for execution by setting up folders and I/O.
+        """
+        if os.path.isfile(command.source_file):
+            if not os.path.isdir(command.target_path):
+                os.mkdir(command.target_path)
+        else:
+            raise FileNotFoundError(
+                f'File does not exist: {command.source_file}'
+            )
+
+    def execute(command):
+        subprocess.run(command.as_subprocess())
+
+    def cleanup(command):
+        pass
 
