@@ -34,49 +34,6 @@ class UnpackPDF(abstract.Command):
         return self.target_dir
 
 
-def make(source_pdf, target_dir=''):
-    """
-    The ``make`` factory method unpacks a PDF file into a collection of TIFF 
-    files, one per page, into the target directory. If a target directory is
-    not specified, a default one is used in the directory of the source pdf
-    file.
-    """
-    if not target_dir:
-        # Use a default directory.
-        new_target_dir = os.path.join(
-            os.path.dirname(source_pdf), util.default_subdirectory()
-        )
-        return UnpackPDF(source_pdf, new_target_dir)
-    else:
-        # use the target directory
-        return UnpackPDF(source_pdf, target_dir)
-
-
-def process_args(arg_dict):
-    """
-    The ``process_args`` factory method parses the command line arguments in
-    ``arg_dict`` and uses them to construct a page command. In particular,
-    parse through the command line arguments to product an ``UnpackPDF``
-    command.
-    """
-    try:
-        input = arg_dict['input']
-        output = arg_dict['output']
-    except KeyError as e:
-        raise e
-
-    try:
-        output = arg_dict['output']
-        if not output:
-            # Derive a default output directory from the input file.
-            output = util.temp_directory(input)
-    except KeyError as e:
-        # Derive a default output directory from the input file.
-        output = util.temp_directory(input)
-
-    return make(input, output)
-
-
 class Runner(abstract.Runner):
 
     def setup(command):
@@ -119,4 +76,47 @@ class Runner(abstract.Runner):
             os.remove(file_path)
 
         os.rmdir(command.target_dir)
+
+
+def make(source_pdf, target_dir=''):
+    """
+    The ``make`` factory method unpacks a PDF file into a collection of TIFF 
+    files, one per page, into the target directory. If a target directory is
+    not specified, a default one is used in the directory of the source pdf
+    file.
+    """
+    if not target_dir:
+        # Use a default directory.
+        new_target_dir = os.path.join(
+            os.path.dirname(source_pdf), util.default_subdirectory()
+        )
+        return UnpackPDF(source_pdf, new_target_dir)
+    else:
+        # use the target directory
+        return UnpackPDF(source_pdf, target_dir)
+
+
+def process_args(arg_dict):
+    """
+    The ``process_args`` factory method parses the command line arguments in
+    ``arg_dict`` and uses them to construct a page command. In particular,
+    parse through the command line arguments to product an ``UnpackPDF``
+    command.
+    """
+    try:
+        input = arg_dict['input']
+        output = arg_dict['output']
+    except KeyError as e:
+        raise e
+
+    try:
+        output = arg_dict['output']
+        if not output:
+            # Derive a default output directory from the input file.
+            output = util.temp_directory(input)
+    except KeyError as e:
+        # Derive a default output directory from the input file.
+        output = util.temp_directory(input)
+
+    return make(input, output)
 

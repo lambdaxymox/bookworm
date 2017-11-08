@@ -48,6 +48,27 @@ class ChangeResolution(abstract.Command):
         )
 
 
+class Runner(abstract.Runner):
+
+    def setup(command):
+        """
+        Prepare an action for execution by setting up folders and I/O.
+        """
+        if os.path.isfile(command.source_file):
+            if not os.path.isdir(command.target_path):
+                os.mkdir(command.target_path)
+        else:
+            raise FileNotFoundError(
+                f'File does not exist: {command.source_file}'
+            )
+
+    def execute(command):
+        subprocess.run(command.as_subprocess())
+
+    def cleanup(command):
+        return
+
+
 def make(resolution, source_file, target_file=''):
     """
     The ``make`` factory method that creates a ``ChangePageResolution`` 
@@ -133,25 +154,4 @@ def process_args(arg_dict):
 
     else:
         raise FileNotFoundError(f'File or directory does not exist: {input}')
-
-
-class Runner(abstract.Runner):
-
-    def setup(command):
-        """
-        Prepare an action for execution by setting up folders and I/O.
-        """
-        if os.path.isfile(command.source_file):
-            if not os.path.isdir(command.target_path):
-                os.mkdir(command.target_path)
-        else:
-            raise FileNotFoundError(
-                f'File does not exist: {command.source_file}'
-            )
-
-    def execute(command):
-        subprocess.run(command.as_subprocess())
-
-    def cleanup(command):
-        return
 
