@@ -99,7 +99,12 @@ def process_args(arg_dict):
         files_dict = {'path': input, 'files': os.listdir(input)}
         tiff_files_dict = util.with_extension('.tiff', files_dict)
 
-        return multi_resample_page(resolution, tiff_files_dict['path'], tiff_files_dict['files'], output)
+        return multi_resample_page(
+            resolution,
+            tiff_files_dict['path'],
+            tiff_files_dict['files'],
+            output
+        )
 
     # If the input is one page only, we only need a single resample page operation.
     elif os.path.isfile(input):

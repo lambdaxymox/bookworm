@@ -66,8 +66,10 @@ def multi_expand_page(width, height, source_path, source_files, target):
     directory.
     """
     actions = {}
-    for source in source_files:
-        action = make(width, height, os.path.join(source_path, source), target)
+    for source_file in source_files:
+        action = make(
+            width, height, os.path.join(source_path, source_file), target
+        )
         actions[source] = action
 
     return actions

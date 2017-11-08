@@ -38,7 +38,7 @@ class ChangeResolution(abstract.Command):
 
 def make(resolution, source, target=''):
     """
-    The ``make`` factory method that creates a ``ChangePageResolution``
+    The ``make`` factory method that creates a ``ChangePageResolution`` 
     action.
     """
     if resolution.value <= 0:
