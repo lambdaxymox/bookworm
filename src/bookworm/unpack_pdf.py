@@ -91,9 +91,6 @@ class Runner(abstract.Runner):
     def execute(command):
         subprocess.run(command.as_subprocess())
 
-    def commit(command):
-        pass
-
     def cleanup(command):
         """
         The ``cleanup`` method is applied after a failure occurs to clean up
