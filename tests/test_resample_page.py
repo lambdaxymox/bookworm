@@ -133,6 +133,7 @@ class TestResamplePageProcessArgs(unittest.TestCase):
 
 class TestRunner(unittest.TestCase):
 
+    @unittest.skip
     def test_resample_page_runner(self):
         source_file = 'sample/sample.tiff'
         target_file = 'sample/sample2.tiff'

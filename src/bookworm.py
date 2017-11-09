@@ -1,4 +1,4 @@
-import bookworm.execute_commands  as execute_commands
+import bookworm.execute_command   as execute_command
 import bookworm.unpack_pdf        as unpack_pdf
 import bookworm.expand_page       as expand_page
 import bookworm.change_resolution as change_resolution
@@ -169,40 +169,6 @@ def warning(*objs):
     print('WARNING: ', *objs, file=sys.stderr)
 
 
-def load_module(module):
-    ALLOWED_COMMANDS = {
-        'unpack-pdf': unpack_pdf,
-        'change-resolution': change_resolution,
-        'expand-page': expand_page,
-        'resample-page': resample_page,
-    }
-
-    return ALLOWED_COMMANDS[module]
-
-
-def process_command(command_dict):
-    """
-    Unpack the command and the arguments.
-    """
-    try:
-        command = command_dict['command']
-        arg_dict = command_dict['args']
-    except KeyError as e:
-        raise e
-
-    try:
-        module = load_module(command)
-    except:
-        raise ValueError(f'Invalid command: {command}')
-
-    try:
-        action = module.process_args(arg_dict)
-    except:
-        raise ValueError(f'Invalid arguments. Got: {arg_dict}')
-
-    return action
-
-
 def main():
     """
     The main pdf operations are:
@@ -225,8 +191,8 @@ def main():
     command = sys.argv[1]
     
     try:
-        action = process_command({'command': command, 'args': vars(args)})
-        execute_commands.run_command([action])
+        action = execute_command.process_command({'command': command, 'args': vars(args)})
+        execute_command.run_command([action])
     except Exception as e:
         print(e)
         sys.exit(1)
