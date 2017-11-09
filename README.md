@@ -1,7 +1,7 @@
 # Bookworm
 
 **Bookworm** is a python utility for automating batch document scan processing.
-It is designed to normalize the dimensions of scanned pages to ensure they all have the same resolution and dimensions. Its purpose is to fit inside a workflow for packing the pages of a book into a document such as a PDF or DJVU file, and running optical character recognition.
+It is designed to normalize the dimensions of scanned pages to ensure they all have the same resolution and dimensions. Its purpose is to fit inside a workflow for packing the pages of a book into a document such as a `pdf` or `djvu` file, and running optical character recognition.
 
 ## Usage
 
