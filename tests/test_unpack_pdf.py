@@ -6,37 +6,45 @@ import os, os.path
 
 class TestUnpackPDF(unittest.TestCase):
 
+    def setUp(self):
+        self.source_file = 'sample/sample.pdf'
+        self.target_path = f'sample/{util.default_subdirectory()}'
+        self.arg_dict = dict(
+            input = self.source_file,
+            output = self.target_path
+        )
+
     def test_unpack_pdf(self):
         """
         UnpackPDF should derive a local directory from the path to the source pdf file.
         """
-        source_pdf = './foo/bar/baz/quux.pdf'
-        target_dir = f'./foo/bar/baz/{util.default_subdirectory()}'
-        action = unpack_pdf.make(source_pdf)
+        action = unpack_pdf.make(self.source_file)
 
-        self.assertEqual(action.image_dir, target_dir)
+        self.assertIsInstance(action, unpack_pdf.UnpackPDF)
 
 
     def test_unpack_pdf_generates_correct_terminal_command(self):
         """
         An ``UnpackPDF`` object should be a valid python subprocess.
         """
-        source_pdf = 'sample/sample.pdf'
-        target_dir = f'sample/{util.default_subdirectory()}'
-        arg_dict = {'input': source_pdf, 'output': target_dir}
-        action = unpack_pdf.process_args(arg_dict)
-
+        action = unpack_pdf.process_args(self.arg_dict)
         terminal_command = [
             'gs', '-q', '-dNOPAUSE', '-dBATCH',   '-sDEVICE=tiff24nc', 
             '-sCompression=lzw',     '-r600x600', 
-            f'-sOutputFile={target_dir}_Page_%04d.tiff',
-            source_pdf
+            f'-sOutputFile={self.target_path}_Page_%04d.tiff',
+            self.source_file
         ]
         
         self.assertEqual(action.as_subprocess(), terminal_command)
 
 
 class TestUnpackPDFProcessArgs(unittest.TestCase):
+
+    def setUp(self):
+        self.arg_dict = dict(
+            input = 'sample/sample.pdf',
+            output = f'sample/{util.default_subdirectory()}'
+        )
 
     def test_process_args(self):
         """
@@ -45,45 +53,41 @@ class TestUnpackPDFProcessArgs(unittest.TestCase):
         of the pdf into a default subdirectory in the same directory as the 
         pdf file.
         """
-        source_pdf = 'sample/sample.pdf'
-        target_dir = f'sample/{util.default_subdirectory()}'
-        arg_dict = {
-            'input': source_pdf,
-            'output': target_dir
-        }     
-        action = unpack_pdf.process_args(arg_dict)
+        action = unpack_pdf.process_args(self.arg_dict)
 
         self.assertIsInstance(action, unpack_pdf.UnpackPDF)
 
 
 class TestRunner(unittest.TestCase):
 
+    def setUp(self):
+        self.arg_dict = dict(
+            input = 'sample/sample.pdf',
+            output = f'sample/{util.default_subdirectory()}'
+        )
+
+    def use_source_file(self, source_file):
+        self.arg_dict['input'] = source_file
+
+    def use_target_path(self, target_path):
+        self.arg_dict['output'] = target_path
+
     def test_unpack_pdf_setup(self):
         """
         An UnpackPDF object's setup function should make the target directory
         if it does not exist.
         """
-        source_pdf = 'sample/sample.pdf'
-        target_dir = f'sample/{util.default_subdirectory()}'
-        arg_dict = {
-            'input': source_pdf,
-            'output': target_dir
-        }
-        action = unpack_pdf.process_args(arg_dict)
-
+        action = unpack_pdf.process_args(self.arg_dict)
         try:
             unpack_pdf.Runner.setup(action)
-        except FileNotFoundError as e:
-            unpack_pdf.Runner.cleanup(action)
+            if not os.path.isdir(self.arg_dict['output']):
+                raise FileExistsError
+        except:
             self.fail()
-
-        if not os.path.isdir(target_dir):
+        finally:
             unpack_pdf.Runner.cleanup(action)
-            self.fail()
 
-        unpack_pdf.Runner.cleanup(action)
-
-        self.assertEqual(action.target_dir, target_dir)
+        self.assertEqual(action.target_dir, self.arg_dict['output'])
 
 
     def test_action_setup_should_reject_non_existent_output_directory(self):
@@ -91,13 +95,9 @@ class TestRunner(unittest.TestCase):
         The UnpackPDF class's ``setup`` method should fail when the 
         output directory does not exist.
         """
-        source_pdf = 'sample/doesnotexist.pdf'
-        target_dir = 'sample/'
-        arg_dict = {
-            'input': source_pdf,
-            'output': target_dir
-        }
-        action = unpack_pdf.process_args(arg_dict)
+        self.use_source_file('sample/doesnotexist.pdf')
+        self.use_target_path('sample/')
+        action = unpack_pdf.process_args(self.arg_dict)
 
         with self.assertRaises(FileNotFoundError):
             unpack_pdf.Runner.setup(action)
@@ -108,13 +108,7 @@ class TestRunner(unittest.TestCase):
         An UnpackPDF object's setup function should make the target directory
         if it does not exist.
         """
-        source_pdf = 'sample/sample.pdf'
-        target_dir = f'sample/{util.default_subdirectory()}'
-        arg_dict = {
-            'input': source_pdf,
-            'output': target_dir
-        }
-        action = unpack_pdf.process_args(arg_dict)
+        action = unpack_pdf.process_args(self.arg_dict)
             
         unpack_pdf.Runner.setup(action)
         unpack_pdf.Runner.cleanup(action)
@@ -123,14 +117,8 @@ class TestRunner(unittest.TestCase):
 
 
     def test_unpack_pdf_should_not_write_to_a_directory_with_existing_files(self):
-        source_pdf = 'sample/sample.pdf'
-        target_dir = 'sample/test_tiffs'
-        arg_dict = {
-            'input': source_pdf,
-            'output': target_dir
-        }
-        action = unpack_pdf.process_args(arg_dict)
-        
+        self.use_target_path('sample/test_tiffs')
+        action = unpack_pdf.process_args(self.arg_dict)    
         try:
             unpack_pdf.Runner.setup(action)
             unpack_pdf.Runner.execute(action)
@@ -139,14 +127,7 @@ class TestRunner(unittest.TestCase):
 
 
     def test_unpack_pdf_runner_executes_entire_process(self):
-        source_pdf = 'sample/sample.pdf'
-        target_dir = f'sample/{util.default_subdirectory()}'
-        arg_dict = {
-            'input': source_pdf,
-            'output': target_dir
-        }
-        action = unpack_pdf.process_args(arg_dict)
-
+        action = unpack_pdf.process_args(self.arg_dict)
         try:
             unpack_pdf.Runner.setup(action)
             unpack_pdf.Runner.execute(action)
@@ -158,14 +139,7 @@ class TestRunner(unittest.TestCase):
 
 
     def test_unpack_pdf_runner_unpacks_a_pdf_to_a_directory(self):
-        source_pdf = 'sample/sample.pdf'
-        target_dir = f'sample/{util.default_subdirectory()}'
-        arg_dict = {
-            'input': source_pdf,
-            'output': target_dir
-        }
-        action = unpack_pdf.process_args(arg_dict)
-
+        action = unpack_pdf.process_args(self.arg_dict)
         try:
             unpack_pdf.Runner.setup(action)
             unpack_pdf.Runner.execute(action)
@@ -173,7 +147,7 @@ class TestRunner(unittest.TestCase):
             unpack_pdf.Runner.cleanup(action)
             self.fail()
 
-        if not os.path.isdir(target_dir):
+        if not os.path.isdir(self.arg_dict['output']):
             unpack_pdf.Runner.cleanup(action)
             self.fail()
 
