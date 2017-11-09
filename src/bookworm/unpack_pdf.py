@@ -8,7 +8,7 @@ class UnpackPDF(abstract.Command):
     """
     Unpack a pdf into a collection of TIFF files inside a target directory.
     """
-    def __init__(self, source_pdf, target_dir, resolution=600):
+    def __init__(self, source_pdf, target_dir, resolution=300):
         self.command = 'gs'
         self.source_pdf = source_pdf
         self.target_dir = target_dir

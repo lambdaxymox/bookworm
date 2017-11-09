@@ -30,7 +30,7 @@ class TestUnpackPDF(unittest.TestCase):
         action = unpack_pdf.process_args(self.arg_dict)
         terminal_command = [
             'gs', '-q', '-dNOPAUSE', '-dBATCH',   '-sDEVICE=tiff24nc', 
-            '-sCompression=lzw',     '-r600x600', 
+            '-sCompression=lzw',     '-r300x300', 
             f'-sOutputFile={self.target_path}_Page_%04d.tiff',
             self.source_file
         ]
