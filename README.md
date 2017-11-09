@@ -5,7 +5,7 @@ They are designed to normalize the dimensions of scanned pages to ensure they al
 
 ## Usage
 
-Fork [link fork](https://github.com/stallmanifold/bookworm) and run
+[Fork](https://github.com/stallmanifold/bookworm) and run
 ```bash
 $ python bookworm.py unpack-pdf -i /path/to/file.pdf  
 ```
