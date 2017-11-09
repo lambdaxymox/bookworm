@@ -15,6 +15,9 @@ ALLOWED_COMMANDS = {
 
 
 def load_module(module):
+    """
+    Load the correct module for running an action.
+    """
     return ALLOWED_COMMANDS[module]
 
 

@@ -191,7 +191,8 @@ def main():
     command = sys.argv[1]
     
     try:
-        action = execute_command.process_command({'command': command, 'args': vars(args)})
+        command_dict = dict(command=command, args=vars(args))
+        action = execute_command.process_command(command_dict)
         execute_command.run_command([action])
     except Exception as e:
         print(e)

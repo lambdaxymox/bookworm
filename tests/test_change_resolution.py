@@ -7,67 +7,44 @@ from bookworm.resolution import Resolution
 
 class TestChangeResolution(unittest.TestCase):
 
+    def setUp(self):
+        self.source_file = 'sample/sample.tiff'
+        self.resolution_val = 300
+        self.unit_str = 'PixelsPerInch'
+        self.resolution = Resolution.make(self.resolution_val, self.unit_str) 
+
     def test_change_resolution(self):
         """
         We should be able to create a page action that has the correct type.
         """
-        source_file = 'sample/sample.tiff'
-        resolution_val = 600
-        unit_str = 'PixelsPerInch'
-        resolution = Resolution.make(resolution_val, unit_str)
-
-        try:
-            action = change_resolution.make(resolution, source_file)
-        except ValueError as e:
-            self.fail()
-
+        action = change_resolution.make(self.resolution, self.source_file)
         self.assertIsInstance(action, change_resolution.ChangeResolution)
-        self.assertNotEqual(action.target_file, action.source_file)
+        #self.assertNotEqual(action.target_file, action.source_file)
 
 
 class TestChangeResolutionProcessArgs(unittest.TestCase):
     
+    def setUp(self):
+        self.arg_dict = dict(
+            input = 'sample/sample.tiff',
+            output = 'sample/',
+            units = 'PixelsPerInch'
+        )
+
+    def use_resolution_val(self, resolution_val):
+        self.arg_dict['resolution'] = resolution_val
+
     def test_process_args(self):
         """
         The argument processor should correctly create a ``ChangeResolution``
         action under conditions where there is a positive resolution value when
         units are given.
         """
-        source_file = 'sample/sample.tiff'
-        target_path = 'sample/'
-        resolution_val = 600
-        arg_dict = {
-            'input': source_file,
-            'output': target_path,
-            'resolution': resolution_val,
-            'units': 'PixelsPerInch'
-        }
-
-        try:
-            action = change_resolution.process_args(arg_dict)
-        except ValueError as e:
-            self.fail("An error should not have occurred here.")
-
+        self.use_resolution_val(600)
+        action = change_resolution.process_args(self.arg_dict)
+        
         self.assertIsInstance(action, change_resolution.ChangeResolution)
         self.assertNotEqual(action.source_file, action.target_file)
-
-
-    def test_process_args_should_reject_missing_units(self):
-        """
-        The argument processor should not create a ``ChangeResolution`` action
-        if the input resolution desired has no units.
-        """
-        source_file = 'sample/sample.tiff'
-        target_path = 'sample/'
-        resolution_val = 600
-        arg_dict = {
-            'input': source_file,
-            'output': target_path,
-            'resolution': resolution_val
-        }
-
-        with self.assertRaises(KeyError):
-            change_resolution.process_args(arg_dict)
 
 
     def test_process_args_should_reject_noninteger_values(self):
@@ -75,18 +52,9 @@ class TestChangeResolutionProcessArgs(unittest.TestCase):
         The argument processor should not accept a noninteger input value for
         the image resolution.
         """
-        source_file = 'sample/sample.tiff'
-        target_path = 'sample/'
-        resolution_val = "Potato"
-        arg_dict = {
-            'input': source_file,
-            'output': target_path,
-            'resolution': resolution_val,
-            'units': 'PixelsPerInch'
-        }
-
+        self.use_resolution_val("Potato")
         with self.assertRaises(TypeError):
-            change_resolution.process_args(arg_dict)
+            change_resolution.process_args(self.arg_dict)
 
 
     def test_process_args_should_reject_nonpositive_resolution_values(self):
@@ -94,18 +62,9 @@ class TestChangeResolutionProcessArgs(unittest.TestCase):
         The argument processor should not accept a negative input value for
         the image resolution.
         """
-        source_file = 'sample/sample.tiff'
-        target_path = 'sample/'
-        resolution_val = -600
-        arg_dict = {
-            'input': source_file,
-            'output': target_path,
-            'resolution': resolution_val,
-            'units': 'PixelsPerInch'
-        }
-
+        self.use_resolution_val(-600)
         with self.assertRaises(ValueError):
-            change_resolution.process_args(arg_dict)
+            change_resolution.process_args(self.arg_dict)
 
 
     def test_process_args_should_reject_resolution_value_of_zero(self):
@@ -113,33 +72,45 @@ class TestChangeResolutionProcessArgs(unittest.TestCase):
         The argument processor should not accept zero as an input value for
         the image resolution.
         """
-        source_file = 'sample/sample.tiff'
-        target_path = 'sample/'
-        resolution_val = 0
-        arg_dict = {
-            'input': source_file,
-            'output': target_path,
-            'resolution': resolution_val,
-            'units': 'PixelsPerInch'
-        }
-        
+        self.use_resolution_val(0)
         with self.assertRaises(ValueError):
-            change_resolution.process_args(arg_dict)
+            change_resolution.process_args(self.arg_dict)
+
+
+class TestProcessArgsWithMissingResolutionUnits(unittest.TestCase):
+
+    def setUp(self):
+        self.arg_dict = dict(
+            input = 'sample/sample.tiff',
+            output = 'sample/',
+            resolution = 300
+        )
+
+    def test_process_args_should_reject_missing_units(self):
+        """
+        The argument processor should not create a ``ChangeResolution`` action
+        if the input resolution desired has no units.
+        """
+        with self.assertRaises(KeyError):
+            change_resolution.process_args(self.arg_dict)
 
 
 class TestChangeResolutionRunner(unittest.TestCase):
 
+    def setUp(self):
+        self.arg_dict = dict(
+            output = 'sample/',
+            resolution = 300,
+            units = 'PixelsPerInch'
+        )
+
+    def use_source_file(self, source_file):
+        self.arg_dict['input'] = source_file
+
+
     def test_change_resolution_runner_process(self):
-        source_file = 'sample/sample.tiff'
-        target_path = 'sample/'
-        resolution_val = 600
-        arg_dict = {
-            'input': source_file,
-            'output': target_path,
-            'resolution': resolution_val,
-            'units': 'PixelsPerInch'
-        }
-        action = change_resolution.process_args(arg_dict)
+        self.use_source_file('sample/sample.tiff')
+        action = change_resolution.process_args(self.arg_dict)
 
         try:
             change_resolution.Runner.setup(action)
@@ -152,22 +123,30 @@ class TestChangeResolutionRunner(unittest.TestCase):
 
 
     def test_runner_should_fail_if_source_does_not_exist(self):
-        source_file = 'sample/doesnotexist.tiff'
-        target_path = 'sample/'
-        resolution_val = 600
-        arg_dict = {
-            'input': source_file,
-            'output': target_path,
-            'resolution': resolution_val,
-            'units': 'PixelsPerInch'
-        }
+        self.use_source_file('sample/doesnotexist.tiff')
 
         with self.assertRaises(FileNotFoundError):
-            action = change_resolution.process_args(arg_dict)
+            action = change_resolution.process_args(self.arg_dict)
             change_resolution.Runner.setup(action)
 
 
 class TestMultiChangePageResolution(unittest.TestCase):
+
+    def setUp(self):
+        self.arg_dict = dict(
+            input = 'sample/test_tiffs/',
+            resolution = 300,
+            units = 'PixelsPerInch'
+        )
+
+    def get_source_files(self):
+        source_path = self.arg_dict['input']
+        source_files = os.listdir(source_path)
+        for source_file in source_files:
+            os.path.join(source_path, source_file)
+
+        return source_files
+
 
     def test_multi_page_change_resolution_should_generate_multiple_actions_from_input_directory(self):
         """
@@ -175,23 +154,28 @@ class TestMultiChangePageResolution(unittest.TestCase):
         page change resolution action argument processor should correctly
         every valid input image and group them together into one action.
         """
-        source_path = 'sample/test_tiffs/'
-        source_files = list(map(lambda f: os.path.join(source_path, f), os.listdir(source_path)))
-        resolution_val = 600
-        resolution = Resolution.make(resolution_val, 'PixelsPerInch')
-        arg_dict = {
-            'input': source_path,
-            'resolution': resolution_val,
-            'units': 'PixelsPerInch'
-        }
-
-        multi_actions = change_resolution.process_args(arg_dict)
+        resolution = Resolution.make(
+            self.arg_dict['resolution'], self.arg_dict['units']
+        )
+        multi_actions = change_resolution.process_args(self.arg_dict)
+        
         for action in multi_actions.values():
             self.assertIsInstance(action, change_resolution.ChangeResolution)
-            self.assertIsInstance(action.resolution, Resolution)
-            self.assertEqual(action.resolution.value, resolution.value)
-            self.assertEqual(action.resolution.units, resolution.units)
-            self.assertTrue(action.source_file in source_files)
+
+
+class TestMultiChangeResolutionProcessArgs(unittest.TestCase):
+
+    def setUp(self):
+        self.arg_dict = dict(
+            input = 'sample/sample_tiffs/',
+            units = 'PixelsPerInch',
+        )
+
+    def use_resolution_val(self, resolution_val):
+        self.arg_dict['resolution'] = resolution_val
+
+    def use_source_path(self, source_path):
+        self.arg_dict['input'] = source_path
 
 
     def test_process_args_should_reject_non_existent_input_directory(self):
@@ -199,34 +183,22 @@ class TestMultiChangePageResolution(unittest.TestCase):
         The arument processor should not accept an input directory that does
         not exist. Surely it is impossible to read a nonexistent input.
         """
-        source_path = 'sample/directory_doesnotexist/'
-        resolution_val = 600
-        arg_dict = {
-            'input': source_path,
-            'resolution': resolution_val,
-            'units': 'PixelsPerInch'
-        }
-        
+        self.use_source_path('sample/directory_doesnotexist/')
+        self.use_resolution_val(600)
+
         with self.assertRaises(FileNotFoundError):
-            change_resolution.process_args(arg_dict)
+            change_resolution.process_args(self.arg_dict)
 
 
     def test_process_args_should_reject_nonpositive_integer_resolutions(self):
         """
-        Thr argument processor should reject negative and zero values for
+        The argument processor should reject negative and zero values for
         the new resolution for the image. It does not make sense to have 
         negative pixels per inch.
         """
-        source_path = 'sample/sample_tiffs/'
-        resolution_val = -600
-        arg_dict = {
-            'input': source_path,
-            'resolution': resolution_val,
-            'units': 'PixelsPerInch'
-        }
-
+        self.use_resolution_val(-600)
         try:
-            action = change_resolution.process_args(arg_dict)
+            action = change_resolution.process_args(self.arg_dict)
 
             # Action should not have been assigned a value.
             self.fail(f'Negative integer accepted: {action}')
@@ -241,16 +213,9 @@ class TestMultiChangePageResolution(unittest.TestCase):
         The ``ChangeResolution`` action's argument processor should not accept
         fractional resolution values.
         """
-        source_path = 'sample/sample_tiffs/'
-        resolution_val = 600.1
-        arg_dict = {
-            'input': source_path,
-            'resolution': resolution_val,
-            'units': 'PixelsPerInch'
-        }
-
+        self.use_resolution_val(600.1)
         try:
-            action = change_resolution.process_args(arg_dict)
+            action = change_resolution.process_args(self.arg_dict)
 
             # Action should not have been assigned a value.
             self.fail(f'Fractional value accepted: {action}')
@@ -262,23 +227,24 @@ class TestMultiChangePageResolution(unittest.TestCase):
 
 class TestRunner(unittest.TestCase):
 
+    def setUp(self):
+        self.arg_dict = dict(
+            input = 'sample/sample.tiff',
+            output = 'sample/sample2.tiff',
+            resolution = 300,
+            units = 'PixelsPerInch'
+        )
+
+    def tearDown(self):
+        os.remove(self.arg_dict['output'])
+
+
     def test_change_resolution_runner(self):
-        source_file = 'sample/sample.tiff'
-        target_file = 'sample/sample2.tiff'
-        resolution_val = 600
-        arg_dict = {
-            'input': source_file,
-            'output': target_file,
-            'resolution': resolution_val,
-            'units': 'PixelsPerInch'
-        }
-        
-        action = change_resolution.process_args(arg_dict)
+        action = change_resolution.process_args(self.arg_dict)
+        target_file = self.arg_dict['output']
+
         change_resolution.Runner.setup(action)
         change_resolution.Runner.execute(action)
 
-        target_file_exists = os.path.exists(target_file)
-        os.remove(target_file)
-
-        self.assertTrue(target_file_exists)
+        self.assertTrue(os.path.exists(target_file))
 
