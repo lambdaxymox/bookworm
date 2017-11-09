@@ -19,26 +19,42 @@ class TestExpandPageWithFill(unittest.TestCase):
         self.assertIsInstance(action, expand_page.ExpandPageWithFill)
 
 
-class TestExpandPageWithFillProcessArgs(unittest.TestCase):
+class TestProcessArgs(unittest.TestCase):
+
+    def setUp(self):
+        self.source_file = 'sample/sample.tiff'
+        self.width = 2160
+        self.height = 3060
+        self.arg_dict = dict(
+            input = self.source_file,
+            dimensions = (self.width, self.height),
+        )
+
+    def use_source_file(self, source_file):
+        self.source_file = source_file
+        self.arg_dict['input'] = source_file
+
+    def use_dimensions(self, width=None, height=None):
+        if width:
+            self.width = width
+            self.arg_dict['dimensions'] = (width, self.height)
+        if height:
+            self.height = height
+            self.arg_dict['dimensions'] = (self.width, height)
+
 
     def test_process_args(self):
         """
         The argument processor should produce a valid instance of
         a page action given valid inputs.
         """
-        source_file = 'sample/sample.tiff'
-        width = 2160
-        height = 3060
-        dimensions = (width, height)
-        arg_dict = {'input': source_file, 'dimensions': dimensions}
-
-        action = expand_page.process_args(arg_dict)
+        action = expand_page.process_args(self.arg_dict)
 
         # No exception occurred.
         self.assertIsInstance(action, expand_page.ExpandPageWithFill)
-        self.assertEqual(action.width, width)
-        self.assertEqual(action.height, height)
-        self.assertEqual(action.source_file, source_file)
+        self.assertEqual(action.width, self.width)
+        self.assertEqual(action.height, self.height)
+        self.assertEqual(action.source_file, self.source_file)
 
 
     def test_process_args_should_reject_bad_dimensions(self):
@@ -47,21 +63,9 @@ class TestExpandPageWithFillProcessArgs(unittest.TestCase):
         You cannot define the notion of width and height by other means in
         terms of pixels.
         """
-        source_file = 'sample/sample.tiff'
-        width = 2160
-        height = "Potato"
-        dimensions = (width, height)
-        arg_dict = {'input': source_file, 'dimensions': dimensions}
-
-        action = None
-        try:
-            action = expand_page.process_args(arg_dict)
-        except TypeError as e:
-            # Successful trap.
-            self.assertIsInstance(e, TypeError)
-
-        # An error should occur from malformed input.
-        self.assertNotEqual(type(action), expand_page.ExpandPageWithFill)
+        self.use_dimensions(height="Potato")
+        with self.assertRaises(TypeError):
+            expand_page.process_args(self.arg_dict)
 
 
     ### TODO: a setup action should handle this!!!
@@ -70,17 +74,33 @@ class TestExpandPageWithFillProcessArgs(unittest.TestCase):
         The argument processor should only generate a valid input if the
         input file actually exists.
         """
-        source_file = 'sample/sample_doesnotexist.tiff'
-        width = 2160
-        height = 3060
-        dimensions = (width, height)
-        arg_dict = {'input': source_file, 'dimensions': dimensions}
-
+        self.use_source_file('sample/sample_doesnotexist.tiff')
         with self.assertRaises(FileNotFoundError):
-            expand_page.process_args(arg_dict)
+            expand_page.process_args(self.arg_dict)
 
 
 class TestMultipleExpandPages(unittest.TestCase):
+
+    def setUp(self):
+        self.width = 2160
+        self.height = 3060
+        self.arg_dict = dict(
+            input = 'sample/test_tiffs/',
+            dimensions = (self.width, self.height)
+        )
+
+    def use_source_path(self, source_path):
+        self.arg_dict['input'] = source_path
+
+    def get_source_files(self):
+        source_path = self.arg_dict['input']
+        source_files = os.listdir(source_path)
+        full_source_files = []
+        for source_file in source_files:
+            full_source_files += os.path.join(source_path, source_file)
+
+        return full_source_files
+
 
     def test_process_args_should_generate_multiple_actions_from_input_directory(self):
         """
@@ -88,19 +108,12 @@ class TestMultipleExpandPages(unittest.TestCase):
         argument processor should find them and pack them together into a
         multiple page action.
         """
-        source_path = 'sample/test_tiffs/'
-        source_files = list(map(lambda f: os.path.join(source_path, f), os.listdir(source_path)))
-        width = 2160
-        height = 3060
-        dimensions = (width, height)
-        arg_dict = {'input': source_path, 'dimensions': dimensions}
-
-        multi_actions = expand_page.process_args(arg_dict)
-
+        multi_actions = expand_page.process_args(self.arg_dict)
+        source_files = self.get_source_files()
         for action in multi_actions.values():
             self.assertIsInstance(action, expand_page.ExpandPageWithFill)
-            self.assertEqual(action.width, width)
-            self.assertEqual(action.height, height)
+            self.assertEqual(action.width, self.width)
+            self.assertEqual(action.height, self.height)
             self.assertTrue(action.source_file in source_files)
 
 
@@ -108,14 +121,9 @@ class TestMultipleExpandPages(unittest.TestCase):
         """
         If the input directory does not exist, there is no work to be done.
         """
-        source_path = 'sample/directory_doesnotexist/'
-        width = 2160
-        height = 3060
-        dimensions = (width, height)
-        arg_dict = {'input': source_path, 'dimensions': dimensions}
-
+        self.use_source_path('sample/directory/does/not/exist/')
         with self.assertRaises(FileNotFoundError):
-            expand_page.process_args(arg_dict)
+            expand_page.process_args(self.arg_dict)
 
 
 class TestRunner(unittest.TestCase):
