@@ -1,12 +1,11 @@
 # Bookworm
-==========
+
 **Bookworm** is a python utility for automating batch document scan processing.
 They are designed to normalize the dimensions of scanned pages to ensure they all have the same resolution and dimensions. The program's purpose is to fit inside a workflow of packing the pages of a book into a document such as a PDF or DJVU file, and running optical character recognition.
 
 ## Usage
-========
 
-Fork [link fork][https://github.com/stallmanifold/bookworm] and run
+Fork [link fork](https://github.com/stallmanifold/bookworm) and run
 ```bash
 $ python bookworm.py unpack-pdf -i /path/to/file.pdf  
 ```
@@ -22,7 +21,6 @@ to change the resolution of a page, in pixels per inch, without modifying the pa
 
 
 ## Dependencies
-===============
 
 These following programs are required to run bookworm.
 ```
