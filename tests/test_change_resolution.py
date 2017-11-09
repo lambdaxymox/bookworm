@@ -116,9 +116,8 @@ class TestChangeResolutionRunner(unittest.TestCase):
             change_resolution.Runner.setup(action)
             change_resolution.Runner.execute(action)
         except FileNotFoundError as e:
-            change_resolution.Runner.cleanup(action)
             self.fail()
-        else:
+        finally:
             change_resolution.Runner.cleanup(action)
 
 
