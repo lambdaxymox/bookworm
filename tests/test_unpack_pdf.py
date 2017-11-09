@@ -81,7 +81,7 @@ class TestRunner(unittest.TestCase):
         try:
             unpack_pdf.Runner.setup(action)
             if not os.path.isdir(self.arg_dict['output']):
-                raise FileExistsError
+                self.fail()
         except:
             self.fail()
         finally:
@@ -109,9 +109,10 @@ class TestRunner(unittest.TestCase):
         if it does not exist.
         """
         action = unpack_pdf.process_args(self.arg_dict)
-            
-        unpack_pdf.Runner.setup(action)
-        unpack_pdf.Runner.cleanup(action)
+        try:
+            unpack_pdf.Runner.setup(action)
+        finally:
+            unpack_pdf.Runner.cleanup(action)
 
         self.assertFalse(os.path.exists(action.target_dir))
 
@@ -132,9 +133,8 @@ class TestRunner(unittest.TestCase):
             unpack_pdf.Runner.setup(action)
             unpack_pdf.Runner.execute(action)
         except FileNotFoundError as e:
-            unpack_pdf.Runner.cleanup(action)
             self.fail()
-        else:
+        finally:
             unpack_pdf.Runner.cleanup(action)
 
 
@@ -143,13 +143,10 @@ class TestRunner(unittest.TestCase):
         try:
             unpack_pdf.Runner.setup(action)
             unpack_pdf.Runner.execute(action)
-        except FileNotFoundError as e:
-            unpack_pdf.Runner.cleanup(action)
+            if not os.path.isdir(self.arg_dict['output']):
+                self.fail()
+        except:
             self.fail()
-
-        if not os.path.isdir(self.arg_dict['output']):
+        finally:
             unpack_pdf.Runner.cleanup(action)
-            self.fail()
-
-        unpack_pdf.Runner.cleanup(action)
 
