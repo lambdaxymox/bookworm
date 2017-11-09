@@ -97,7 +97,7 @@ class TestMultipleExpandPages(unittest.TestCase):
         source_files = os.listdir(source_path)
         full_source_files = []
         for source_file in source_files:
-            full_source_files += os.path.join(source_path, source_file)
+            full_source_files.append(os.path.join(source_path, source_file))
 
         return full_source_files
 

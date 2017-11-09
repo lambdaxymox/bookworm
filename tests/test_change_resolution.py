@@ -141,10 +141,11 @@ class TestMultiChangePageResolution(unittest.TestCase):
     def get_source_files(self):
         source_path = self.arg_dict['input']
         source_files = os.listdir(source_path)
+        full_source_files = []
         for source_file in source_files:
-            os.path.join(source_path, source_file)
+            full_source_files.append(os.path.join(source_path, source_file))
 
-        return source_files
+        return full_source_files
 
 
     def test_multi_page_change_resolution_should_generate_multiple_actions_from_input_directory(self):
