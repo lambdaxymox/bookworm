@@ -13,6 +13,7 @@ ALLOWED_COMMANDS = {
     'resample-page': resample_page,
 }
 
+
 def load_module(module):
     return ALLOWED_COMMANDS[module]
 
@@ -44,12 +45,11 @@ def run_command(actions):
     """
     Run a pdf or page action catching for runtime errors.
     """
-    try:
-        for action, runner in actions:
-            print(action.as_terminal_command())
+    for action, runner in actions:
+        try:
             runner.setup(action)
             runner.execute(action)
-    except subprocess.CalledProcessError as e:
-        runner.cleanup(action)
-        raise e
+        except subprocess.CalledProcessError as e:
+            runner.cleanup(action)
+            raise e
 
