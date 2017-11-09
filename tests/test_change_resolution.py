@@ -124,7 +124,6 @@ class TestChangeResolutionRunner(unittest.TestCase):
 
     def test_runner_should_fail_if_source_does_not_exist(self):
         self.use_source_file('sample/doesnotexist.tiff')
-
         with self.assertRaises(FileNotFoundError):
             action = change_resolution.process_args(self.arg_dict)
             change_resolution.Runner.setup(action)
@@ -197,15 +196,8 @@ class TestMultiChangeResolutionProcessArgs(unittest.TestCase):
         negative pixels per inch.
         """
         self.use_resolution_val(-600)
-        try:
-            action = change_resolution.process_args(self.arg_dict)
-
-            # Action should not have been assigned a value.
-            self.fail(f'Negative integer accepted: {action}')
-        except TypeError as e:
-            self.assertIsInstance(e, TypeError)
-        except ValueError as e:
-            self.assertIsInstance(e, ValueError)
+        with self.assertRaises(ValueError):
+            change_resolution.process_args(self.arg_dict)
 
 
     def test_process_args_should_reject_fractional_resolution_values(self):
@@ -214,16 +206,9 @@ class TestMultiChangeResolutionProcessArgs(unittest.TestCase):
         fractional resolution values.
         """
         self.use_resolution_val(600.1)
-        try:
-            action = change_resolution.process_args(self.arg_dict)
+        with self.assertRaises(TypeError):
+            change_resolution.process_args(self.arg_dict)
 
-            # Action should not have been assigned a value.
-            self.fail(f'Fractional value accepted: {action}')
-        except TypeError as e:
-            self.assertIsInstance(e, TypeError)
-        except ValueError as e:
-            self.assertIsInstance(e, ValueError)
-            
 
 class TestRunner(unittest.TestCase):
 
