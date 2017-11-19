@@ -19,7 +19,6 @@ class TestChangeResolution(unittest.TestCase):
         """
         action = change_resolution.make(self.resolution, self.source_file)
         self.assertIsInstance(action, change_resolution.ChangeResolution)
-        #self.assertNotEqual(action.target_file, action.source_file)
 
 
 class TestChangeResolutionProcessArgs(unittest.TestCase):
