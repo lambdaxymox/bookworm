@@ -1,7 +1,7 @@
 import os.path
 
 
-def temp_file_name(file_name):
+def temp_file_name(file_path):
 
     def remove_leading_period(file_ext):
         if file_ext[0] == '.':
@@ -10,17 +10,19 @@ def temp_file_name(file_name):
             return file_ext
 
 
-    file, ext = os.path.splitext(file_name)
+    prefix, file = os.path.split(file_path)
+    file_name, file_ext = os.path.splitext(file)
 
     # If the file has no name, file and ext must be swapped
     # because os.path.splitext will place the file extension into file.
-    if ext == '':
-        ext = file
-        file = ''
+    if file_ext == '':
+        file_ext = file_name
+        file_name = ''
 
-    trim_ext = remove_leading_period(ext)
+    trimmed_ext = remove_leading_period(file_ext)
+    temp_file = f'{file_name}.bookworm.{trimmed_ext}'
 
-    return f'{file}.bookworm.{trim_ext}'
+    return os.path.join(prefix, temp_file)
 
 
 def default_subdirectory():
