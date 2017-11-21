@@ -1,30 +1,36 @@
 import unittest
 import bookworm.util as util
+from hypothesis import given, example
+import hypothesis.strategies as st
 
 
 class TestTempFileName(unittest.TestCase):
 
-    def test_temp_file_name(self):
-        """
-        We should generate the correct file name under normal conditions.
-        """
-        old_file = 'foo.pdf'
-        expected = 'foo.bookworm.pdf'
-        result = util.temp_file_name(old_file)
+    file_extensions = st.sampled_from(['.pdf', '.djvu'])
+    file_names = st.tuples(st.text(), file_extensions)
 
-        self.assertEqual(result, expected)
+    @st.composite
+    def temp_file_name_data(draw, file_names=file_names):
+        old_file = draw(file_names)
+        old_file_name = old_file[0] + old_file[1]
+        new_file_name = old_file[0] + '.bookworm' + old_file[1]
+        
+        return dict(
+            old_file_name = old_file_name,
+            new_file_name = new_file_name
+        )
 
-
-    def test_temp_file_name_should_correctly_apply_to_nameless_file(self):
+    @given(temp_file_name_data())
+    @example(dict(old_file_name='.pdf', new_file_name='.bookworm.pdf'))
+    def test_temp_file_name(self, temp_file_name_data):
         """
-        ``temp_file_name`` should correctly handle files with no name but
-        a file extension.
+        Given a valid input file, ``temp_file_name`` should generate the temporary file
+        name string, including in the case where the file name is empty.
         """
-        old_file = '.pdf'
-        expected = '.bookworm.pdf'
-        result = util.temp_file_name(old_file)
+        result = util.temp_file_name(temp_file_name_data['old_file_name'])
+        new_file_name = temp_file_name_data['new_file_name']
 
-        self.assertEqual(result, expected)
+        assert result == new_file_name
 
 
 class TestFilesExist(unittest.TestCase):
