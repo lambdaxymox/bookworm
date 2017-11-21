@@ -19,21 +19,21 @@ class PyTest(TestCommand):
         sys.exit(errno)
 
 
-config = {
-    'description': 'Bookworm',
-    'author': 'Stallmanifold',
-    'url': 'https://github.com/stallmanifold/bookworm',
-    'download_url': 'https://github.com/stallmanifold/bookworm.git',
-    'author_email': 'stallmanifold@gmail.com',
-    'version': '0.1',
-    'install_requires': ['pytest'],
-    'package_dir': {'': 'src'},
-    'packages': ['bookworm'],
-    'scripts': [],
-    'name': 'bookworm',
-    'tests_require': ['pytest', 'hypothesis'],
-    'cmdclass' : {'test': PyTest},
-}
+config = dict(
+    description = 'Bookworm',
+    author = 'Stallmanifold',
+    url = 'https://github.com/stallmanifold/bookworm',
+    download_url = 'https://github.com/stallmanifold/bookworm.git',
+    author_email = 'stallmanifold@gmail.com',
+    version = '0.1',
+    install_requires = ['pytest'],
+    package_dir = {'': 'src'},
+    packages = ['bookworm'],
+    scripts = [],
+    name = 'bookworm',
+    tests_require = ['pytest', 'hypothesis'],
+    cmdclass = {'test': PyTest},
+)
 
 setup(**config)
 
