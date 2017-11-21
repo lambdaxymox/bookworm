@@ -31,7 +31,7 @@ config = {
     'packages': ['bookworm'],
     'scripts': [],
     'name': 'bookworm',
-    'tests_require': ['pytest'],
+    'tests_require': ['pytest', 'hypothesis'],
     'cmdclass' : {'test': PyTest},
 }
 

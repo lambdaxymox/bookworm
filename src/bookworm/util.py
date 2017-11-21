@@ -18,7 +18,9 @@ def temp_file_name(file_name):
         ext = file
         file = ''
 
-    return '{}.bookworm.{}'.format(file, remove_leading_period(ext))
+    trim_ext = remove_leading_period(ext)
+
+    return f'{file}.bookworm.{trim_ext}'
 
 
 def default_subdirectory():
@@ -41,8 +43,9 @@ def with_extension(extension, file_dict):
 
         return file_extension == extension
 
+
     if extension[0] != '.':
-        # Prepend a leading period.
+        # We are missing the leading period.
         extension = '.' + extension
 
     try:
@@ -51,7 +54,10 @@ def with_extension(extension, file_dict):
     except KeyError as e:
         raise e
 
-    return {'path': path, 'files': list(filter(lambda file: by_ext(extension, file), files))}
+    return dict(
+        path = path, 
+        files = list(filter(lambda file: by_ext(extension, file), files))
+    )
 
 
 def files_exist(files):
