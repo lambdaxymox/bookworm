@@ -71,10 +71,7 @@ class TestFilesExist(unittest.TestCase):
         should return ``False``
         """
         file_name = ['.pdf']
-        try:
-            util.files_exist(file_name)
-        except:
-            self.fail('files_exist threw an exception.')
+        self.assertFalse(util.files_exist(file_name))
 
 
     def test_files_exist_with_nameless_file_without_extension(self):
@@ -119,14 +116,14 @@ class TestWithExtension(unittest.TestCase):
         ``with_extension`` functio should correctly identify which
         files inside that directory have the input file extension.
         """
-        before = {
-            'path': '/foo/bar/baz/',
-            'files': ['quux1.tiff', 'quux2.tiff', 'quux3.tiff', 'quux4.jpg']
-        }
-        after = {
-            'path': '/foo/bar/baz/',
-            'files': ['quux1.tiff', 'quux2.tiff', 'quux3.tiff']
-        }
+        before = dict(
+            path = '/foo/bar/baz/',
+            files =  ['quux1.tiff', 'quux2.tiff', 'quux3.tiff', 'quux4.jpg']
+        )
+        after = dict(
+            path = '/foo/bar/baz/',
+            files = ['quux1.tiff', 'quux2.tiff', 'quux3.tiff']
+        )
 
         res = util.with_extension('.tiff', before)
         self.assertEqual(res, after)
@@ -137,14 +134,14 @@ class TestWithExtension(unittest.TestCase):
         ``with_extension`` should accept a file extension string with or
         without a leading period.
         """
-        before = {
-            'path': '/foo/bar/baz/',
-            'files': ['quux1.tiff', 'quux2.tiff', 'quux3.tiff', 'quux4.jpg']
-        }
-        after = {
-            'path': '/foo/bar/baz/',
-            'files': ['quux1.tiff', 'quux2.tiff', 'quux3.tiff']
-        }
+        before = dict(
+            path =  '/foo/bar/baz/',
+            files =  ['quux1.tiff', 'quux2.tiff', 'quux3.tiff', 'quux4.jpg']
+        )
+        after = dict(
+            path = '/foo/bar/baz/',
+            files = ['quux1.tiff', 'quux2.tiff', 'quux3.tiff']
+        )
         
         # with_extension should be able to correct for no leading period.
         res = util.with_extension('tiff', before)
@@ -156,13 +153,13 @@ class TestWithExtension(unittest.TestCase):
         same files that match a given file extension with or without the
         leading period in the extension name.
         """
-        files = {
-            'path': '/foo/bar/baz/', 
-            'files': ['quux1.tiff', 'quux2.tiff', 'quux3.tiff', 'quux4.jpg']
-        }
+        files_dict = dict(
+            path = '/foo/bar/baz/', 
+            files = ['quux1.tiff', 'quux2.tiff', 'quux3.tiff', 'quux4.jpg']
+        )
 
-        with_period = util.with_extension('.tiff', files)
-        without_period = util.with_extension('tiff', files)
+        with_period = util.with_extension('.tiff', files_dict)
+        without_period = util.with_extension('tiff', files_dict)
 
         self.assertEqual(with_period, without_period)
 
