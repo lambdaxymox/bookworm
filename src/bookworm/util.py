@@ -9,20 +9,35 @@ def temp_file_name(file_path):
         else:
             return file_ext
 
+    def split_on_leading_periods(file_name):
+        count = 0
+        for ch in file_name:
+            if ch == '.':
+                count += 1
+            else:
+                break
+
+        return file_name[0:count-1], file_name[count-1:]
+
 
     prefix, file = os.path.split(file_path)
     file_name, file_ext = os.path.splitext(file)
-
-    # If the file has no name, file and ext must be swapped
-    # because os.path.splitext will place the file extension into file.
+    # If file_name  is empty, there are two possible scenarios: 
+    #
+    # 1. the file name contains leading periods;
+    # 2. the file name is empty.
+    #
+    # In the case of (2) file_name and file_ext must be swapped because 
+    # splitext() will place file extension into file_name. In the case of (1),
+    # we need to apply another split to extract the leading periods to yield
+    # a correct ultimate file name.
     if file_ext == '':
-        file_ext = file_name
-        file_name = ''
+        file_name, file_ext = split_on_leading_periods(file_name)
 
     trimmed_ext = remove_leading_period(file_ext)
-    temp_file = f'{file_name}.bookworm.{trimmed_ext}'
+    new_file_name = f'{file_name}.bookworm.{trimmed_ext}'
 
-    return os.path.join(prefix, temp_file)
+    return os.path.join(prefix, new_file_name)
 
 
 def default_subdirectory():
