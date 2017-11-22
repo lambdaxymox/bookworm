@@ -1,7 +1,9 @@
+import os
 import unittest
 import bookworm.util as util
-from hypothesis import given, example
 import hypothesis.strategies as st
+
+from hypothesis import given, example
 
 
 class TestTempFileName(unittest.TestCase):
@@ -22,15 +24,15 @@ class TestTempFileName(unittest.TestCase):
 
     @given(temp_file_name_data())
     @example(dict(old_file_name='.pdf', new_file_name='.bookworm.pdf'))
-    def test_temp_file_name(self, temp_file_name_data):
+    def test_temp_file_name(self, file_dict):
         """
         Given a valid input file, ``temp_file_name`` should generate the temporary file
         name string, including in the case where the file name is empty.
         """
-        result = util.temp_file_name(temp_file_name_data['old_file_name'])
-        new_file_name = temp_file_name_data['new_file_name']
+        result = util.temp_file_name(file_dict['old_file_name'])
+        expected = file_dict['new_file_name']
 
-        assert result == new_file_name
+        assert result == expected
 
 
 class TestFilesExist(unittest.TestCase):
@@ -89,29 +91,36 @@ class TestFilesExist(unittest.TestCase):
 
 
 class TestTempDirectory(unittest.TestCase):
+   
+    @st.composite
+    def file_paths(draw):
+        file_path = draw(st.lists(elements=st.text()))
+        return '/'.join(file_path)
 
-    def test_temp_directory(self):
+    @st.composite
+    def temp_directory_data(draw, file_paths=file_paths()):
+        old_file_path = draw(file_paths)
+        new_file_path = os.path.join(old_file_path, '__bookworm__/')
+        return dict(old_path = old_file_path, new_path = new_file_path)
+
+
+    @given(temp_directory_data())
+    @example(dict(
+        old_path = '/foo/bar/baz/quux/', 
+        new_path = '/foo/bar/baz/quux/__bookworm__/'
+    ))
+    @example(dict(old_path = '/', new_path = '/__bookworm__/'))
+    @example(dict(old_path = '', new_path = '__bookworm__/'))
+    def test_temp_directory(self, file_dict):
         """
         Given any file directory, ``temp_directory`` should return the correct
         path to the temporary directory. Also, that directory should exist
         inside the input directory.
         """
-        old_dir = '/foo/bar/baz/quux/'
-        expected = '/foo/bar/baz/quux/__bookworm__/'
-        result = util.temp_directory(old_dir)
+        result = util.temp_directory(file_dict['old_path'])
+        expected = file_dict['new_path']
 
-        self.assertEqual(result, expected)
-
-    def test_root_temp_directory(self):
-        """
-        Given the root directory, ``temp_directory`` should correctly place
-        the temporary folder inside root.
-        """
-        old_dir = '/'
-        expected = '/__bookworm__/'
-        result = util.temp_directory(old_dir)
-
-        self.assertEqual(result, expected)
+        assert result == expected
 
 
 class TestWithExtension(unittest.TestCase):

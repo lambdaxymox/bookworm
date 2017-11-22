@@ -29,11 +29,9 @@ def default_subdirectory():
     return '__bookworm__/'
 
 
-def temp_directory(file_name):
-    file_path, ext = os.path.splitext(file_name)
-    new_path = os.path.dirname(file_path)
-
-    return os.path.join(new_path, default_subdirectory())
+def temp_directory(file_path):
+    #file_path, _ = os.path.split(file_name_or_file_path)
+    return os.path.join(file_path, default_subdirectory())
 
 
 def with_extension(extension, file_dict):

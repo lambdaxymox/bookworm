@@ -189,7 +189,7 @@ def main():
 
     args = parser.parse_args(sys.argv[1:])
     command = sys.argv[1]
-    
+
     try:
         command_dict = dict(command=command, args=vars(args))
         action = execute_command.process_command(command_dict)

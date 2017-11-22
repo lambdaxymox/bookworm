@@ -109,14 +109,15 @@ def process_args(arg_dict):
     except KeyError as e:
         raise e
 
+    file_path, file_name = os.path.split(input)
     try:
         output = arg_dict['output']
         if not output:
             # Derive a default output directory from the input file.
-            output = util.temp_directory(input)
+            output = util.temp_directory(file_path)
     except KeyError as e:
         # Derive a default output directory from the input file.
-        output = util.temp_directory(input)
+        output = util.temp_directory(file_path)
 
     return make(input, output)
 
