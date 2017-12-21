@@ -1,3 +1,4 @@
+import pytest
 import unittest
 import bookworm.resample_page as resample_page
 import os

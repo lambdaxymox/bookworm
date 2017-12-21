@@ -1,3 +1,4 @@
+import pytest
 import unittest
 import os
 import bookworm.expand_page as expand_page
@@ -16,7 +17,7 @@ class TestExpandPageWithFill(unittest.TestCase):
         height = 3060
         action = expand_page.make(width, height, source_file)
 
-        self.assertIsInstance(action, expand_page.ExpandPageWithFill)
+        assert isinstance(action, expand_page.ExpandPageWithFill)
 
 
 class TestProcessArgs(unittest.TestCase):
@@ -51,10 +52,10 @@ class TestProcessArgs(unittest.TestCase):
         action = expand_page.process_args(self.arg_dict)
 
         # No exception occurred.
-        self.assertIsInstance(action, expand_page.ExpandPageWithFill)
-        self.assertEqual(action.width, self.width)
-        self.assertEqual(action.height, self.height)
-        self.assertEqual(action.source_file, self.source_file)
+        assert isinstance(action, expand_page.ExpandPageWithFill)
+        assert action.width == self.width
+        assert action.height == self.height
+        assert action.source_file == self.source_file
 
 
     def test_process_args_should_reject_bad_dimensions(self):
@@ -64,7 +65,7 @@ class TestProcessArgs(unittest.TestCase):
         terms of pixels.
         """
         self.use_dimensions(height="Potato")
-        with self.assertRaises(TypeError):
+        with pytest.raises(TypeError):
             expand_page.process_args(self.arg_dict)
 
 
@@ -75,7 +76,7 @@ class TestProcessArgs(unittest.TestCase):
         input file actually exists.
         """
         self.use_source_file('sample/sample_doesnotexist.tiff')
-        with self.assertRaises(FileNotFoundError):
+        with pytest.raises(FileNotFoundError):
             expand_page.process_args(self.arg_dict)
 
 
@@ -111,10 +112,10 @@ class TestMultipleExpandPages(unittest.TestCase):
         multi_actions = expand_page.process_args(self.arg_dict)
         source_files = self.get_source_files()
         for action in multi_actions.values():
-            self.assertIsInstance(action, expand_page.ExpandPageWithFill)
-            self.assertEqual(action.width, self.width)
-            self.assertEqual(action.height, self.height)
-            self.assertTrue(action.source_file in source_files)
+            assert isinstance(action, expand_page.ExpandPageWithFill)
+            assert action.width == self.width
+            assert action.height == self.height
+            assert action.source_file in source_files
 
 
     def test_process_args_should_reject_non_existent_input_directory(self):
@@ -122,7 +123,7 @@ class TestMultipleExpandPages(unittest.TestCase):
         If the input directory does not exist, there is no work to be done.
         """
         self.use_source_path('sample/directory/does/not/exist/')
-        with self.assertRaises(FileNotFoundError):
+        with pytest.raises(FileNotFoundError):
             expand_page.process_args(self.arg_dict)
 
 
@@ -147,5 +148,5 @@ class TestRunner(unittest.TestCase):
         target_file_exists = os.path.exists(target_file)
         os.remove(target_file)
 
-        self.assertTrue(target_file_exists)
+        assert target_file_exists
 

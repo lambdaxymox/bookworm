@@ -1,5 +1,4 @@
 import os
-import unittest
 import bookworm.util as util
 import hypothesis.strategies as st
 
