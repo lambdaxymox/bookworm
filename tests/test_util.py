@@ -167,6 +167,38 @@ class TestQuotedString(unittest.TestCase):
         self.assertEqual(result, expected)
 
 
+    @st.composite
+    def test_case(draw, quote_or_not=st.sampled_from(['\"', ''])):
+        raw_string = draw(st.characters(blacklist_characters=['\"', '\'']))
+        string = f'{draw(quote_or_not)}{raw_string}{draw(quote_or_not)}'
+        expected = f'\"{raw_string}\"'
+        
+        return dict(string = string, expected = expected)
+
+
+    @given(test_case())
+    @example(dict(string="", expected="\"\""))
+    @example(dict(string="\"foo bar baz quux!\"", expected="\"foo bar baz quux!\""))
+    @example(dict(string="\"foo bar baz quux!", expected="\"foo bar baz quux!\""))
+    @example(dict(string="foo bar baz quux!\"", expected="\"foo bar baz quux!\""))
+    @example(dict(string="foo bar baz quux!", expected="\"foo bar baz quux!\""))
+    def test_quoted_string_unquoted_string(self, test_case):
+        """
+        Given an arbitrary string that is not necessarily exclosed in quotes, 
+        ``quoted_string`` enclose the string in exactly one pair of quotes.
+        """
+        assert util.quoted_string(test_case['string']) == test_case['expected']
+
+
+    @given(test_case())
+    def test_quoted_string_is_singly_quoted(self, test_case):
+        """
+        Given a string that is already enclosed in quotes, ``quoted_string``
+        should not change the string.
+        """
+        expected = util.quoted_string(test_case['string'])      
+        assert util.quoted_string(expected) == expected
+
     def test_quoted_string_empty_string(self):
         """
         ``quoted_string`` should be able to quote an empty string.
