@@ -161,12 +161,6 @@ class TestWithExtension(unittest.TestCase):
 
 class TestQuotedString(unittest.TestCase):
 
-    def run_with(self, string, expected):
-        result = util.quoted_string(string)
-
-        self.assertEqual(result, expected)
-
-
     @st.composite
     def test_case(draw, quote_or_not=st.sampled_from(['\"', ''])):
         raw_string = draw(st.characters(blacklist_characters=['\"', '\'']))
@@ -198,42 +192,4 @@ class TestQuotedString(unittest.TestCase):
         """
         expected = util.quoted_string(test_case['string'])      
         assert util.quoted_string(expected) == expected
-
-    def test_quoted_string_empty_string(self):
-        """
-        ``quoted_string`` should be able to quote an empty string.
-        """
-        self.run_with(string='', expected='\"\"')
-    
-    def test_quoted_string_closed_in_quotes(self):
-        """
-        Given a string that is already exclosed in quotes, ``quoted_string``
-        should not change the string.
-        """
-        string='\"foo bar baz quux!\"'
-        self.run_with(string=string, expected=f'{string}')
-    
-    def test_quoted_string_with_one_quote_head(self):
-        """
-        Given a string with a quote symbol at the start of the string,
-        ``quoted_string`` should only quote the tail of the string.
-        """
-        string='\"foo bar baz quux'
-        self.run_with(string=string, expected=f'{string}\"')
-
-    def test_quoted_string_with_one_quote_tail(self):
-        """
-        Given a string with a quote symbol at the end of the string,
-        ``quoted_string`` should only quote at the head of the string.
-        """
-        string='foo bar baz quux\"'
-        self.run_with(string=string, expected=f'\"{string}')
-
-    def test_quoted_string_no_quotes(self):
-        """
-        Given a string with no quoted, ``quoted_string`` should close the
-        string in quotes.
-        """
-        string = 'foo bar baz quux!'
-        self.run_with(string=string, expected=f'\"{string}\"')
 
