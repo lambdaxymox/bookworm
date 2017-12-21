@@ -6,10 +6,12 @@ import hypothesis.strategies as st
 from hypothesis import given, example
 
 
-class TestTempFileName(unittest.TestCase):
+class TestTempFileName:
 
     file_extensions = st.sampled_from(['.pdf', '.djvu'])
-    file_names = st.tuples(st.text(), file_extensions)
+    file_names = st.tuples(
+        st.characters(blacklist_characters=['\"']), file_extensions
+    )
 
     @st.composite
     def temp_file_name_data(draw, file_names=file_names):
@@ -35,7 +37,7 @@ class TestTempFileName(unittest.TestCase):
         assert result == expected
 
 
-class TestFilesExist(unittest.TestCase):
+class TestFilesExist:
 
     existing_files = st.lists(elements=st.sampled_from([
         'sample/sample.pdf',
@@ -70,7 +72,7 @@ class TestFilesExist(unittest.TestCase):
         assert not util.files_exist(nonexisting_files)
 
 
-class TestTempDirectory(unittest.TestCase):
+class TestTempDirectory:
    
     @st.composite
     def file_paths(draw):
@@ -103,7 +105,7 @@ class TestTempDirectory(unittest.TestCase):
         assert result == expected
 
 
-class TestWithExtension(unittest.TestCase):
+class TestWithExtension:
 
     def test_with_extension(self):
         """
@@ -120,8 +122,8 @@ class TestWithExtension(unittest.TestCase):
             files = ['quux1.tiff', 'quux2.tiff', 'quux3.tiff']
         )
 
-        res = util.with_extension('.tiff', before)
-        self.assertEqual(res, after)
+        result = util.with_extension('.tiff', before)
+        assert result == after
 
 
     def test_with_extension_should_correct_with_no_leading_period_in_input_extension(self):
@@ -139,8 +141,8 @@ class TestWithExtension(unittest.TestCase):
         )
         
         # with_extension should be able to correct for no leading period.
-        res = util.with_extension('tiff', before)
-        self.assertEqual(res, after)
+        result = util.with_extension('tiff', before)
+        assert result == after
 
     def test_with_extension_invariant_under_leading_period(self):
         """
@@ -156,10 +158,10 @@ class TestWithExtension(unittest.TestCase):
         with_period = util.with_extension('.tiff', files_dict)
         without_period = util.with_extension('tiff', files_dict)
 
-        self.assertEqual(with_period, without_period)
+        assert with_period == without_period
 
 
-class TestQuotedString(unittest.TestCase):
+class TestQuotedString:
 
     @st.composite
     def test_case(draw, quote_or_not=st.sampled_from(['\"', ''])):
