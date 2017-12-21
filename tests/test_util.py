@@ -37,57 +37,37 @@ class TestTempFileName(unittest.TestCase):
 
 class TestFilesExist(unittest.TestCase):
 
-    def test_files_exists_with_single_existing_file(self):
+    existing_files = st.lists(elements=st.sampled_from([
+        'sample/sample.pdf',
+        'sample/sample.tiff',
+        'sample/test_tiffs/sample_001.tiff',
+        'sample/test_tiffs/sample_002.tiff',
+        'sample/test_tiffs/sample_003.tiff',
+        'sample/test_tiffs/sample_004.tiff',
+        'sample/test_tiffs/sample_005.tiff'
+    ]))
+
+    nonexisting_files = st.lists(elements=st.text(), min_size=1)
+
+    @given(existing_files)
+    @example([])
+    def test_files_exist_with_existing_files(self, existing_files):
         """
-        Given a single file that we know exists, ``files_exist`` should 
-        return ``True``.
+        #Given a list of one or more files all of which exist, ``files_exist`` should
+        #return ``True`` i.e., all the files exist.
         """
-        existing_file = ['sample/sample.pdf']
-        self.assertTrue(util.files_exist(existing_file))
+        assert util.files_exist(existing_files)
 
 
-    def test_files_exists_with_multiple_existing_files(self):
+    @given(nonexisting_files)
+    @example(['.pdf'])
+    @example([''])
+    def test_files_exist_with_nonexisting_files(self, nonexisting_files):
         """
-        Given a collection of files that we know exist, ``files_exists``
-        should return ``True``.
-        """
-        existing_files = ['sample/sample.pdf', 'sample/sample.tiff']
-        self.assertTrue(util.files_exist(existing_files))
-
-
-    def test_files_exist_with_empty_input(self):
-        """
-        Given an empty collection of files, ``files_exist`` should 
-        trivially return ``True``.
-        """
-        empty_file_list = []
-        self.assertTrue(util.files_exist(empty_file_list))
-
-
-    def test_files_exist_with_nonexistent_file(self):
-        """
-        Given a collection of files that don't exist, ``files_exist`` should
+        Given an collection of files that don't exist, ``files_exist`` should 
         return ``False``.
         """
-        nonexisting_files = ['foo.pdf', 'bar.pdf', 'baz.pdf']
-        self.assertFalse(util.files_exist(nonexisting_files))
-
-
-    def test_files_exist_with_nameless_file_with_extension(self):
-        """
-        Given a file with no name, but just a file extension, ``files_exist``
-        should return ``False``
-        """
-        file_name = ['.pdf']
-        self.assertFalse(util.files_exist(file_name))
-
-
-    def test_files_exist_with_nameless_file_without_extension(self):
-        """
-        Given a file of zero length, ``files_exist`` should return ``False``.
-        """
-        file_name = ['']
-        self.assertFalse(util.files_exist(file_name))
+        assert not util.files_exist(nonexisting_files)
 
 
 class TestTempDirectory(unittest.TestCase):

@@ -24,8 +24,8 @@ def temp_file_name(file_path):
     file_name, file_ext = os.path.splitext(file)
     # If file_name  is empty, there are two possible scenarios: 
     #
-    # 1. the file name contains leading periods;
-    # 2. the file name is empty.
+    # (1) the file name contains leading periods;
+    # (2) the file name is empty.
     #
     # In the case of (2) file_name and file_ext must be swapped because 
     # splitext() will place file extension into file_name. In the case of (1),
@@ -45,7 +45,6 @@ def default_subdirectory():
 
 
 def temp_directory(file_path):
-    #file_path, _ = os.path.split(file_name_or_file_path)
     return os.path.join(file_path, default_subdirectory())
 
 
@@ -80,7 +79,10 @@ def files_exist(files):
     Check that the files actually exist.
     """
     for file in files:
-        if not os.path.isfile(file):
+        try:
+            if not os.path.isfile(file):
+                return False
+        except ValueError as e:
             return False
 
     return True
