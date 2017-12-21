@@ -179,13 +179,13 @@ class TestQuotedString(unittest.TestCase):
     def test_quoted_string_unquoted_string(self, test_case):
         """
         Given an arbitrary string that is not necessarily exclosed in quotes, 
-        ``quoted_string`` enclose the string in exactly one pair of quotes.
+        ``quoted_string`` encloses the string in exactly one pair of quotes.
         """
         assert util.quoted_string(test_case['string']) == test_case['expected']
 
 
     @given(test_case())
-    def test_quoted_string_is_singly_quoted(self, test_case):
+    def test_quoted_string_is_idempotent(self, test_case):
         """
         Given a string that is already enclosed in quotes, ``quoted_string``
         should not change the string.
