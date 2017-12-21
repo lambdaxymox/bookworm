@@ -53,8 +53,8 @@ class TestFilesExist(unittest.TestCase):
     @example([])
     def test_files_exist_with_existing_files(self, existing_files):
         """
-        #Given a list of one or more files all of which exist, ``files_exist`` should
-        #return ``True`` i.e., all the files exist.
+        Given a list of zero or more files all of which exist, ``files_exist`` should
+        return ``True`` i.e., all the files exist.
         """
         assert util.files_exist(existing_files)
 
@@ -64,7 +64,7 @@ class TestFilesExist(unittest.TestCase):
     @example([''])
     def test_files_exist_with_nonexisting_files(self, nonexisting_files):
         """
-        Given an collection of files that don't exist, ``files_exist`` should 
+        Given a nonempty collection of files that don't exist, ``files_exist`` should 
         return ``False``.
         """
         assert not util.files_exist(nonexisting_files)
