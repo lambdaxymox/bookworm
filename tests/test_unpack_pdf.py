@@ -18,7 +18,6 @@ class TestUnpackPDF:
         UnpackPDF should derive a local directory from the path to the source pdf file.
         """
         action = unpack_pdf.make(arg_dict['input'])
-
         assert isinstance(action, unpack_pdf.UnpackPDF)
 
 
@@ -55,7 +54,6 @@ class TestUnpackPDFProcessArgs:
         pdf file.
         """
         action = unpack_pdf.process_args(arg_dict)
-
         assert isinstance(action, unpack_pdf.UnpackPDF)
 
 
