@@ -3,6 +3,8 @@ import unittest
 import os
 import bookworm.expand_page as expand_page
 
+from collections import namedtuple
+
 
 class TestExpandPageWithFill(unittest.TestCase):
 
@@ -127,26 +129,29 @@ class TestMultipleExpandPages(unittest.TestCase):
             expand_page.process_args(self.arg_dict)
 
 
-class TestRunner(unittest.TestCase):
+class TestRunner:
 
-    def test_expand_page_runner(self):
-        source_file = 'sample/sample.tiff'
-        target_file = 'sample/sample2.tiff'
-        width = 2160
-        height = 3060
-        dimensions = (width, height)
-        arg_dict = {
-            'input': source_file,
-            'output': target_file,
-            'dimensions': dimensions
-        }
-        
-        action = expand_page.process_args(arg_dict)
+    Data = namedtuple('Data', 'target_file arg_dict')
+
+    @pytest.fixture
+    def fixture(self):
+        data = self.Data(
+            target_file = 'sample/sample2.tiff',
+            arg_dict = dict(
+                input = 'sample/sample.tiff',
+                output = 'sample/sample2.tiff',
+                dimensions = (2160, 3060),
+            )
+        )
+
+        yield data
+        os.remove(data.target_file)
+
+
+    def test_expand_page_runner(self, fixture):        
+        action = expand_page.process_args(fixture.arg_dict)
         expand_page.Runner.setup(action)
         expand_page.Runner.execute(action)
 
-        target_file_exists = os.path.exists(target_file)
-        os.remove(target_file)
-
-        assert target_file_exists
+        assert os.path.exists(fixture.target_file)
 
