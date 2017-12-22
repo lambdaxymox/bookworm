@@ -125,7 +125,7 @@ class TestChangeResolutionRunner:
             change_resolution.Runner.setup(action)
             change_resolution.Runner.execute(action)
         except FileNotFoundError as e:
-            pytest.fail()
+            pytest.fail(e)
         finally:
             change_resolution.Runner.cleanup(action)
 
@@ -225,7 +225,7 @@ class TestMultiChangeResolutionProcessArgs:
 class TestRunner:
 
     @pytest.fixture
-    def fixture(self, request):
+    def arg_dict(self, request):
         arg_dict = dict(
             input = 'sample/sample.tiff',
             output = 'sample/sample2.tiff',
@@ -241,9 +241,9 @@ class TestRunner:
         return arg_dict
 
 
-    def test_change_resolution_runner(self, fixture):
-        action = change_resolution.process_args(fixture)
-        target_file = fixture['output']
+    def test_change_resolution_runner(self, arg_dict):
+        action = change_resolution.process_args(arg_dict)
+        target_file = arg_dict['output']
 
         change_resolution.Runner.setup(action)
         change_resolution.Runner.execute(action)
