@@ -1,5 +1,4 @@
 import pytest
-import unittest
 import os
 import bookworm.expand_page as expand_page
 

@@ -1,5 +1,4 @@
 import pytest
-import unittest
 import bookworm.resample_page as resample_page
 import os
 import os.path
@@ -8,7 +7,7 @@ from bookworm.resolution import Resolution
 from collections import namedtuple
 
 
-class TestResamplePage(unittest.TestCase):
+class TestResamplePage:
 
     def test_resample_page(self):
         """
