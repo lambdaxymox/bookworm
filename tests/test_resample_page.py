@@ -5,6 +5,7 @@ import os
 import os.path
 
 from bookworm.resolution import Resolution
+from collections import namedtuple
 
 
 class TestResamplePage(unittest.TestCase):
@@ -96,25 +97,27 @@ class TestProcessArgsWithMissingResolutionUnits(unittest.TestCase):
             resample_page.process_args(self.arg_dict)
 
 
-@unittest.skip
-class TestRunner(unittest.TestCase):
+class TestRunner:
 
-    def setUp(self):
-        self.arg_dict = dict(
+    Data = namedtuple('Data', 'arg_dict action')
+
+    @pytest.fixture
+    def fixture(self):
+        arg_dict = dict(
             input = 'sample/sample.tiff',
             output = 'sample/sample2.tiff',
             resolution = 300,
             units = 'PixelsPerInch'
         )
-        self.action = resample_page.process_args(self.arg_dict)
+        action = resample_page.process_args(arg_dict)
 
-    def tearDown(self):
-        os.remove(self.action.target_file)
+        yield self.Data(arg_dict, action)
+        os.remove(action.target_file)
 
     
-    def test_resample_page_runner(self):
-        resample_page.Runner.setup(self.action)
-        resample_page.Runner.execute(self.action)
+    def test_resample_page_runner(self, fixture):
+        resample_page.Runner.setup(fixture.action)
+        resample_page.Runner.execute(fixture.action)
 
-        self.assertTrue(os.path.exists(self.action.target_file))
+        assert os.path.exists(fixture.action.target_file)
 
