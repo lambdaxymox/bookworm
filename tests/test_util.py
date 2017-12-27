@@ -1,4 +1,5 @@
 import os
+import bookworm.sample_data as sample
 import bookworm.util as util
 import hypothesis.strategies as st
 
@@ -38,15 +39,9 @@ class TestTempFileName:
 
 class TestFilesExist:
 
-    existing_files = st.lists(elements=st.sampled_from([
-        'sample/sample.pdf',
-        'sample/sample.tiff',
-        'sample/test_tiffs/sample_001.tiff',
-        'sample/test_tiffs/sample_002.tiff',
-        'sample/test_tiffs/sample_003.tiff',
-        'sample/test_tiffs/sample_004.tiff',
-        'sample/test_tiffs/sample_005.tiff'
-    ]))
+    existing_files = st.lists(
+        elements=st.sampled_from(sample.SAMPLE_FILES)
+    )
 
     nonexisting_files = st.lists(elements=st.text(), min_size=1)
 
