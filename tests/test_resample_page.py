@@ -1,7 +1,7 @@
 import pytest
+import bookworm.sample_data as sample
 import bookworm.resample_page as resample_page
 import os
-import os.path
 
 from bookworm.resolution import Resolution
 from collections import namedtuple
@@ -13,8 +13,8 @@ class TestResamplePage:
         """
         The factory method should generate valid instances of ``ResamplePage``.
         """
-        source_file = 'sample/sample.tiff'
-        target_file = 'sample/sample.tiff'
+        source_file = sample.SAMPLE_TIFF
+        target_file = sample.SAMPLE_TIFF
         resolution_val = 300
         unit_str = 'PixelsPerInch'
         
@@ -29,8 +29,8 @@ class TestResamplePageProcessArgs:
     @pytest.fixture
     def arg_dict(self):
         return dict(
-            input =  'sample/sample.tiff',
-            output = 'sample/sample.tiff',
+            input =  sample.SAMPLE_TIFF,
+            output = sample.SAMPLE_TIFF,
             units = 'PixelsPerInch'
         )
 
@@ -84,8 +84,8 @@ class TestProcessArgsWithMissingResolutionUnits:
     @pytest.fixture
     def arg_dict(self):
         return dict(
-            input = 'sample/sample.tiff',
-            output = 'sample/sample.tiff',
+            input = sample.SAMPLE_TIFF,
+            output = sample.SAMPLE_TIFF,
             resolution = 300
         )
 
@@ -105,8 +105,8 @@ class TestRunner:
     @pytest.fixture
     def fixture(self):
         arg_dict = dict(
-            input = 'sample/sample.tiff',
-            output = 'sample/sample2.tiff',
+            input = sample.SAMPLE_TIFF,
+            output = os.path.join(sample.SAMPLE_ROOT, 'sample2.tiff'),
             resolution = 300,
             units = 'PixelsPerInch'
         )
