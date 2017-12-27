@@ -1,4 +1,5 @@
 import pytest
+import bookworm.sample_data as sample
 import bookworm.change_resolution as change_resolution
 import os
 
@@ -13,7 +14,7 @@ class TestChangeResolution:
     @pytest.fixture
     def fixture(self):
         return self.Data(
-            source_file = 'sample/sample.tiff',
+            source_file = sample.SAMPLE_TIFF,
             resolution_val = 300,
             unit_str = 'PixelsPerInch',
             resolution = Resolution.make(300, 'PixelsPerInch') 
@@ -32,8 +33,8 @@ class TestChangeResolutionProcessArgs:
     @pytest.fixture
     def arg_dict(self):
         return dict(
-            input = 'sample/sample.tiff',
-            output = 'sample/',
+            input = sample.SAMPLE_TIFF,
+            output = sample.SAMPLE_ROOT,
             units = 'PixelsPerInch'
         )
 
@@ -89,8 +90,8 @@ class TestProcessArgsWithMissingResolutionUnits:
     @pytest.fixture
     def arg_dict(self):
         return dict(
-            input = 'sample/sample.tiff',
-            output = 'sample/',
+            input = sample.SAMPLE_TIFF,
+            output = sample.SAMPLE_ROOT,
             resolution = 300
         )
 
@@ -108,7 +109,7 @@ class TestChangeResolutionRunner:
     @pytest.fixture
     def arg_dict(self):
         return dict(
-            output = 'sample/',
+            output = os.path.join(sample.SAMPLE_ROOT, 'sample2.tiff'),
             resolution = 300,
             units = 'PixelsPerInch'
         )
@@ -131,7 +132,7 @@ class TestChangeResolutionRunner:
 
 
     def test_runner_should_fail_if_source_does_not_exist(self, arg_dict):
-        self.use_source_file(arg_dict, 'sample/doesnotexist.tiff')
+        self.use_source_file(arg_dict, 'sample/does_not_exist.tiff')
         with pytest.raises(FileNotFoundError):
             action = change_resolution.process_args(arg_dict)
             change_resolution.Runner.setup(action)
@@ -143,7 +144,7 @@ class TestMultiChangePageResolution:
     @pytest.fixture
     def arg_dict(self):
         return dict(
-            input = 'sample/test_tiffs/',
+            input = sample.TEST_TIFFS,
             resolution = 300,
             units = 'PixelsPerInch'
         )
@@ -178,7 +179,7 @@ class TestMultiChangeResolutionProcessArgs:
     @pytest.fixture
     def arg_dict(self):
         return dict(
-            input = 'sample/sample_tiffs/',
+            input = sample.TEST_TIFFS,
             units = 'PixelsPerInch',
         )
 
@@ -194,7 +195,7 @@ class TestMultiChangeResolutionProcessArgs:
         The arument processor should not accept an input directory that does
         not exist. Surely it is impossible to read a nonexistent input.
         """
-        self.use_source_path(arg_dict, 'sample/directory_doesnotexist/')
+        self.use_source_path(arg_dict, 'sample/directory_does_not_exist/')
         self.use_resolution_val(arg_dict, 600)
 
         with pytest.raises(FileNotFoundError):
@@ -227,8 +228,8 @@ class TestRunner:
     @pytest.fixture
     def arg_dict(self, request):
         arg_dict = dict(
-            input = 'sample/sample.tiff',
-            output = 'sample/sample2.tiff',
+            input = sample.SAMPLE_TIFF,
+            output = os.path.join(sample.SAMPLE_ROOT, 'sample2.tiff'),
             resolution = 300,
             units = 'PixelsPerInch'
         )
