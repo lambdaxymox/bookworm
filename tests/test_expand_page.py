@@ -1,5 +1,6 @@
 import pytest
 import os
+import bookworm.sample_data as sample
 import bookworm.expand_page as expand_page
 
 from collections import namedtuple
@@ -12,8 +13,8 @@ class TestExpandPageWithFill:
         The page action should generate a valid python subprocess 
         or terminal command under normal conditions.
         """
-        source_file = 'sample/sample1.tiff'
-        target_file = 'sample/sample1.bookworm.tiff'
+        source_file = os.path.join(sample.SAMPLE_ROOT, 'sample1.tiff')
+        target_file = os.path.join(sample.SAMPLE_ROOT, 'sample1.bookworm.tiff')
         width = 2160
         height = 3060
         action = expand_page.make(width, height, source_file)
@@ -26,7 +27,7 @@ class TestProcessArgs:
     @pytest.fixture
     def arg_dict(self):
         return dict(
-            input = 'sample/sample.tiff',
+            input = sample.SAMPLE_TIFF,
             width = 2160,
             height = 3060,
             dimensions = (2160, 3060),
@@ -74,7 +75,9 @@ class TestProcessArgs:
         The argument processor should only generate a valid input if the
         input file actually exists.
         """
-        self.use_source_file(arg_dict, 'sample/sample_doesnotexist.tiff')
+        self.use_source_file(
+            arg_dict, os.path.join(sample.SAMPLE_ROOT, 'does_not_exist.tiff')
+        )
         with pytest.raises(FileNotFoundError):
             expand_page.process_args(arg_dict)
 
@@ -84,7 +87,7 @@ class TestMultipleExpandPages:
     @pytest.fixture
     def arg_dict(self):
         return dict(
-            input = 'sample/test_tiffs/',
+            input = sample.TEST_TIFFS,
             dimensions = (2160, 3060)
         )
 
@@ -132,10 +135,10 @@ class TestRunner:
     @pytest.fixture
     def fixture(self):
         data = self.Data(
-            target_file = 'sample/sample2.tiff',
+            target_file = os.path.join(sample.SAMPLE_ROOT, 'sample2.tiff'),
             arg_dict = dict(
-                input = 'sample/sample.tiff',
-                output = 'sample/sample2.tiff',
+                input = sample.SAMPLE_TIFF,
+                output = os.path.join(sample.SAMPLE_ROOT, 'sample2.tiff'),
                 dimensions = (2160, 3060),
             )
         )
