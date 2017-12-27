@@ -15,7 +15,7 @@ def get_sample_files(root):
     return files
 
 
-SAMPLE_ROOT = os.path.join('.', 'sample')
+SAMPLE_ROOT = 'sample'
 TEST_TIFFS = os.path.join(SAMPLE_ROOT, 'test_tiffs')
 SAMPLE_TIFF = os.path.join(SAMPLE_ROOT, 'sample.tiff')
 SAMPLE_PDF = os.path.join(SAMPLE_ROOT, 'sample.pdf')
