@@ -76,17 +76,19 @@ class TestTempDirectory:
     @st.composite
     def temp_directory_data(draw, file_paths=file_paths()):
         old_file_path = draw(file_paths)
-        new_file_path = os.path.join(old_file_path, '__bookworm__/')
+        new_file_path = os.path.join(
+            old_file_path, util.default_subdirectory()
+        )
         return dict(old_path = old_file_path, new_path = new_file_path)
 
 
     @given(temp_directory_data())
     @example(dict(
         old_path = '/foo/bar/baz/quux/', 
-        new_path = '/foo/bar/baz/quux/__bookworm__/'
+        new_path = f'/foo/bar/baz/quux/{util.default_subdirectory()}'
     ))
-    @example(dict(old_path = '/', new_path = '/__bookworm__/'))
-    @example(dict(old_path = '', new_path = '__bookworm__/'))
+    @example(dict(old_path = '/', new_path = f'/{util.default_subdirectory()}'))
+    @example(dict(old_path = '', new_path = util.default_subdirectory()))
     def test_temp_directory(self, file_dict):
         """
         Given any file directory, ``temp_directory`` should return the correct
@@ -111,13 +113,13 @@ class TestWithExtension:
             path = '/foo/bar/baz/',
             files =  ['quux1.tiff', 'quux2.tiff', 'quux3.tiff', 'quux4.jpg']
         )
-        after = dict(
+        expected = dict(
             path = '/foo/bar/baz/',
             files = ['quux1.tiff', 'quux2.tiff', 'quux3.tiff']
         )
 
         result = util.with_extension('.tiff', before)
-        assert result == after
+        assert result == expected
 
 
     def test_with_extension_should_correct_with_no_leading_period_in_input_extension(self):
@@ -129,14 +131,14 @@ class TestWithExtension:
             path =  '/foo/bar/baz/',
             files =  ['quux1.tiff', 'quux2.tiff', 'quux3.tiff', 'quux4.jpg']
         )
-        after = dict(
+        expected = dict(
             path = '/foo/bar/baz/',
             files = ['quux1.tiff', 'quux2.tiff', 'quux3.tiff']
         )
         
         # with_extension should be able to correct for no leading period.
         result = util.with_extension('tiff', before)
-        assert result == after
+        assert result == expected
 
     def test_with_extension_invariant_under_leading_period(self):
         """
