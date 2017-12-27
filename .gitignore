@@ -9,3 +9,4 @@ target/*
 .eggs
 */.eggs/*
 .hypothesis
+dist
