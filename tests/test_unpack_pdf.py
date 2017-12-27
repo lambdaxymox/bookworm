@@ -1,7 +1,8 @@
 import pytest
+import bookworm.sample_data as sample
 import bookworm.unpack_pdf as unpack_pdf
 import bookworm.util       as util
-import os, os.path
+import os
 
 
 class TestUnpackPDF:
@@ -9,8 +10,10 @@ class TestUnpackPDF:
     @pytest.fixture
     def arg_dict(self):
         return dict(
-            input = 'sample/sample.pdf',
-            output = f'sample/{util.default_subdirectory()}'
+            input = sample.SAMPLE_PDF,
+            output = os.path.join(
+                sample.SAMPLE_ROOT, util.default_subdirectory()
+            )
         )
 
     def test_unpack_pdf(self, arg_dict):
@@ -42,8 +45,10 @@ class TestUnpackPDFProcessArgs:
     @pytest.fixture
     def arg_dict(self):
         return dict(
-            input = 'sample/sample.pdf',
-            output = f'sample/{util.default_subdirectory()}'
+            input = sample.SAMPLE_PDF,
+            output = os.path.join(
+                sample.SAMPLE_ROOT, util.default_subdirectory()
+            )
         )
 
     def test_process_args(self, arg_dict):
@@ -62,8 +67,10 @@ class TestRunner:
     @pytest.fixture
     def arg_dict(self):
         return dict(
-            input = 'sample/sample.pdf',
-            output = f'sample/{util.default_subdirectory()}'
+            input = sample.SAMPLE_PDF,
+            output = os.path.join(
+                sample.SAMPLE_ROOT, util.default_subdirectory()
+            )
         )
 
     def use_source_file(self, arg_dict, source_file):
@@ -95,8 +102,10 @@ class TestRunner:
         The UnpackPDF class's ``setup`` method should fail when the 
         output directory does not exist.
         """
-        self.use_source_file(arg_dict, 'sample/doesnotexist.pdf')
-        self.use_target_path(arg_dict, 'sample/')
+        self.use_source_file(
+            arg_dict, os.path.join(sample.SAMPLE_ROOT, 'does_not_exist.pdf')
+        )
+        self.use_target_path(arg_dict, sample.SAMPLE_ROOT)
         action = unpack_pdf.process_args(arg_dict)
         with pytest.raises(FileNotFoundError):
             unpack_pdf.Runner.setup(action)
@@ -117,7 +126,7 @@ class TestRunner:
 
 
     def test_unpack_pdf_should_not_write_to_a_directory_with_existing_files(self, arg_dict):
-        self.use_target_path(arg_dict, 'sample/test_tiffs')
+        self.use_target_path(arg_dict, sample.TEST_TIFFS)
         action = unpack_pdf.process_args(arg_dict)    
         try:
             unpack_pdf.Runner.setup(action)
