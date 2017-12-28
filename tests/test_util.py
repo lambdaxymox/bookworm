@@ -176,8 +176,8 @@ class TestQuotedString:
     @example(dict(string="foo bar baz quux!", expected="\"foo bar baz quux!\""))
     def test_quoted_string_unquoted_string(self, test_case):
         """
-        Given an arbitrary string that is not necessarily exclosed in quotes, 
-        ``quoted_string`` encloses the string in exactly one pair of quotes.
+        Given an arbitrary string that is not necessarily enclosed in quotes, 
+        ``quoted_string`` encloses the string with exactly one pair of quotes.
         """
         assert util.quoted_string(test_case['string']) == test_case['expected']
 
