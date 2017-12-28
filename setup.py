@@ -1,8 +1,12 @@
 import sys
 import setuptools
+import os
 
 from setuptools import setup
 from setuptools.command.test import test as TestCommand
+
+TAR_FILE = os.path.join('tarballs', 'sample.tar.gz')
+SAMPLE_ROOT = 'sample'
 
 
 class PyTest(TestCommand):
@@ -30,18 +34,16 @@ class InitializeSampleData(setuptools.Command):
         pass
 
     def run(self):
-        import os
         import shutil
 
-        tar_file = 'sample.tar.gz'
+        if os.path.exists(TAR_FILE):
+            if os.path.exists(SAMPLE_ROOT):
+                shutil.rmtree(SAMPLE_ROOT)
 
-        if os.path.exists(tar_file):
-            if os.path.exists('sample'):
-                shutil.rmtree('sample')
-
-            shutil.unpack_archive(tar_file)
+            shutil.unpack_archive(TAR_FILE)
+            sys.exit(0)
         else:
-            print(f'File not found: {tar_file}')
+            print(f'File not found: {TAR_FILE}')
             sys.exit(1)
 
 
