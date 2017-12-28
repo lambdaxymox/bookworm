@@ -60,7 +60,7 @@ $ python src/bookworm.py --help
 ```
 
 ## Dependencies
-Bookworm requires the follow programs to be installed on your system.
+Bookworm requires the following programs to be installed on your system.
 ```
 GhostScript
 ImageMagick
