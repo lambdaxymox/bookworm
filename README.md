@@ -7,7 +7,11 @@ It is designed to normalize the dimensions of scanned pages to ensure they all h
 To install `bookworm`, [Fork](https://github.com/stallmanifold/bookworm) and run the following commands in the terminal or command line.
 ```bash
 $ python setup.py sdist
-$ python setup.py install
+$ python setup.py install --user
+```
+Alternatively, you can install it directly using pip.
+```bash
+pip install git+https://github.com/stallmanifold/bookworm.git
 ```
 
 ## Usage
