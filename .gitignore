@@ -10,3 +10,4 @@ target/*
 */.eggs/*
 .hypothesis
 dist
+build

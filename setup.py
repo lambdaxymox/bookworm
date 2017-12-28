@@ -65,6 +65,9 @@ config = dict(
         'test': PyTest,
         'initialize_sample_data': InitializeSampleData
     },
+    entry_points = {
+        'console_scripts': [ 'bookworm = bookworm.bookworm.bookworm:main' ]
+    }
 )
 
 setup(**config)
