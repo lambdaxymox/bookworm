@@ -71,7 +71,7 @@ class Runner(abstract.Runner):
 
 def make(resolution, source_file, target_file=''):
     """
-    The ``make`` factory method that creates a ``ChangePageResolution`` 
+    The ``make`` factory method creates a ``ChangePageResolution`` 
     action.
     """
     if resolution.value <= 0:

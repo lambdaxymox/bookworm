@@ -9,7 +9,7 @@ def is_admin():
     """
     if os.name == 'nt':
         try:
-            # Only windows users with admin privileges can read 
+            # Only Windows users with admin privileges can read 
             # the C:\windows\temp directory.
             os.listdir(os.sep.join([os.environ.get('SystemRoot','C:\\windows'),'temp']))
         except:

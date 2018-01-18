@@ -28,7 +28,7 @@ class TestTempFileName:
     @example(dict(old_file_name='.pdf', new_file_name='.bookworm.pdf'))
     def test_temp_file_name(self, file_dict):
         """
-        Given a valid input file, ``temp_file_name`` should generate the temporary file
+        Given a valid input file, ``temp_file_name`` should generate a temporary file
         name string, including in the case where the file name is empty.
         """
         result = util.temp_file_name(file_dict['old_file_name'])
@@ -106,7 +106,7 @@ class TestWithExtension:
     def test_with_extension(self):
         """
         Given a set of files with different file extensions, the 
-        ``with_extension`` functio should correctly identify which
+        ``with_extension`` function should correctly identify which
         files inside that directory have the input file extension.
         """
         before = dict(
@@ -125,7 +125,7 @@ class TestWithExtension:
     def test_with_extension_should_correct_with_no_leading_period_in_input_extension(self):
         """
         ``with_extension`` should accept a file extension string with or
-        without a leading period.
+        with no leading period.
         """
         before = dict(
             path =  '/foo/bar/baz/',
@@ -136,7 +136,6 @@ class TestWithExtension:
             files = ['quux1.tiff', 'quux2.tiff', 'quux3.tiff']
         )
         
-        # with_extension should be able to correct for no leading period.
         result = util.with_extension('tiff', before)
         assert result == expected
 

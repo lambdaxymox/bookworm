@@ -29,8 +29,8 @@ def temp_file_name(file_path):
     #
     # In the case of (2) file_name and file_ext must be swapped because 
     # splitext() will place file extension into file_name. In the case of (1),
-    # we need to apply another split to extract the leading periods to yield
-    # a correct ultimate file name.
+    # we need to apply another split to extract the leading periods to get
+    # a correct file name.
     if file_ext == '':
         file_name, file_ext = split_on_leading_periods(file_name)
 

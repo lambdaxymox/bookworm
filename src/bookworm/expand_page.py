@@ -84,7 +84,7 @@ class Runner(abstract.Runner):
 def make(width, height, source_file, target_file=''):
     """
     The ``make`` function is a factory method that constructs an 
-    ``ExpandPageWIithFill`` action. It expands the side of a page by 
+    ``ExpandPageWithFill`` action. It expands the side of a page by 
     expanding the edges of the page with a fill color. This function only does
     this with the color white.
     """
@@ -97,7 +97,7 @@ def make(width, height, source_file, target_file=''):
 
 def multi_expand_page(width, height, source_path, source_files, target):
     """
-    Create multiple ExpandPageWithFill actions, one per page, in a single
+    Create multiple ExpandPageWithFill actions--one per page--in a single
     directory.
     """
     actions = {}

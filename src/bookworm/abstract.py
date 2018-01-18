@@ -23,7 +23,7 @@ class Command(abc.ABC):
 class Runner(abc.ABC):
     """
     The ``Runner`` class is an abstract class that defines the required
-    methods necessary to successfully execute a ``Command``, and the handle
+    methods necessary to successfully execute a ``Command``, and to handle
     cleanup after a success or failure. The exact details are left to the
     implementors of the abstract class. 
     """

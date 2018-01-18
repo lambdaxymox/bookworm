@@ -161,9 +161,9 @@ class TestMultiChangePageResolution:
 
     def test_multi_page_change_resolution_should_generate_multiple_actions_from_input_directory(self, arg_dict):
         """
-        Given a valid input directory with zero or more files in it, a multiple
-        page change resolution action argument processor should correctly
-        every valid input image and group them together into one action.
+        Given a valid input directory with zero or more files in it, the multiple
+        page change resolution action argument processor should find every valid 
+        input image and group them together into one action.
         """
         resolution = Resolution.make(
             arg_dict['resolution'], arg_dict['units']

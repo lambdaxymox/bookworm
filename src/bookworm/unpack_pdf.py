@@ -66,7 +66,7 @@ class Runner(abstract.Runner):
 
     def cleanup(command):
         """
-        The ``cleanup`` method is applied after a failure occurs to clean up
+        The ``cleanup`` method is applied after a failure to clean up
         the target directory by removing the data created during setup or
         execution.
         """
@@ -81,7 +81,7 @@ class Runner(abstract.Runner):
 def make(source_pdf, target_dir=''):
     """
     The ``make`` factory method unpacks a PDF file into a collection of TIFF 
-    files, one per page, into the target directory. If a target directory is
+    files--one per page--into the target directory. If a target directory is
     not specified, a default one is used in the directory of the source pdf
     file.
     """
@@ -99,8 +99,8 @@ def make(source_pdf, target_dir=''):
 def process_args(arg_dict):
     """
     The ``process_args`` factory method parses the command line arguments in
-    ``arg_dict`` and uses them to construct a page command. In particular,
-    parse through the command line arguments to product an ``UnpackPDF``
+    ``arg_dict`` and uses them to construct a page command. In particular, it
+    parses through the command line arguments to produce an ``UnpackPDF``
     command.
     """
     try:
