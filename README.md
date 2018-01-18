@@ -68,7 +68,7 @@ Python 3 (>= 3.6)
 ```
 
 ## Uninstallation
-Should you decide you no longer want to use `bookworm` on your system. You can remove it via `pip` in terminal or command line.
+Should you decide you no longer want to use `bookworm` on your system, you can remove it via `pip` in terminal or command line.
 ```bash
 $ pip uninstall bookworm
 ```
