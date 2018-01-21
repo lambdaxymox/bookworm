@@ -189,7 +189,7 @@ def main():
 
     args = parser.parse_args(sys.argv[1:])
     command = sys.argv[1]
-
+    print(args)
     try:
         command_dict = dict(command=command, args=vars(args))
         action = execute_command.process_command(command_dict)
@@ -199,7 +199,7 @@ def main():
         sys.exit(1)
     except ValueError as e:
         print(e)
-        sys.exit(1)
+        sys.exit(2)
 
 
 if __name__ == 'main':
