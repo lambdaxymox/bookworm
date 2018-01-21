@@ -4,12 +4,7 @@ import sys
 
 def main():
     """
-    The main pdf operations are:
-
-    1. Unpack a PDF.
-    2. Change image resolution.
-    3. Rescale image.
-    4. Expand image with fill.
+    Main is a wrapper for bookworm's main interface.
     """
     errno = bookworm_main.main()
     sys.exit(errno)
