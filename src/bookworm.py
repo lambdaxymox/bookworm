@@ -6,11 +6,11 @@ def main():
     """
     Main is a wrapper for bookworm's main interface.
     """
-    errno = bookworm_main.main()
-    sys.exit(errno)
+    bookworm_main.main()
 
 
 if __name__ == 'main':
     main()
 else:
     main()
+

@@ -1,18 +1,7 @@
 import bookworm.execute_command    as execute_command
-import bookworm.unpack_pdf         as unpack_pdf
-import bookworm.expand_page        as expand_page
-import bookworm.change_resolution  as change_resolution
 import bookworm.detect_user        as detect_user
-import bookworm.resample_page      as resample_page
 import bookworm_main.arg_processor as arg_processor
 import sys
-
-
-def help_text(parser):
-    """
-    Return the help information for how to use the interface.
-    """
-    return parser.parse_args(['--help'])
 
 
 def warning(*objs):
@@ -22,7 +11,7 @@ def warning(*objs):
     print('WARNING: ', *objs, file=sys.stderr)
 
 
-def main():
+def main(argv=sys.argv):
     """
     The main pdf operations are:
 
@@ -37,11 +26,13 @@ def main():
         warning('You are currently running bookworm as superuser. '
                 'You really should not run this program with elevated privileges.')
 
-    if len(sys.argv) < 2:
-        help_text(parser)
+    if len(argv) < 2:
+        parser.print_help()
+        # An exit code of 2 is standard unix convention.
+        sys.exit(2)
 
-    args = parser.parse_args(sys.argv[1:])
-    command = sys.argv[1]
+    args = parser.parse_args(argv[1:])
+    command = argv[1]
 
     try:
         command_dict = dict(command=command, args=vars(args))
@@ -52,5 +43,5 @@ def main():
         sys.exit(1)
     except ValueError as e:
         print(e)
-        sys.exit(2)
+        sys.exit(1)
 
