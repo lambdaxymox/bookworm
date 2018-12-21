@@ -15,7 +15,7 @@ pip install git+https://github.com/stallmanifold/bookworm.git
 ```
 
 ## Usage
-There are two ways to run bookworm: (1) run from source; (2) install it. In order to run from source, see the section **Usage From Source**. This section describes how to use it on your local machine. Enter
+Enter
 ```bash
 $ bookworm unpack-pdf -i "/path/to/file.pdf"
 ```
