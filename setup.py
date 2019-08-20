@@ -49,10 +49,10 @@ class InitializeSampleData(setuptools.Command):
 
 config = dict(
     description = 'Bookworm',
-    author = 'Stallmanifold',
-    url = 'https://github.com/stallmanifold/bookworm',
-    download_url = 'https://github.com/stallmanifold/bookworm.git',
-    author_email = 'stallmanifold@gmail.com',
+    author = 'LambdaXymox',
+    url = 'https://github.com/lambdaxymox/bookworm',
+    download_url = 'https://github.com/lambdaxymox/bookworm.git',
+    author_email = 'lambda.xymox@gmail.com',
     version = '0.1',
     install_requires = ['pytest', 'hypothesis'],
     license = "LICENSE-APACHE",
